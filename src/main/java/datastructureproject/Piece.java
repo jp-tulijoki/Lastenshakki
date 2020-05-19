@@ -1,4 +1,4 @@
-package chess.rules;
+package datastructureproject;
 
 import chess.model.Side;
 

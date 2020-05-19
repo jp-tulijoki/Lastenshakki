@@ -1,4 +1,4 @@
-package chess.rules;
+package datastructureproject;
 
 /**
  * This enum contains all piece types, their relative values and empty type for

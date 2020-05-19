@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package chess.rules;
+package datastructureproject;
 
+import datastructureproject.Board;
+import datastructureproject.Type;
 import chess.model.Side;
 import org.junit.After;
 import org.junit.AfterClass;
