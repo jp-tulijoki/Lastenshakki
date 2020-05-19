@@ -23,15 +23,12 @@ public class BoardTest {
     private Board board;
     
     public BoardTest() {
-    }
-    
-    @Before
-    public void setUp() {
         this.board = new Board();
     }
     
     @Test
-    public void boardContainsNoNullSquares() {
+    public void initializedBoardContainsNoNullSquares() {
+        board.initBoard();
         for (int y = 0; y <= 7; y++) {
             for (int x = 0; x <= 7; x++) {
                 assertNotNull(board.getPiece(y, x).getType());
@@ -40,7 +37,8 @@ public class BoardTest {
     }
     
     @Test
-    public void thePawnsAreInTheFrontRow() {
+    public void initializedPawnsAreInTheFrontRow() {
+        board.initBoard();
         for (int x = 0; x <= 7; x++) {
             assertEquals(Side.WHITE, board.getPiece(1, x).getSide());
             assertEquals(Type.PAWN, board.getPiece(1, x).getType());
@@ -50,7 +48,8 @@ public class BoardTest {
     }
     
     @Test
-    public void otherPiecesAreInCorrectSquares() {
+    public void otherPiecesAreInCorrectSquaresWhenInitialized() {
+        board.initBoard();
         for (int x = 0; x <=7; x++) {
             assertEquals(Side.WHITE, board.getPiece(0, x).getSide());
             assertEquals(Side.BLACK, board.getPiece(7, x).getSide());
@@ -63,7 +62,8 @@ public class BoardTest {
     }
     
     @Test
-    public void castlingIsPossibleForKingsAndRooksOnly() {
+    public void castlingIsPossibleForKingsAndRooksOnlyWhenInitialized() {
+        board.initBoard();
         for (int y = 0; y <= 7; y++) {
             for (int x = 0; x <= 7; x++) {
                 if (y == 0 || y == 7) {
@@ -76,5 +76,61 @@ public class BoardTest {
             }
         }
     }
+    
+    @Test
+    public void unhinderedPawnsMoveOneStep() {
+        board.initBoard();
+        Piece whitePawn = board.getPiece(1, 0);
+        Piece blackPawn = board.getPiece(6, 0);
+        board.addRegularPawnMove(whitePawn, 1, 0);
+        board.addRegularPawnMove(blackPawn, 6, 0);
+        Piece[][] whiteMove = board.getLegalMoves().get(0);
+        Piece[][] blackMove = board.getLegalMoves().get(1);
+        assertEquals(Type.PAWN, whiteMove[2][0].getType());
+        assertEquals(Side.WHITE, whiteMove[2][0].getSide());
+        assertEquals(Type.EMPTY, whiteMove[1][0].getType());
+        assertEquals(Type.PAWN, blackMove[5][0].getType());
+        assertEquals(Side.BLACK, blackMove[5][0].getSide());
+        assertEquals(Type.EMPTY, blackMove[6][0].getType());
+    }
+    
+    @Test
+    public void unhinderedPawnsMoveTwoSteps() {
+        board.initBoard();
+        Piece whitePawn = board.getPiece(1, 0);
+        Piece blackPawn = board.getPiece(6, 0);
+        board.addTwoStepPawnMove(whitePawn, 1, 0);
+        board.addTwoStepPawnMove(blackPawn, 6, 0);
+        Piece[][] whiteMove = board.getLegalMoves().get(0);
+        Piece[][] blackMove = board.getLegalMoves().get(1);
+        assertEquals(Type.PAWN, whiteMove[3][0].getType());
+        assertEquals(Side.WHITE, whiteMove[3][0].getSide());
+        assertEquals(Type.EMPTY, whiteMove[1][0].getType());
+        assertEquals(Type.PAWN, blackMove[4][0].getType());
+        assertEquals(Side.BLACK, blackMove[4][0].getSide());
+        assertEquals(Type.EMPTY, blackMove[6][0].getType());
+    }
+    
+    @Test
+    public void hinderedPawnsDoNotMove() {
+        board.initBoard();
+        Piece[][] currentBoard = board.getCurrentBoard();
+        Piece whitePawn = board.getPiece(1, 0);
+        Piece blackPawn = board.getPiece(6, 0);
+        board.movePiece(currentBoard, 0, 1, 2, 0);
+        board.movePiece(currentBoard, 7, 1, 5, 0);
+        board.addRegularPawnMove(whitePawn, 1, 0);
+        board.addTwoStepPawnMove(whitePawn, 1, 0);
+        board.addRegularPawnMove(blackPawn, 6, 0);
+        board.addTwoStepPawnMove(blackPawn, 6, 0);
+        assertTrue(board.getLegalMoves().isEmpty());
+    }
+    
+    @Test
+    public void pawnsDoNotAttackOutOfBounds() {
+        
+    }
+    
+    
 
 }
