@@ -1,16 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package datastructureproject;
 
 import chess.model.Side;
 import java.util.ArrayList;
 
 /**
- *
- * @author tulijoki
+ * This class contains the main functionalities of the chessboard such as moving
+ * the pieces according to the rules. This class keeps track of the current
+ * piece locations on the chessboard and a list of legal moves.
  */
 public class Board {
     private Piece[][] currentBoard;
@@ -20,7 +16,10 @@ public class Board {
         this.currentBoard = new Piece[8][8];
         this.legalMoves = new ArrayList();
     }
-        
+    
+    /**
+     * This method initializes the chessboard with starting positions.
+     */
     public void initBoard() {
         for (int x = 0; x <= 7; x++) {
             currentBoard[1][x] = new Piece(Type.PAWN, Side.WHITE, false);
@@ -75,6 +74,16 @@ public class Board {
         return newBoard;
     }
     
+    /**
+     * This method moves a chesspiece to the new square and replaces the old 
+     * location with empty square.
+     * @param board the current piece locations on the chessboard
+     * @param currentY the current y-coordinate of the chesspiece moved
+     * @param currentX the current x-coordinate of the chesspiece moved
+     * @param newY the y-coordinate the chesspiece is moved to
+     * @param newX the x-coordinate the chesspiece is moved to
+     * @return returns the piece locations on the chessboard after the move
+     */
     public Piece[][] movePiece(Piece[][] board, int currentY, int currentX, int newY, int newX) {
         Piece movedPiece = board[currentY][currentX];
         board[newY][newX] = movedPiece;
@@ -82,6 +91,13 @@ public class Board {
         return board;
     }
     
+    /**
+     * This method adds a regular one step pawn move to the legal moves list if 
+     * it's possible.
+     * @param pawn the specified pawn piece
+     * @param y the y-coordinate of the current location of the pawn piece
+     * @param x the x-coordinate of the current location of the pawn piece
+     */
     public void addRegularPawnMove(Piece pawn, int y, int x) {           
         if (pawn.getSide() == Side.WHITE && currentBoard[y+1][x].getType() == Type.EMPTY) {
             Piece[][] newBoard = copyCurrentBoard();
@@ -96,6 +112,13 @@ public class Board {
         }
     }
     
+    /**
+     * This method adds a two step pawn move to the legal moves list if 
+     * it's possible.
+     * @param pawn the specified pawn piece
+     * @param y the y-coordinate of the current location of the pawn piece
+     * @param x the x-coordinate of the current location of the pawn piece
+     */
     public void addTwoStepPawnMove(Piece pawn, int y, int x) {
         if (pawn.getSide() == Side.WHITE && y != 1) {
             return;
@@ -116,6 +139,12 @@ public class Board {
         }
     }
     
+    /**
+     * This method adds a pawn attack to the legal moves list if it's possible.
+     * @param pawn the specified pawn piece
+     * @param y the y-coordinate of the current location of the pawn piece
+     * @param x the x-coordinate of the current location of the pawn piece
+     */
     public void addPawnAttack(Piece pawn, int y, int x) {
         if (x != 0) {
             if (pawn.getSide() == Side.WHITE && currentBoard[y+1][x-1].getSide() == Side.BLACK) {
@@ -147,6 +176,154 @@ public class Board {
         
     }
     
+    public void addKnightMoves(Piece knight, int y, int x) {
+        int[][] knightMoves = {{2,2,1,1,-1,-1,-2,-2},{1,-1,2,-2,2,-2,1,-1}};
+        for (int i = 0; i < knightMoves[0].length; i++) {
+            int newY = y + knightMoves[0][i];
+            int newX = x + knightMoves[1][i];
+            
+            if (newY < 0 || newY > 7 || newX < 0 || newX > 7) {
+                continue;
+            }
+            
+            if (knight.getSide() != currentBoard[newY][newX].getSide()) {
+                Piece[][] newBoard = copyCurrentBoard();
+                movePiece(newBoard, y, x, newY, newX);
+                legalMoves.add(newBoard);
+            }
+        }
+    }
     
+    public void addRookMoves(Piece rook, int y, int x) {
+        int up = y+1;
+        int down = y-1;
+        int right = x+1;
+        int left = x-1;
+        
+        while (up <= 7) {
+            if (currentBoard[up][x].getSide() == rook.getSide()) {
+                break;
+            }
+            Piece[][] newBoard = copyCurrentBoard();
+            movePiece(newBoard, y, x, up, x);
+            legalMoves.add(newBoard);
+            if (currentBoard[up][x].getSide() != null) {
+                break;
+            }
+            up++;
+        }
+        
+        while (down >= 0) {
+            if (currentBoard[down][x].getSide() == rook.getSide()) {
+                break;
+            }
+            Piece[][] newBoard = copyCurrentBoard();
+            movePiece(newBoard, y, x, down, x);
+            legalMoves.add(newBoard);
+            if (currentBoard[down][x].getSide() != null) {
+                break;
+            }
+            down--;
+        }
+        
+        while (right <= 7) {
+            if (currentBoard[y][right].getSide() == rook.getSide()) {
+                break;
+            }
+            Piece[][] newBoard = copyCurrentBoard();
+            movePiece(newBoard, y, x, y, right);
+            legalMoves.add(newBoard);
+            if (currentBoard[y][right].getSide() != null) {
+                break;
+            }
+            right++;
+        }
+        
+        while (left >= 0) {
+            if (currentBoard[y][left].getSide() == rook.getSide()) {
+                break;
+            }
+            Piece[][] newBoard = copyCurrentBoard();
+            movePiece(newBoard, y, x, y, left);
+            legalMoves.add(newBoard);
+            if (currentBoard[y][left].getSide() != null) {
+                break;
+            }
+            left--;
+        }
+    }
+    
+    public void addBishopMoves(Piece bishop, int y, int x) {
+        int up = y+1;
+        int down = y-1;
+        int right = x+1;
+        int left = x-1;
+        
+        while (up <= 7 && right <= 7) {
+            if (currentBoard[up][right].getSide() == bishop.getSide()) {
+                break;
+            }
+            Piece[][] newBoard = copyCurrentBoard();
+            movePiece(newBoard, y, x, up, right);
+            legalMoves.add(newBoard);
+            if (currentBoard[up][right].getSide() != null) {
+                break;
+            }
+            up++;
+            right++;
+        }
+        up = y+1;
+        right = x+1;
+        
+        while (down >= 0 && right <=7) {
+            if (currentBoard[down][right].getSide() == bishop.getSide()) {
+                break;
+            }
+            Piece[][] newBoard = copyCurrentBoard();
+            movePiece(newBoard, y, x, down, right);
+            legalMoves.add(newBoard);
+            if (currentBoard[down][right].getSide() != null) {
+                break;
+            }
+            down--;
+            right++;
+        }
+        down = y-1;
+        right = x+1;
+        
+        while (up <= 7 && left >= 0) {
+            if (currentBoard[up][left].getSide() == bishop.getSide()) {
+                break;
+            }
+            Piece[][] newBoard = copyCurrentBoard();
+            movePiece(newBoard, y, x, up, left);
+            legalMoves.add(newBoard);
+            if (currentBoard[up][left].getSide() != null) {
+                break;
+            }
+            up++;
+            left--;
+        }
+        left = x-1;
+        
+        while (down >= 0 && left >= 0) {
+            if (currentBoard[down][left].getSide() == bishop.getSide()) {
+                break;
+            }
+            Piece[][] newBoard = copyCurrentBoard();
+            movePiece(newBoard, y, x, down, left);
+            legalMoves.add(newBoard);
+            if (currentBoard[down][left].getSide() != null) {
+                break;
+            }
+            down--;
+            left--;
+        }
+    }
+    
+    public void addQueenMoves(Piece queen, int y, int x) {
+        addRookMoves(queen, y, x);
+        addBishopMoves(queen, y, x);
+    }
     
 }
