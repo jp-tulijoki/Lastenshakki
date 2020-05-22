@@ -99,15 +99,15 @@ public class Board {
      * @param x the x-coordinate of the current location of the pawn piece
      */
     public void addRegularPawnMove(Piece pawn, int y, int x) {           
-        if (pawn.getSide() == Side.WHITE && currentBoard[y+1][x].getType() == Type.EMPTY) {
+        if (pawn.getSide() == Side.WHITE && currentBoard[y + 1][x].getType() == Type.EMPTY) {
             Piece[][] newBoard = copyCurrentBoard();
-            movePiece(newBoard, y, x, y+1, x);
+            movePiece(newBoard, y, x, y + 1, x);
             legalMoves.add(newBoard);
             return;
         }
-        if (pawn.getSide() == Side.BLACK && currentBoard[y-1][x].getType() == Type.EMPTY) {
+        if (pawn.getSide() == Side.BLACK && currentBoard[y - 1][x].getType() == Type.EMPTY) {
             Piece[][] newBoard = copyCurrentBoard();
-            movePiece(newBoard, y, x, y-1, x);
+            movePiece(newBoard, y, x, y - 1, x);
             legalMoves.add(newBoard);
         }
     }
@@ -126,15 +126,17 @@ public class Board {
         if (pawn.getSide() == Side.BLACK && y != 6) {
             return;
         }
-        if (pawn.getSide() == Side.WHITE && currentBoard[y+1][x].getType() == Type.EMPTY && currentBoard[y+2][x].getType() == Type.EMPTY) {
+        if (pawn.getSide() == Side.WHITE && currentBoard[y + 1][x].getType() == 
+                Type.EMPTY && currentBoard[y + 2][x].getType() == Type.EMPTY) {
             Piece[][] newBoard = copyCurrentBoard();
-            movePiece(newBoard, y, x, y+2, x);
+            movePiece(newBoard, y, x, y + 2, x);
             legalMoves.add(newBoard);
             return;
         }
-        if (pawn.getSide() == Side.BLACK && currentBoard[y-1][x].getType() == Type.EMPTY && currentBoard[y-2][x].getType() == Type.EMPTY) {
+        if (pawn.getSide() == Side.BLACK && currentBoard[y - 1][x].getType() == 
+                Type.EMPTY && currentBoard[y - 2][x].getType() == Type.EMPTY) {
             Piece[][] newBoard = copyCurrentBoard();
-            movePiece(newBoard, y, x, y-2, x);
+            movePiece(newBoard, y, x, y - 2, x);
             legalMoves.add(newBoard);
         }
     }
@@ -147,26 +149,26 @@ public class Board {
      */
     public void addPawnAttack(Piece pawn, int y, int x) {
         if (x != 0) {
-            if (pawn.getSide() == Side.WHITE && currentBoard[y+1][x-1].getSide() == Side.BLACK) {
+            if (pawn.getSide() == Side.WHITE && currentBoard[y + 1][x - 1].getSide() == Side.BLACK) {
                 Piece[][] newBoard = copyCurrentBoard();
-                movePiece(newBoard, y, x, y+1, x-1);
+                movePiece(newBoard, y, x, y + 1, x - 1);
                 legalMoves.add(newBoard);
             }
-            if (pawn.getSide() == Side.BLACK && currentBoard[y-1][x-1].getSide() == Side.WHITE) {
+            if (pawn.getSide() == Side.BLACK && currentBoard[y - 1][x - 1].getSide() == Side.WHITE) {
                 Piece[][] newBoard = copyCurrentBoard();
-                movePiece(newBoard, y, x, y-1, x-1);
+                movePiece(newBoard, y, x, y - 1, x - 1);
                 legalMoves.add(newBoard);
             }
         }
         if (x != 7) {
-            if (pawn.getSide() == Side.WHITE && currentBoard[y+1][x+1].getSide() == Side.BLACK) {
+            if (pawn.getSide() == Side.WHITE && currentBoard[y + 1][x + 1].getSide() == Side.BLACK) {
                 Piece[][] newBoard = copyCurrentBoard();
-                movePiece(newBoard, y, x, y+1, x+1);
+                movePiece(newBoard, y, x, y + 1, x + 1);
                 legalMoves.add(newBoard);
             }
-            if (pawn.getSide() == Side.BLACK && currentBoard[y-1][x+1].getSide() == Side.WHITE) {
+            if (pawn.getSide() == Side.BLACK && currentBoard[y - 1][x + 1].getSide() == Side.WHITE) {
                 Piece[][] newBoard = copyCurrentBoard();
-                movePiece(newBoard, y, x, y-1, x+1);
+                movePiece(newBoard, y, x, y - 1, x + 1);
                 legalMoves.add(newBoard);
             }
         }
@@ -176,8 +178,16 @@ public class Board {
         
     }
     
+    /**
+     * This method adds all possible moves of a certain knight to legal moves
+     * list.
+     * @param knight the specified knight piece
+     * @param y the y-coordinate of the current location of the knight piece
+     * @param x the x-coordniate of the current location of the knight piece
+     */
     public void addKnightMoves(Piece knight, int y, int x) {
-        int[][] knightMoves = {{2,2,1,1,-1,-1,-2,-2},{1,-1,2,-2,2,-2,1,-1}};
+        int[][] knightMoves = {{2, 2, 1, 1, -1, -1, -2, -2},
+            {1, -1, 2, -2, 2, -2, 1, -1}};
         for (int i = 0; i < knightMoves[0].length; i++) {
             int newY = y + knightMoves[0][i];
             int newX = x + knightMoves[1][i];
@@ -194,11 +204,17 @@ public class Board {
         }
     }
     
+    /**
+     * This method adds all possible moves of a certain rook to legal moves list
+     * @param rook the specified rook piece
+     * @param y the y-coordinate of the current location of the rook piece
+     * @param x the x-coordinate of the current location of the rook piece
+     */
     public void addRookMoves(Piece rook, int y, int x) {
-        int up = y+1;
-        int down = y-1;
-        int right = x+1;
-        int left = x-1;
+        int up = y + 1;
+        int down = y - 1;
+        int right = x + 1;
+        int left = x - 1;
         
         while (up <= 7) {
             if (currentBoard[up][x].getSide() == rook.getSide()) {
@@ -253,11 +269,18 @@ public class Board {
         }
     }
     
+    /**
+     * This method adds all possible moves of a certain bishop to legal moves
+     * list.
+     * @param bishop the specified bishop
+     * @param y the y-coordinate of the current location of the bishop
+     * @param x the x-coordinate of the current location of the bishop
+     */
     public void addBishopMoves(Piece bishop, int y, int x) {
-        int up = y+1;
-        int down = y-1;
-        int right = x+1;
-        int left = x-1;
+        int up = y + 1;
+        int down = y - 1;
+        int right = x + 1;
+        int left = x - 1;
         
         while (up <= 7 && right <= 7) {
             if (currentBoard[up][right].getSide() == bishop.getSide()) {
@@ -272,10 +295,10 @@ public class Board {
             up++;
             right++;
         }
-        up = y+1;
-        right = x+1;
+        up = y + 1;
+        right = x + 1;
         
-        while (down >= 0 && right <=7) {
+        while (down >= 0 && right <= 7) {
             if (currentBoard[down][right].getSide() == bishop.getSide()) {
                 break;
             }
@@ -288,8 +311,8 @@ public class Board {
             down--;
             right++;
         }
-        down = y-1;
-        right = x+1;
+        down = y - 1;
+        right = x + 1;
         
         while (up <= 7 && left >= 0) {
             if (currentBoard[up][left].getSide() == bishop.getSide()) {
@@ -304,7 +327,7 @@ public class Board {
             up++;
             left--;
         }
-        left = x-1;
+        left = x - 1;
         
         while (down >= 0 && left >= 0) {
             if (currentBoard[down][left].getSide() == bishop.getSide()) {
@@ -321,9 +344,67 @@ public class Board {
         }
     }
     
+    /**
+     * This method adds all possible moves of a certain queen to legal 
+     * moves list by combining the moves of the rook and the bishop piece.
+     * @param queen the specified queen
+     * @param y the y-coordinate of the current location of the queen
+     * @param x the x-coordinate of the current location of the queen
+     */
     public void addQueenMoves(Piece queen, int y, int x) {
         addRookMoves(queen, y, x);
         addBishopMoves(queen, y, x);
+    }
+    
+    /**
+     * This method adds all possible moves of a certain king to legal moves 
+     * list.
+     * @param king the specified king
+     * @param y the y-coordinate of the current location of the king
+     * @param x the x-coordinate of the current location of the king
+     */
+    public void addRegularKingMoves(Piece king, int y, int x) {
+        for (int newY = y - 1; newY <= y + 1; newY++) {
+            for (int newX = x - 1; newX <= x + 1; newX++) {
+                if (newY == y && newX == x) {
+                    continue;
+                }
+                if (newY < 0 || newY > 7 || newX < 0 || newX > 7) {
+                    continue;
+                }
+                if (currentBoard[newY][newX].getSide() == king.getSide()) {
+                    continue;
+                }
+                Piece[][] newBoard = copyCurrentBoard();
+                movePiece(newBoard, y, x, newY, newX);
+                legalMoves.add(newBoard);
+            }
+        }
+    }
+    
+    public void addCastling(Piece king, int y, int x) {
+        
+    }
+    
+    /**
+     * This method checks if the specified board situation contains the king
+     * of the specified side.
+     * @param board the specified board situation 
+     * @param side the side of the king
+     * @return returns true if the king of the specified side is dead and false
+     * if the king is alive
+     */
+    public boolean isKingDead(Piece[][] board, Side side) {
+        boolean dead = true;
+        for (int y = 0; y <= 7; y++) {
+            for (int x = 0; x <= 7; x++) {
+                if (board[y][x].getSide() == side && 
+                        board[y][x].getType() == Type.KING) {
+                    dead = false;
+                }
+            }
+        }
+        return dead;
     }
     
 }

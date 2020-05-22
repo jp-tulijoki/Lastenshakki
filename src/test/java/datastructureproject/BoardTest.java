@@ -256,4 +256,38 @@ public class BoardTest {
         board.addQueenMoves(whiteQueen, 4, 3);
         assertEquals(19, board.getLegalMoves().size());
     }
+    
+    @Test
+    public void initializedKingDoesNotMove() {
+        board.initBoard();
+        Piece[][] currentBoard = board.getCurrentBoard();
+        Piece whiteKing = board.getPiece(0, 4);
+        board.addRegularKingMoves(whiteKing, 0, 3);
+        assertTrue(board.getLegalMoves().size() == 0);
+    }
+    
+    public void kingHasCorrectNumberOfLegalMoves() {
+        board.initBoard();
+        Piece[][] currentBoard = board.getCurrentBoard();
+        board.movePiece(currentBoard, 0, 4, 3, 4);
+        Piece whiteKing = board.getPiece(3, 4);
+        board.addRegularKingMoves(whiteKing, 3, 4);
+        assertEquals(8, board.getLegalMoves().size());
+    }
+    
+    @Test
+    public void bothKingsAreAliveInTheBeginning() {
+        board.initBoard();
+        Piece[][] currentBoard = board.getCurrentBoard();
+        assertFalse(board.isKingDead(currentBoard, Side.WHITE));
+        assertFalse(board.isKingDead(currentBoard, Side.BLACK));
+    }
+    
+    @Test
+    public void deadKingIsDetected() {
+        board.initBoard();
+        Piece[][] currentBoard = board.getCurrentBoard();
+        board.movePiece(currentBoard, 0, 3, 7, 4);
+        assertTrue(board.isKingDead(currentBoard, Side.BLACK));
+    }
 }
