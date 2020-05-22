@@ -9,3 +9,5 @@ Muu ohjelmakoodi perustuu kurssia varten toteutettuun valmiiseen ![projektipohja
 ## Viikkoraportit
 
 [Viikko1](https://github.com/jp-tulijoki/Lastenshakki/blob/master/documentation/weeklyReports/viikko1.md)
+
+[Viikko2](https://github.com/jp-tulijoki/Lastenshakki/blob/master/documentation/weeklyReports/viikko2.md)
