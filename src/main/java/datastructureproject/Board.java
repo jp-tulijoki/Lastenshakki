@@ -178,6 +178,13 @@ public class Board {
         
     }
     
+    public void addAllPawnMoves(Piece pawn, int y, int x) {
+        addRegularPawnMove(pawn, y, x);
+        addTwoStepPawnMove(pawn, y, x);
+        addPawnAttack(pawn, y, x);
+        addEnPassant(pawn, y, x);
+    }
+    
     /**
      * This method adds all possible moves of a certain knight to legal moves
      * list.
@@ -405,6 +412,30 @@ public class Board {
             }
         }
         return dead;
+    }
+    
+    public void addAllLegalMoves(Side side) {
+        for (int y = 0; y <= 7; y++) {
+            for (int x = 0; x <=7; x++) {
+                Piece piece = currentBoard[y][x];
+                if (piece.getSide() != side) {
+                    continue;
+                }
+                if (piece.getType() == Type.PAWN) {
+                    addAllPawnMoves(piece, y, x);
+                } else if (piece.getType() == Type.KNIGHT) {
+                    addKnightMoves(piece, y, x);
+                } else if (piece.getType() == Type.ROOK) {
+                    addRookMoves(piece, y, x);
+                } else if (piece.getType() == Type.BISHOP) {
+                    addBishopMoves(piece, y, x);
+                } else if (piece.getType() == Type.QUEEN) {
+                    addQueenMoves(piece, y, x);
+                } else if (piece.getType() == Type.KING) {
+                    addRegularKingMoves(piece, y, x);
+                }
+            }
+        }
     }
     
 }

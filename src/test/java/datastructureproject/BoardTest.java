@@ -5,13 +5,7 @@
  */
 package datastructureproject;
 
-import datastructureproject.Board;
-import datastructureproject.Type;
 import chess.model.Side;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -192,7 +186,7 @@ public class BoardTest {
         Piece[][] currentBoard = board.getCurrentBoard();
         Piece whiteRook = board.getPiece(0, 0);
         board.addRookMoves(whiteRook, 0, 0);
-        assertTrue(board.getLegalMoves().size() == 0);
+        assertTrue(board.getLegalMoves().isEmpty());
     }
     
     // A white rook is moved to square (y4,x3) in otherwise initialized board,
@@ -215,7 +209,7 @@ public class BoardTest {
         Piece[][] currentBoard = board.getCurrentBoard();
         Piece whiteBishop = board.getPiece(0, 2);
         board.addBishopMoves(whiteBishop, 0, 2);
-        assertTrue(board.getLegalMoves().size() == 0);
+        assertTrue(board.getLegalMoves().isEmpty());
     }
     
     // A white bishop is moved to square (y4, x3) in otherwise initialized board,
@@ -238,7 +232,7 @@ public class BoardTest {
         Piece[][] currentBoard = board.getCurrentBoard();
         Piece whiteQueen = board.getPiece(0, 3);
         board.addQueenMoves(whiteQueen, 0, 3);
-        assertTrue(board.getLegalMoves().size() == 0);
+        assertTrue(board.getLegalMoves().isEmpty());
     }
     
     // A white queen is moved to square (y4, x3) in otherwise initialized board,
@@ -263,7 +257,7 @@ public class BoardTest {
         Piece[][] currentBoard = board.getCurrentBoard();
         Piece whiteKing = board.getPiece(0, 4);
         board.addRegularKingMoves(whiteKing, 0, 3);
-        assertTrue(board.getLegalMoves().size() == 0);
+        assertTrue(board.getLegalMoves().isEmpty());
     }
     
     public void kingHasCorrectNumberOfLegalMoves() {
@@ -289,5 +283,12 @@ public class BoardTest {
         Piece[][] currentBoard = board.getCurrentBoard();
         board.movePiece(currentBoard, 0, 3, 7, 4);
         assertTrue(board.isKingDead(currentBoard, Side.BLACK));
+    }
+    
+    @Test
+    public void correctNumberOfMovesInTheBeginning() {
+        board.initBoard();
+        board.addAllLegalMoves(Side.WHITE);
+        assertEquals(20, board.getLegalMoves().size());
     }
 }
