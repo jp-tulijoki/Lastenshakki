@@ -31,7 +31,7 @@ public class BoardTest {
     }
     
     @Test
-    public void initializedPawnsAreInTheFrontRow() {
+    public void initializedPawnsAreOnTheFrontRow() {
         board.initBoard();
         for (int x = 0; x <= 7; x++) {
             assertEquals(Side.WHITE, board.getPiece(1, x).getSide());
@@ -160,6 +160,22 @@ public class BoardTest {
         assertEquals(Type.PAWN, blackMove[5][1].getType());
         assertEquals(Side.BLACK, blackMove[5][1].getSide());
         assertEquals(Type.EMPTY, blackMove[6][0].getType());
+    }
+    
+    @Test
+    public void enPassantWorksProperly() {
+        board.initBoard();
+        Piece[][] currentBoard = board.getCurrentBoard();
+        board.movePiece(currentBoard, 1, 4, 4, 4);
+        board.movePiece(currentBoard, 6, 5, 4, 5);
+        board.setEnPassant(board.getPiece(4, 5));
+        Piece whitePawn = board.getPiece(4, 4);
+        board.addEnPassant(whitePawn, 4, 4);
+        assertEquals(1, board.getLegalMoves().size());
+        Piece[][] newBoard = board.getLegalMoves().get(0);
+        assertEquals(Side.WHITE, newBoard[5][5].getSide());
+        assertEquals(Type.PAWN, newBoard[5][5].getType());
+        assertEquals(Type.EMPTY, newBoard[4][5].getType());
     }
     
     @Test

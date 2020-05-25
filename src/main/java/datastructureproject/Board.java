@@ -11,6 +11,7 @@ import java.util.ArrayList;
 public class Board {
     private Piece[][] currentBoard;
     private ArrayList<Piece[][]> legalMoves;
+    private Piece enPassant;
 
     public Board() {
         this.currentBoard = new Piece[8][8];
@@ -74,6 +75,18 @@ public class Board {
         return newBoard;
     }
     
+    public void setEnPassant(Piece pawn) {
+        this.enPassant = pawn;
+    }
+    
+    public Piece getEnPassant() {
+        return enPassant;
+    }
+    
+    public void nullifyEnPassant() {
+        this.enPassant = null;
+    }
+    
     /**
      * This method moves a chesspiece to the new square and replaces the old 
      * location with empty square.
@@ -82,13 +95,11 @@ public class Board {
      * @param currentX the current x-coordinate of the chesspiece moved
      * @param newY the y-coordinate the chesspiece is moved to
      * @param newX the x-coordinate the chesspiece is moved to
-     * @return returns the piece locations on the chessboard after the move
      */
-    public Piece[][] movePiece(Piece[][] board, int currentY, int currentX, int newY, int newX) {
+    public void movePiece(Piece[][] board, int currentY, int currentX, int newY, int newX) {
         Piece movedPiece = board[currentY][currentX];
         board[newY][newX] = movedPiece;
         board[currentY][currentX] = new Piece(Type.EMPTY);
-        return board;
     }
     
     /**
@@ -175,7 +186,38 @@ public class Board {
     }
     
     public void addEnPassant(Piece pawn, int y, int x) {
+        if (x > 0) {
+            if (currentBoard[y][x - 1] == enPassant) {
+                if (pawn.getSide() == Side.WHITE) {
+                    Piece[][] newBoard = copyCurrentBoard();
+                    movePiece(newBoard, y, x, y + 1, x - 1);
+                    newBoard[y][x - 1] = new Piece(Type.EMPTY);
+                    legalMoves.add(newBoard);
+                } else {
+                    Piece[][] newBoard = copyCurrentBoard();
+                    movePiece(newBoard, y, x, y - 1, x - 1);
+                    newBoard[y][x - 1] = new Piece(Type.EMPTY);
+                    legalMoves.add(newBoard);
+                }
+                return;
+            }
+        }
         
+        if (x < 7) {
+            if (currentBoard[y][x + 1] == enPassant) {
+                if (pawn.getSide() == Side.WHITE) {
+                    Piece[][] newBoard = copyCurrentBoard();
+                    movePiece(newBoard, y, x, y + 1, x + 1);
+                    newBoard[y][x + 1] = new Piece(Type.EMPTY);
+                    legalMoves.add(newBoard);
+                } else {
+                    Piece[][] newBoard = copyCurrentBoard();
+                    movePiece(newBoard, y, x, y - 1, x + 1);
+                    newBoard[y][x + 1] = new Piece(Type.EMPTY);
+                    legalMoves.add(newBoard);
+                }
+            }
+        }
     }
     
     public void addAllPawnMoves(Piece pawn, int y, int x) {
