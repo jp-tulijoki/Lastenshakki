@@ -8,12 +8,12 @@ import java.util.ArrayList;
  * the pieces according to the rules. This class keeps track of the current
  * piece locations on the chessboard and a list of legal moves.
  */
-public class Board {
+public class Game {
     private Piece[][] currentBoard;
     private ArrayList<Piece[][]> legalMoves;
     private Piece enPassant;
 
-    public Board() {
+    public Game() {
         this.currentBoard = new Piece[8][8];
         this.legalMoves = new ArrayList();
     }
@@ -232,7 +232,7 @@ public class Board {
      * list.
      * @param knight the specified knight piece
      * @param y the y-coordinate of the current location of the knight piece
-     * @param x the x-coordniate of the current location of the knight piece
+     * @param x the x-coordinate of the current location of the knight piece
      */
     public void addKnightMoves(Piece knight, int y, int x) {
         int[][] knightMoves = {{2, 2, 1, 1, -1, -1, -2, -2},
@@ -457,6 +457,7 @@ public class Board {
     }
     
     public void addAllLegalMoves(Side side) {
+        legalMoves = new ArrayList();
         for (int y = 0; y <= 7; y++) {
             for (int x = 0; x <=7; x++) {
                 Piece piece = currentBoard[y][x];
