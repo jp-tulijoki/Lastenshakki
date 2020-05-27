@@ -481,4 +481,23 @@ public class Game {
         }
     }
     
+    public ArrayList<Piece[][]> getOnePieceMoves(Piece[][] board, int y, int x) {
+        legalMoves = new ArrayList();
+        Piece piece = board[y][x];
+        if (piece.getType() == Type.PAWN) {
+            addAllPawnMoves(piece, y, x);
+        } else if (piece.getType() == Type.KNIGHT) {
+            addKnightMoves(piece, y, x);
+        } else if (piece.getType() == Type.ROOK) {
+            addRookMoves(piece, y, x);
+        } else if (piece.getType() == Type.BISHOP) {
+            addBishopMoves(piece, y, x);
+        } else if (piece.getType() == Type.QUEEN) {
+            addQueenMoves(piece, y, x);
+        } else if (piece.getType() == Type.KING) {
+            addRegularKingMoves(piece, y, x);
+        }
+        return legalMoves;
+    }
+    
 }

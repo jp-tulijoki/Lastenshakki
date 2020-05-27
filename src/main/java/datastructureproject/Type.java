@@ -11,7 +11,7 @@ public enum Type {
     ROOK(5),
     BISHOP(3),
     KNIGHT(3),
-    PAWN(3),
+    PAWN(1),
     EMPTY(0);
     
     private final int value;
