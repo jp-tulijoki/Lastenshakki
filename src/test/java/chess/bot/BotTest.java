@@ -41,6 +41,5 @@ public class BotTest {
         assertEquals(Type.EMPTY, game.getPiece(1, 0).getType());
         assertEquals(Type.PAWN, game.getPiece(3, 0).getType());
         assertEquals(Side.WHITE, game.getPiece(3, 0).getSide());
-    }
-   
+    }   
 }

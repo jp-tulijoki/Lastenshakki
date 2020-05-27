@@ -307,4 +307,21 @@ public class GameTest {
         game.addAllLegalMoves(Side.WHITE);
         assertEquals(20, game.getLegalMoves().size());
     }
+    
+    @Test
+    public void legalMovesDoesNotContainOldData() {
+        this.game = new Game();
+        Piece[][] board = game.getCurrentBoard();
+        for (int y = 0; y <= 7; y++) {
+            for (int x = 0; x <= 7; x++) {
+                board[y][x] = new Piece(Type.EMPTY);
+            }
+        }
+        board[2][2] = new Piece(Type.PAWN, Side.WHITE, false);
+        game.addAllLegalMoves(Side.WHITE);
+        assertEquals(1, game.getLegalMoves().size());
+        board[2][2] = new Piece(Type.EMPTY);
+        game.addAllLegalMoves(Side.WHITE);
+        assertTrue(game.getLegalMoves().isEmpty());
+    }
 }

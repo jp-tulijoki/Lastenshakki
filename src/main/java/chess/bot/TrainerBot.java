@@ -1,6 +1,7 @@
 package chess.bot;
 
 import chess.engine.GameState;
+import chess.model.Side;
 import datastructureproject.*;
 import java.util.ArrayList;
 import java.util.Random;
@@ -49,17 +50,20 @@ public class TrainerBot implements ChessBot {
             String latestMove = gamestate.getLatestMove();
             updateLatestMove(latestMove);
         }
-        Piece[][] currentBoard = game.getCurrentBoard();
-        game.addAllLegalMoves(gamestate.playing);
-        ArrayList<Piece[][]> legalMoves = game.getLegalMoves();
-        int random = r.nextInt(legalMoves.size());
-        Piece[][] newBoard = legalMoves.get(random);
-        String move = parseMove(currentBoard, newBoard);
-        return move;
+        if (gamestate.playing == Side.BLACK) {
+            game.addAllLegalMoves(Side.BLACK);
+            ArrayList<Piece[][]> legalMoves = game.getLegalMoves();
+            int random = r.nextInt(legalMoves.size());
+            Piece[][] newBoard = legalMoves.get(random);
+            String move = parseMove(game.getCurrentBoard(), newBoard);
+            updateLatestMove(move);
+            return move;
+        }
+        return null;
     }
     
     public void updateLatestMove(String move) {
-        Piece[][] board = game.getCurrentBoard();
+        Piece[][] board = game.copyCurrentBoard();
         int currentY = Character.getNumericValue(move.charAt(1)) - 1;
         int currentX = (int)move.charAt(0) - 97;
         int newY = Character.getNumericValue(move.charAt(3)) - 1;
