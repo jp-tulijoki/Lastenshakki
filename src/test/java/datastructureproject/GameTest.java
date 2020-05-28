@@ -56,22 +56,6 @@ public class GameTest {
     }
     
     @Test
-    public void castlingIsPossibleForKingsAndRooksOnlyWhenInitialized() {
-        game.initBoard();
-        for (int y = 0; y <= 7; y++) {
-            for (int x = 0; x <= 7; x++) {
-                if (y == 0 || y == 7) {
-                    if (x == 0 || x == 4 || x == 7) {
-                        assertTrue(game.getPiece(y, x).isCastlingPossible());
-                        continue;
-                    }
-                }
-                assertFalse(game.getPiece(y, x).isCastlingPossible());
-            }
-        }
-    }
-    
-    @Test
     public void unhinderedPawnsMoveOneStep() {
         game.initBoard();
         Piece whitePawn = game.getPiece(1, 0);
@@ -268,6 +252,96 @@ public class GameTest {
     }
     
     @Test
+    public void unhinderedwhiteCastlingWorksProperly() {
+        Game game = new Game();
+        Piece[][] board = game.getCurrentBoard();
+        for (int y = 0; y <= 7; y++) {
+            for (int x = 0; x <= 7; x++) {
+                board[y][x] = new Piece(Type.EMPTY);
+            }
+        }
+        Piece whiteRook = new Piece(Type.ROOK, Side.WHITE);
+        Piece whiteKing = new Piece(Type.KING, Side.WHITE);
+        board[0][0] = whiteRook;
+        board[0][4] = whiteKing;
+        board[3][4] = new Piece(Type.BISHOP, Side.BLACK);
+        game.checkWhiteCastling();
+        assertTrue(game.getCastling()[4]);
+        game.addWhiteCastling(whiteKing, 0, 4);
+        Piece[][] castling = game.getLegalMoves().get(game.getLegalMoves().size() - 1);
+        assertEquals(whiteKing, castling[0][2]);
+        assertEquals(whiteRook, castling[0][3]);
+        assertEquals(Type.EMPTY, castling[0][0].getType());
+        assertEquals(Type.EMPTY, castling[0][4].getType());
+    }
+    
+    @Test
+    public void unhinderedBlackCastlingWorksProperly() {
+        Game game = new Game();
+        Piece[][] board = game.getCurrentBoard();
+        for (int y = 0; y <= 7; y++) {
+            for (int x = 0; x <= 7; x++) {
+                board[y][x] = new Piece(Type.EMPTY);
+            }
+        }
+        Piece blackRook = new Piece(Type.ROOK, Side.BLACK);
+        Piece blackKing = new Piece(Type.KING, Side.BLACK);
+        board[7][7] = blackRook;
+        board[7][4] = blackKing;
+        board[3][3] = new Piece(Type.BISHOP, Side.WHITE);
+        game.checkBlackCastling();
+        assertEquals(true, game.getCastling()[7]);
+        game.addBlackCastling(blackKing, 7, 4);
+        Piece[][] castling = game.getLegalMoves().get(game.getLegalMoves().size() - 1);
+        assertEquals(blackKing, castling[7][6]);
+        assertEquals(blackRook, castling[7][5]);
+        assertEquals(Type.EMPTY, castling[7][4].getType());
+        assertEquals(Type.EMPTY, castling[7][7].getType());
+    }
+    
+    @Test
+    public void attackedKingCannotCastle() {
+        Game game = new Game();
+        Piece[][] board = game.getCurrentBoard();
+        for (int y = 0; y <= 7; y++) {
+            for (int x = 0; x <= 7; x++) {
+                board[y][x] = new Piece(Type.EMPTY);
+            }
+        }
+        Piece whiteRook1 = new Piece(Type.ROOK, Side.WHITE);
+        Piece whiteRook2 = new Piece(Type.ROOK, Side.WHITE);
+        Piece whiteKing = new Piece(Type.KING, Side.WHITE);
+        board[0][0] = whiteRook1;
+        board[0][7] = whiteRook2;
+        board[0][4] = whiteKing;
+        board[4][0] = new Piece(Type.BISHOP, Side.BLACK);
+        game.checkWhiteCastling();
+        assertFalse(game.getCastling()[4]);
+        assertFalse(game.getCastling()[5]);
+    }
+    
+    @Test
+    public void KingCannotCastleOverAttackedSquares() {
+        Game game = new Game();
+        Piece[][] board = game.getCurrentBoard();
+        for (int y = 0; y <= 7; y++) {
+            for (int x = 0; x <= 7; x++) {
+                board[y][x] = new Piece(Type.EMPTY);
+            }
+        }
+        Piece blackRook1 = new Piece(Type.ROOK, Side.BLACK);
+        Piece blackRook2 = new Piece(Type.ROOK, Side.BLACK);
+        Piece blackKing = new Piece(Type.KING, Side.BLACK);
+        board[7][0] = blackRook1;
+        board[7][7] = blackRook2;
+        board[7][4] = blackKing;
+        board[6][4] = new Piece(Type.BISHOP, Side.WHITE);
+        game.checkBlackCastling();
+        assertFalse(game.getCastling()[6]);
+        assertFalse(game.getCastling()[7]);
+    }
+    
+    @Test
     public void initializedKingDoesNotMove() {
         game.initBoard();
         Piece[][] currentBoard = game.getCurrentBoard();
@@ -304,6 +378,7 @@ public class GameTest {
     @Test
     public void correctNumberOfMovesInTheBeginning() {
         game.initBoard();
+        game.checkWhiteCastling();
         game.addAllLegalMoves(Side.WHITE);
         assertEquals(20, game.getLegalMoves().size());
     }
@@ -317,7 +392,7 @@ public class GameTest {
                 board[y][x] = new Piece(Type.EMPTY);
             }
         }
-        board[2][2] = new Piece(Type.PAWN, Side.WHITE, false);
+        board[2][2] = new Piece(Type.PAWN, Side.WHITE);
         game.addAllLegalMoves(Side.WHITE);
         assertEquals(1, game.getLegalMoves().size());
         board[2][2] = new Piece(Type.EMPTY);

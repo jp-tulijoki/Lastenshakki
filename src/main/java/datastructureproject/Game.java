@@ -12,10 +12,12 @@ public class Game {
     private Piece[][] currentBoard;
     private ArrayList<Piece[][]> legalMoves;
     private Piece enPassant;
+    private boolean[] castling;
 
     public Game() {
         this.currentBoard = new Piece[8][8];
         this.legalMoves = new ArrayList();
+        this.castling = new boolean[]{true, true, true, true, true, true, true, true};
     }
     
     /**
@@ -23,30 +25,30 @@ public class Game {
      */
     public void initBoard() {
         for (int x = 0; x <= 7; x++) {
-            currentBoard[1][x] = new Piece(Type.PAWN, Side.WHITE, false);
-            currentBoard[6][x] = new Piece(Type.PAWN, Side.BLACK, false);
+            currentBoard[1][x] = new Piece(Type.PAWN, Side.WHITE);
+            currentBoard[6][x] = new Piece(Type.PAWN, Side.BLACK);
             for (int y = 2; y <= 5; y++) {
                 currentBoard[y][x] = new Piece(Type.EMPTY);
             }
         }
         
-        currentBoard[0][0] = new Piece(Type.ROOK, Side.WHITE, true);
-        currentBoard[0][1] = new Piece(Type.KNIGHT, Side.WHITE, false);
-        currentBoard[0][2] = new Piece(Type.BISHOP, Side.WHITE, false);
-        currentBoard[0][3] = new Piece(Type.QUEEN, Side.WHITE, false);
-        currentBoard[0][4] = new Piece(Type.KING, Side.WHITE, true);
-        currentBoard[0][5] = new Piece(Type.BISHOP, Side.WHITE, false);
-        currentBoard[0][6] = new Piece(Type.KNIGHT, Side.WHITE, false);
-        currentBoard[0][7] = new Piece(Type.ROOK, Side.WHITE, true);
+        currentBoard[0][0] = new Piece(Type.ROOK, Side.WHITE);
+        currentBoard[0][1] = new Piece(Type.KNIGHT, Side.WHITE);
+        currentBoard[0][2] = new Piece(Type.BISHOP, Side.WHITE);
+        currentBoard[0][3] = new Piece(Type.QUEEN, Side.WHITE);
+        currentBoard[0][4] = new Piece(Type.KING, Side.WHITE);
+        currentBoard[0][5] = new Piece(Type.BISHOP, Side.WHITE);
+        currentBoard[0][6] = new Piece(Type.KNIGHT, Side.WHITE);
+        currentBoard[0][7] = new Piece(Type.ROOK, Side.WHITE);
         
-        currentBoard[7][0] = new Piece(Type.ROOK, Side.BLACK, true);
-        currentBoard[7][1] = new Piece(Type.KNIGHT, Side.BLACK, false);
-        currentBoard[7][2] = new Piece(Type.BISHOP, Side.BLACK, false);
-        currentBoard[7][3] = new Piece(Type.QUEEN, Side.BLACK, false);
-        currentBoard[7][4] = new Piece(Type.KING, Side.BLACK, true);
-        currentBoard[7][5] = new Piece(Type.BISHOP, Side.BLACK, false);
-        currentBoard[7][6] = new Piece(Type.KNIGHT, Side.BLACK, false);
-        currentBoard[7][7] = new Piece(Type.ROOK, Side.BLACK, true);
+        currentBoard[7][0] = new Piece(Type.ROOK, Side.BLACK);
+        currentBoard[7][1] = new Piece(Type.KNIGHT, Side.BLACK);
+        currentBoard[7][2] = new Piece(Type.BISHOP, Side.BLACK);
+        currentBoard[7][3] = new Piece(Type.QUEEN, Side.BLACK);
+        currentBoard[7][4] = new Piece(Type.KING, Side.BLACK);
+        currentBoard[7][5] = new Piece(Type.BISHOP, Side.BLACK);
+        currentBoard[7][6] = new Piece(Type.KNIGHT, Side.BLACK);
+        currentBoard[7][7] = new Piece(Type.ROOK, Side.BLACK);
     }
 
     public Piece getPiece(int y, int x) {
@@ -86,6 +88,11 @@ public class Game {
     public void nullifyEnPassant() {
         this.enPassant = null;
     }
+
+    public boolean[] getCastling() {
+        return castling;
+    }
+    
     
     /**
      * This method moves a chesspiece to the new square and replaces the old 
@@ -431,8 +438,117 @@ public class Game {
         }
     }
     
-    public void addCastling(Piece king, int y, int x) {
-        
+    public void checkWhiteCastling() {
+        castling[4] = true;
+        castling[5] = true;
+        if (castling[0] == false) {
+            castling[4] = false;
+        }
+        if (castling[1] == false) {
+            castling[5] = false;
+        }
+        if (castling[4] == false & castling[5] == false) {
+            return;
+        }
+        if (currentBoard[0][1].getType() != Type.EMPTY || currentBoard[0][2].getType() != Type.EMPTY || currentBoard[0][3].getType() != Type.EMPTY) {
+            castling[4] = false;
+        }
+        if (currentBoard[0][5].getType() != Type.EMPTY || currentBoard[0][6].getType() == Type.EMPTY) {
+            castling[5] = false;
+        }
+        if (castling[4] == false & castling[5] == false) {
+            return;
+        }
+        addAllLegalMoves(Side.BLACK);
+        for (Piece[][] move : legalMoves) {
+            if (move[0][2].getType() != Type.EMPTY || move[0][3].getType() != Type.EMPTY || move[0][4].getType() != Type.KING) {
+                castling[4] = false;
+            }
+            if (move[0][4].getType() != Type.KING || move[0][5].getType() != Type.EMPTY || move[0][6].getType() != Type.EMPTY) {
+                castling[5] = false;
+            }
+            if (castling[4] == false && castling[5] == false) {
+                break;
+            }
+        }
+    }       
+    
+    public void checkBlackCastling() {
+        if (castling[2] == false) {
+            castling[6] = false;
+        }
+        if (castling[3] == false) {
+            castling[7] = false;
+        }
+        if (castling[6] == false & castling[7] == false) {
+            return;
+        }
+        if (currentBoard[7][1].getType() == Type.EMPTY && currentBoard[7][2].getType() == Type.EMPTY && currentBoard[7][3].getType() == Type.EMPTY) {
+            castling[6] = true;
+        }
+        if (currentBoard[7][5].getType() == Type.EMPTY && currentBoard[7][6].getType() == Type.EMPTY) {
+            castling[7] = true;
+        }
+        if (castling[6] == false & castling[7] == false) {
+            return;
+        }
+        addAllLegalMoves(Side.WHITE);
+        for (Piece[][] move : legalMoves) {
+            if (move[7][2].getType() != Type.EMPTY || move[7][3].getType() != Type.EMPTY || move[7][4].getType() != Type.KING) {
+                castling[6] = false;
+            }
+            if (move[7][4].getType() != Type.KING || move[7][5].getType() != Type.EMPTY || move[7][6].getType() != Type.EMPTY) {
+                castling[7] = false;
+            }
+            if (castling[6] == false && castling[7] == false) {
+                break;
+            }
+        }
+    }       
+    
+    public void addWhiteCastling(Piece whiteKing, int y, int x) {
+        if (castling[4] == false && castling[5] == false) {
+            return;
+        }
+        if (castling[4]) {
+            Piece[][] newBoard = copyCurrentBoard();
+            movePiece(newBoard, y, x, y, x - 2);
+            movePiece(newBoard, y, 0, y, 3);
+            legalMoves.add(newBoard);
+        }
+        if (castling[5]) {
+            Piece[][] newBoard = copyCurrentBoard();
+            movePiece(newBoard, y, x, y, x + 2);
+            movePiece(newBoard, y, 7, y, 5);
+            legalMoves.add(newBoard);
+        }
+    }
+    
+    public void addBlackCastling(Piece blackKing, int y, int x) {
+        if (castling[6] == false && castling[7] == false) {
+            return;
+        }
+        if (castling[6]) {
+            Piece[][] newBoard = copyCurrentBoard();
+            movePiece(newBoard, y, x, y, x - 2);
+            movePiece(newBoard, y, 0, y, 3);
+            legalMoves.add(newBoard);
+        }
+        if (castling[5]) {
+            Piece[][] newBoard = copyCurrentBoard();
+            movePiece(newBoard, y, x, y, x + 2);
+            movePiece(newBoard, y, 7, y, 5);
+            legalMoves.add(newBoard);
+        }
+    }
+    
+    public void addAllKingMoves(Piece king, int y, int x) {
+        addRegularKingMoves(king, y, x);
+        if (king.getSide() == Side.WHITE) {
+            addWhiteCastling(king, y, x);
+        } else {
+            addBlackCastling(king, y, x);
+        }
     }
     
     /**
@@ -475,7 +591,7 @@ public class Game {
                 } else if (piece.getType() == Type.QUEEN) {
                     addQueenMoves(piece, y, x);
                 } else if (piece.getType() == Type.KING) {
-                    addRegularKingMoves(piece, y, x);
+                    addAllKingMoves(piece, y, x);
                 }
             }
         }
@@ -495,7 +611,7 @@ public class Game {
         } else if (piece.getType() == Type.QUEEN) {
             addQueenMoves(piece, y, x);
         } else if (piece.getType() == Type.KING) {
-            addRegularKingMoves(piece, y, x);
+            addAllKingMoves(piece, y, x);
         }
         return legalMoves;
     }
