@@ -8,12 +8,10 @@ import chess.model.Side;
 public class Piece {
     private Type type;
     private Side side;
-    private boolean castlingPossible;
 
-    public Piece(Type type, Side side, boolean castlingPossible) {
+    public Piece(Type type, Side side) {
         this.type = type;
         this.side = side;
-        this.castlingPossible = castlingPossible;
     }
 
     public Piece(Type type) {
@@ -26,11 +24,5 @@ public class Piece {
 
     public Side getSide() {
         return side;
-    }
-
-    public boolean isCastlingPossible() {
-        return castlingPossible;
-    }
-    
-    
+    }    
 }
