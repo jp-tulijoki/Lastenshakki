@@ -10,8 +10,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 /**
+ * This class takes care of evaluation of board situations and selects a 
+ * suitable next move for the chess bot.
  *
- * @author tulijoki
  */
 public class MoveSelector {
     
@@ -21,6 +22,16 @@ public class MoveSelector {
         this.game = game;
     }
     
+    /**
+     * This method evaluates the given chessboard situation. The main principles
+     * for piece values and mobility bonus can be found here:
+     * https://www.chessprogramming.org/Evaluation. In addition to these, the
+     * method gives a bonus for a bishop pair and pawns close to promotion.
+     * @param board the evaluated board situation
+     * @return returns an evaluation of the given board in which positive value
+     * indicates a stronger white player and negative value a stronger black 
+     * player.
+     */
     public double evaluateBoard(Piece[][] board) {
         double whiteValue = 0;
         double blackValue = 0;
@@ -56,6 +67,15 @@ public class MoveSelector {
         return whiteValue - blackValue;
     }
     
+    /**
+     * This method counts mobility bonus used in board evaluation including
+     * special situations concerning pawn pieces (blocked, isolated, doubled and
+     * close to promotion).
+     * @param board the evaluated board situation
+     * @param y the y-coordinate of the evaluated piece
+     * @param x the x-coordinate of the evaluated piece
+     * @return returns mobility bonus as a double value
+     */
     public double countMobilityBonus(Piece[][] board, int y, int x) {
         Piece piece = board[y][x];
         double value = 0;
@@ -76,6 +96,14 @@ public class MoveSelector {
         return value;
     }
     
+    /**
+     * This method checks if a certain pawn has no adjaent friendly pieces.
+     * @param board the evaluated board situation
+     * @param y the y-coordinate of the evaluated pawn
+     * @param x the x-coordinate of the evaluated pawn
+     * @return returns false if the pawn has an adjacent frindly piece and true
+     * if not.
+     */
     public boolean checkPawnIsolation(Piece[][] board, int y, int x) {
         Piece pawn = board[y][x];
         for (int y2 = y - 1; y2 <= y + 1; y2++) {
@@ -86,7 +114,7 @@ public class MoveSelector {
                 if (y2 < 0 || y2 > 7 || x2 < 0 || x2 > 7) {
                     continue;
                 }
-                if (board[y2][x2].getType() != Type.EMPTY) {
+                if (board[y2][x2].getSide() == pawn.getSide()) {
                     return false;
                 }
             }
@@ -94,6 +122,15 @@ public class MoveSelector {
         return true;
     }
     
+    /**
+     * This method checks if there is a friendly pawn in the same file (column).
+     * To avoid double penalties, only ranks greater than the current rank
+     * are checked.
+     * @param board the evaluated board situation
+     * @param y the y-coordinate of the evaluated pawn
+     * @param x the x-coordinate of the evaluated pawn
+     * @return returns true if there are doubled pawns and otherwise false
+     */
     public boolean checkDoubledPawns(Piece[][] board, int y, int x) {
         Piece pawn = board[y][x];
         for (int y2 = y + 1; y2 <= 7; y2++) {
@@ -104,6 +141,14 @@ public class MoveSelector {
         return false;
     }
     
+    /**
+     * This method counts a bonus for pawns close to promotion.
+     * @param board the evaluated board situation
+     * @param y the y-coordinate of the evaluated pawn
+     * @param x the x-coordinate of the evaluated pawn
+     * @return returns 1 if the pawn has two steps to promotion, 2 if only one 
+     * step and otherwise 0.
+     */
     public int addCloseToPromotionBonus(Piece[][] board, int y, int x) {
         Piece pawn = board[y][x];
         if (pawn.getSide() == Side.WHITE && y == 5) {
@@ -129,6 +174,12 @@ public class MoveSelector {
         }
     }
     
+    /**
+     * This method selects the next move for the bot. (At this point, it selects
+     * a random legal move.)
+     * @param side the side of the player
+     * @return returns a move as a chessboard representation.
+     */
     public Piece[][] selectMove(Side side) {
         if (side == Side.BLACK) {
             game.checkBlackCastling();

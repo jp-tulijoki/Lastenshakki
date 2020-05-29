@@ -41,5 +41,17 @@ public class BotTest {
         assertEquals(Type.EMPTY, game.getPiece(1, 0).getType());
         assertEquals(Type.PAWN, game.getPiece(3, 0).getType());
         assertEquals(Side.WHITE, game.getPiece(3, 0).getSide());
-    }   
+        Piece whitePawn = game.getPiece(3, 0);
+        assertEquals(whitePawn, game.getEnPassant());
+    }
+    
+    @Test
+    public void enPassantIsNullIfNoTwoSquarePawnMove() {
+        Game game = bot.getGame();
+        game.initBoard();
+        bot.updateLatestMove("b1a3");
+        assertEquals(null, game.getEnPassant());
+        bot.updateLatestMove("d2d3");
+        assertEquals(null, game.getEnPassant());
+    }
 }

@@ -6,13 +6,25 @@ import java.util.ArrayList;
 /**
  * This class contains the main functionalities of the chessboard such as moving
  * the pieces according to the rules. This class keeps track of the current
- * piece locations on the chessboard and a list of legal moves.
+ * piece locations on the chessboard and castling and en passant status.
  */
 public class Game {
     private Piece[][] currentBoard;
     private Piece enPassant;
     private boolean[] castling;
 
+    /**
+     * The constructor. The chessboard is represented as a 8*8 two-dimensional
+     * array. The boolean array for castling contains following values:
+     * 0 = white queenside castling possible in the current game
+     * 1 = white kingside castling possible in the current game
+     * 2 = black queenside castling possible in the current game
+     * 3 = black kingside castling possible in the current game
+     * 4 = white queenside castling possible in the current turn
+     * 5 = white kingside castling possible in the current turn
+     * 6 = black queenside castling possible in the current turn
+     * 7 = black kingside castling possible in the current turn
+     */
     public Game() {
         this.currentBoard = new Piece[8][8];
         this.castling = new boolean[]{true, true, true, true, true, true, true, true};
@@ -78,10 +90,6 @@ public class Game {
     public Piece getEnPassant() {
         return enPassant;
     }
-    
-    public void nullifyEnPassant() {
-        this.enPassant = null;
-    }
 
     public boolean[] getCastling() {
         return castling;
@@ -103,8 +111,9 @@ public class Game {
     }
     
     /**
-     * This method adds a regular one step pawn move to the legal moves list if 
+     * This method adds a regular one step pawn move to the moves list if 
      * it's possible.
+     * @param moves the list the move is added to
      * @param pawn the specified pawn piece
      * @param y the y-coordinate of the current location of the pawn piece
      * @param x the x-coordinate of the current location of the pawn piece
@@ -124,8 +133,9 @@ public class Game {
     }
     
     /**
-     * This method adds a two step pawn move to the legal moves list if 
+     * This method adds a two step pawn move to the moves list if 
      * it's possible.
+     * @param moves the list the move is added to
      * @param pawn the specified pawn piece
      * @param y the y-coordinate of the current location of the pawn piece
      * @param x the x-coordinate of the current location of the pawn piece
@@ -137,15 +147,15 @@ public class Game {
         if (pawn.getSide() == Side.BLACK && y != 6) {
             return;
         }
-        if (pawn.getSide() == Side.WHITE && currentBoard[y + 1][x].getType() == 
-                Type.EMPTY && currentBoard[y + 2][x].getType() == Type.EMPTY) {
+        if (pawn.getSide() == Side.WHITE && currentBoard[y + 1][x].getType() 
+                == Type.EMPTY && currentBoard[y + 2][x].getType() == Type.EMPTY) {
             Piece[][] newBoard = copyCurrentBoard();
             movePiece(newBoard, y, x, y + 2, x);
             moves.add(newBoard);
             return;
         }
-        if (pawn.getSide() == Side.BLACK && currentBoard[y - 1][x].getType() == 
-                Type.EMPTY && currentBoard[y - 2][x].getType() == Type.EMPTY) {
+        if (pawn.getSide() == Side.BLACK && currentBoard[y - 1][x].getType() 
+                == Type.EMPTY && currentBoard[y - 2][x].getType() == Type.EMPTY) {
             Piece[][] newBoard = copyCurrentBoard();
             movePiece(newBoard, y, x, y - 2, x);
             moves.add(newBoard);
@@ -153,7 +163,8 @@ public class Game {
     }
     
     /**
-     * This method adds a pawn attack to the legal moves list if it's possible.
+     * This method adds pawn attacks to the moves list if it's possible.
+     * @param moves the list the moves are added to
      * @param pawn the specified pawn piece
      * @param y the y-coordinate of the current location of the pawn piece
      * @param x the x-coordinate of the current location of the pawn piece
@@ -185,6 +196,13 @@ public class Game {
         }
     }
     
+    /**
+     * This method adds enPassant to the moves list if it's possible.
+     * @param moves the list the move is added to
+     * @param pawn the specified pawn piece
+     * @param y the y-coordinate of the current location of the pawn piece
+     * @param x the x-coordinate of the current location of the pawn piece
+     */
     public void addEnPassant(ArrayList<Piece[][]> moves, Piece pawn, int y, int x) {
         if (x > 0) {
             if (currentBoard[y][x - 1] == enPassant) {
@@ -220,6 +238,13 @@ public class Game {
         }
     }
     
+    /**
+     * This method calls all pawn move methods to add all different pawn moves.
+     * @param moves the list the moves are added to
+     * @param pawn the specified pawn piece
+     * @param y the y-coordinate of the current location of the pawn piece
+     * @param x the x-coordinate of the current location of the pawn piece
+     */
     public void addAllPawnMoves(ArrayList<Piece[][]> moves, Piece pawn, int y, int x) {
         addRegularPawnMove(moves, pawn, y, x);
         addTwoStepPawnMove(moves, pawn, y, x);
@@ -228,8 +253,9 @@ public class Game {
     }
     
     /**
-     * This method adds all possible moves of a certain knight to legal moves
+     * This method adds all possible moves of a certain knight to moves
      * list.
+     * @param moves the list the moves are added to
      * @param knight the specified knight piece
      * @param y the y-coordinate of the current location of the knight piece
      * @param x the x-coordinate of the current location of the knight piece
@@ -254,7 +280,8 @@ public class Game {
     }
     
     /**
-     * This method adds all possible moves of a certain rook to legal moves list
+     * This method adds all possible moves of a certain rook to moves list
+     * @param moves the list the moves are added to
      * @param rook the specified rook piece
      * @param y the y-coordinate of the current location of the rook piece
      * @param x the x-coordinate of the current location of the rook piece
@@ -319,8 +346,9 @@ public class Game {
     }
     
     /**
-     * This method adds all possible moves of a certain bishop to legal moves
+     * This method adds all possible moves of a certain bishop to moves
      * list.
+     * @param moves the list the moves are added to
      * @param bishop the specified bishop
      * @param y the y-coordinate of the current location of the bishop
      * @param x the x-coordinate of the current location of the bishop
@@ -394,8 +422,9 @@ public class Game {
     }
     
     /**
-     * This method adds all possible moves of a certain queen to legal 
-     * moves list by combining the moves of the rook and the bishop piece.
+     * This method adds all possible moves of a certain queen to moves 
+     * list by combining the moves of the rook and the bishop piece.
+     * @param moves the list the moves are added to
      * @param queen the specified queen
      * @param y the y-coordinate of the current location of the queen
      * @param x the x-coordinate of the current location of the queen
@@ -406,8 +435,9 @@ public class Game {
     }
     
     /**
-     * This method adds all possible moves of a certain king to legal moves 
+     * This method adds all possible moves of a certain king to moves 
      * list.
+     * @param moves the list the moves are added to
      * @param king the specified king
      * @param y the y-coordinate of the current location of the king
      * @param x the x-coordinate of the current location of the king
@@ -431,6 +461,10 @@ public class Game {
         }
     }
     
+    /**
+     * This method updates the castling boolean array values for the white 
+     * player. See constructor for value clarifications.
+     */
     public void checkWhiteCastling() {
         if (!(currentBoard[0][4].getType() == Type.KING && currentBoard[0][4].getSide() == Side.WHITE)) {
             castling[0] = false;
@@ -445,38 +479,45 @@ public class Game {
         }
         castling[4] = true;
         castling[5] = true;
-        if (castling[0] == false) {
+        if (!castling[0]) {
             castling[4] = false;
         }
-        if (castling[1] == false) {
+        if (!castling[1]) {
             castling[5] = false;
         }
-        if (castling[4] == false & castling[5] == false) {
+        if (!castling[4] && !castling[5]) {
             return;
         }
-        if (currentBoard[0][1].getType() != Type.EMPTY || currentBoard[0][2].getType() != Type.EMPTY || currentBoard[0][3].getType() != Type.EMPTY) {
+        if (currentBoard[0][1].getType() != Type.EMPTY || currentBoard[0][2].getType() 
+                != Type.EMPTY || currentBoard[0][3].getType() != Type.EMPTY) {
             castling[4] = false;
         }
         if (currentBoard[0][5].getType() != Type.EMPTY || currentBoard[0][6].getType() == Type.EMPTY) {
             castling[5] = false;
         }
-        if (castling[4] == false & castling[5] == false) {
+        if (!castling[4] && !castling[5]) {
             return;
         }
         ArrayList<Piece[][]> moves = addAllLegalMoves(Side.BLACK);
         for (Piece[][] move : moves) {
-            if (move[0][2].getType() != Type.EMPTY || move[0][3].getType() != Type.EMPTY || move[0][4].getType() != Type.KING) {
+            if (move[0][2].getType() != Type.EMPTY || move[0][3].getType() 
+                    != Type.EMPTY || move[0][4].getType() != Type.KING) {
                 castling[4] = false;
             }
-            if (move[0][4].getType() != Type.KING || move[0][5].getType() != Type.EMPTY || move[0][6].getType() != Type.EMPTY) {
+            if (move[0][4].getType() != Type.KING || move[0][5].getType() 
+                    != Type.EMPTY || move[0][6].getType() != Type.EMPTY) {
                 castling[5] = false;
             }
-            if (castling[4] == false && castling[5] == false) {
+            if (!castling[4] && !castling[5]) {
                 break;
             }
         }
     }       
     
+    /**
+     * This method updates the castling boolean array values for the black 
+     * player. See constructor for value clarifications.
+     */
     public void checkBlackCastling() {
         if (!(currentBoard[7][4].getType() == Type.KING && currentBoard[7][4].getSide() == Side.BLACK)) {
             castling[2] = false;
@@ -491,31 +532,41 @@ public class Game {
         }
         castling[6] = true;
         castling[7] = true;
-        if (castling[2] == false) {
+        if (!castling[2]) {
             castling[6] = false;
         }
-        if (castling[3] == false) {
+        if (!castling[3]) {
             castling[7] = false;
         }
-        if (castling[6] == false & castling[7] == false) {
+        if (!castling[6] && !castling[7]) {
             return;
         }
         ArrayList<Piece[][]> moves = addAllLegalMoves(Side.WHITE);
         for (Piece[][] move : moves) {
-            if (move[7][2].getType() != Type.EMPTY || move[7][3].getType() != Type.EMPTY || move[7][4].getType() != Type.KING) {
+            if (move[7][2].getType() != Type.EMPTY || move[7][3].getType() 
+                    != Type.EMPTY || move[7][4].getType() != Type.KING) {
                 castling[6] = false;
             }
-            if (move[7][4].getType() != Type.KING || move[7][5].getType() != Type.EMPTY || move[7][6].getType() != Type.EMPTY) {
+            if (move[7][4].getType() != Type.KING || move[7][5].getType() 
+                    != Type.EMPTY || move[7][6].getType() != Type.EMPTY) {
                 castling[7] = false;
             }
-            if (castling[6] == false && castling[7] == false) {
+            if (!castling[6] && !castling[7]) {
                 break;
             }
         }
     }       
     
+    /**
+     * This method adds castling moves for white player to the moves list if
+     * it's possible
+     * @param moves the list the moves are added to
+     * @param whiteKing the white king
+     * @param y the y-coordinate of the current location of the king
+     * @param x the x-coordinate of the current location of the king
+     */
     public void addWhiteCastling(ArrayList<Piece[][]> moves, Piece whiteKing, int y, int x) {
-        if (castling[4] == false && castling[5] == false) {
+        if (!castling[4] && !castling[5]) {
             return;
         }
         if (castling[4]) {
@@ -532,8 +583,16 @@ public class Game {
         }
     }
     
+    /**
+     * This method adds castling moves for black player to the moves list if
+     * it's possible
+     * @param moves the list the moves are added to
+     * @param blackKing the black king
+     * @param y the y-coordinate of the current location of the king
+     * @param x the x-coordinate of the current location of the king
+     */
     public void addBlackCastling(ArrayList<Piece[][]> moves, Piece blackKing, int y, int x) {
-        if (castling[6] == false && castling[7] == false) {
+        if (!castling[6] && !castling[7]) {
             return;
         }
         if (castling[6]) {
@@ -550,6 +609,14 @@ public class Game {
         }
     }
     
+    /**
+     * This method calls both king move method to add all king moves to the 
+     * moves list
+     * @param moves the list the moves are added to
+     * @param king the specified king
+     * @param y the y-coordinate of the current location of the king
+     * @param x the x-coordinate of the current location of the king
+     */
     public void addAllKingMoves(ArrayList<Piece[][]> moves, Piece king, int y, int x) {
         addRegularKingMoves(moves, king, y, x);
         if (king.getSide() == Side.WHITE) {
@@ -571,8 +638,8 @@ public class Game {
         boolean dead = true;
         for (int y = 0; y <= 7; y++) {
             for (int x = 0; x <= 7; x++) {
-                if (board[y][x].getSide() == side && 
-                        board[y][x].getType() == Type.KING) {
+                if (board[y][x].getSide() == side 
+                        && board[y][x].getType() == Type.KING) {
                     dead = false;
                 }
             }
@@ -580,10 +647,17 @@ public class Game {
         return dead;
     }
     
+    /**
+     * This method adds all moves of the specified player to the moves list.
+     * @param side the side of the player
+     * @return returns a list of moves which are legal for an individual piece,
+     * but legality concerning the entire game situation, e.g. check is not 
+     * controlled.
+     */
     public ArrayList<Piece[][]> addAllLegalMoves(Side side) {
         ArrayList<Piece[][]> moves = new ArrayList();
         for (int y = 0; y <= 7; y++) {
-            for (int x = 0; x <=7; x++) {
+            for (int x = 0; x <= 7; x++) {
                 Piece piece = currentBoard[y][x];
                 if (piece.getSide() != side) {
                     continue;
@@ -606,6 +680,15 @@ public class Game {
         return moves;
     }
     
+    /**
+     * This method returns all moves of a specified piece.
+     * @param board the board in which the moves are made
+     * @param y the current y-coordinate of the specified piece
+     * @param x the current y-coordinate of the specified piece
+     * @return returns a list of moves which are legal for the specified piece,
+     * but legality concerning the entire game situation, e.g. check is not 
+     * controlled.
+     */
     public ArrayList<Piece[][]> getOnePieceMoves(Piece[][] board, int y, int x) {
         ArrayList<Piece[][]> moves = new ArrayList();
         Piece piece = board[y][x];
@@ -624,5 +707,4 @@ public class Game {
         }
         return moves;
     }
-    
 }
