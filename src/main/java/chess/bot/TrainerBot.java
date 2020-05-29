@@ -3,28 +3,29 @@ package chess.bot;
 import chess.engine.GameState;
 import chess.model.Side;
 import datastructureproject.*;
-import java.util.ArrayList;
-import java.util.Random;
 
 public class TrainerBot implements ChessBot {
     
     private Game game;
-    
-    private Random r;
+    private MoveSelector ms;
 
     public TrainerBot() {
         this.game = new Game();
+        this.ms = new MoveSelector(game);
         game.initBoard();
-        this.r = new Random();
     }
 
     public Game getGame() {
         return game;
     }
     
-    public String parseMove(Piece[][] currentBoard, Piece[][] newBoard) {
+    public String parseMove(Side side, Piece[][] currentBoard, Piece[][] newBoard) {
         String start = "";
         String end = "";
+        String move = parseCastling(side, currentBoard, newBoard);
+        if (!move.isEmpty()) {
+            return move;
+        }
         for (int y = 0; y <= 7; y++) {
             for (int x = 0; x <= 7; x++) {
                 Piece currentBoardPiece = currentBoard[y][x];
@@ -34,12 +35,34 @@ public class TrainerBot implements ChessBot {
                         start += (char)(x + 97) + String.valueOf(y + 1);
                     } else {
                         end += (char)(x + 97) + String.valueOf(y + 1);
+                        if ((y == 0 || y == 7) && newBoardPiece.getType() == Type.PAWN) {
+                            end += 'q';
+                        }
                     }
                 }
             }
         }
-        String move = start + end;
+        move = start + end;
         return move;
+    }
+    
+    public String parseCastling(Side side, Piece[][] currentBoard, Piece[][] newBoard) {
+        if (side == Side.WHITE) {
+            if (currentBoard[0][4].getType() == Type.KING && currentBoard[0][4].getSide() == Side.WHITE && newBoard[0][2].getType() == Type.KING && newBoard[0][2].getSide() == Side.WHITE) {
+                return "e1c1";
+            }
+            if (currentBoard[0][4].getType() == Type.KING && currentBoard[0][4].getSide() == Side.WHITE && newBoard[0][6].getType() == Type.KING && newBoard[0][6].getSide() == Side.WHITE) {
+                return "e1g1";
+            }
+        } else {
+            if (currentBoard[7][4].getType() == Type.KING && currentBoard[7][4].getSide() == Side.BLACK && newBoard[7][2].getType() == Type.KING && newBoard[7][2].getSide() == Side.BLACK) {
+                return "e8c8";
+            }
+            if (currentBoard[7][4].getType() == Type.KING && currentBoard[7][4].getSide() == Side.BLACK && newBoard[7][6].getType() == Type.KING && newBoard[7][6].getSide() == Side.BLACK) {
+                return "e8g18";
+            }
+        }
+        return "";
     }
     
     @Override
@@ -49,10 +72,8 @@ public class TrainerBot implements ChessBot {
             updateLatestMove(latestMove);
         }
         if (gamestate.playing == Side.BLACK) {
-            ArrayList<Piece[][]> moves = game.addAllLegalMoves(Side.BLACK);
-            int random = r.nextInt(moves.size());
-            Piece[][] newBoard = moves.get(random);
-            String move = parseMove(game.getCurrentBoard(), newBoard);
+            Piece[][] newBoard = ms.selectMove(Side.BLACK);
+            String move = parseMove(Side.BLACK, game.getCurrentBoard(), newBoard);
             updateLatestMove(move);
             return move;
         }

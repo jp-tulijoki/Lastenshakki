@@ -28,7 +28,7 @@ public class BotTest {
         Piece[][] currentBoard = game.getCurrentBoard();
         Piece[][] newBoard = game.copyCurrentBoard();
         game.movePiece(newBoard, 1, 0, 3, 0);
-        String move = bot.parseMove(currentBoard, newBoard);
+        String move = bot.parseMove(Side.WHITE, currentBoard, newBoard);
         assertEquals("a2a4", move);
     }
     

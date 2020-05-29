@@ -129,5 +129,35 @@ public class MoveSelector {
         }
     }
     
+    public Piece[][] selectMove(Side side) {
+        if (side == Side.BLACK) {
+            game.checkBlackCastling();
+        } else {
+            game.checkWhiteCastling();
+        }
+        ArrayList<Piece[][]> moves = game.addAllLegalMoves(side);
+        Collections.shuffle(moves);
+        Piece[][] currentBoard = game.copyCurrentBoard();
+        Piece[][] selectedMove = null;
+        
+        for (Piece[][] move : moves) {
+            boolean illegalMove = false;
+            game.setCurrentBoard(move);
+            ArrayList<Piece[][]> oppositeMoves = game.addAllLegalMoves(getOppositeSide(side));
+            for (Piece[][] oppositeMove : oppositeMoves) {
+                if (game.isKingDead(oppositeMove, side)) {
+                    illegalMove = true;
+                    break;
+                }
+            }
+            if (illegalMove) {
+                continue;
+            } else {
+                selectedMove = move;
+            }
+        }
+        game.setCurrentBoard(currentBoard);
+        return selectedMove;
+    }
 
 }
