@@ -21,8 +21,6 @@ public class TrainerBot implements ChessBot {
     public Game getGame() {
         return game;
     }
-
-    
     
     public String parseMove(Piece[][] currentBoard, Piece[][] newBoard) {
         String start = "";
@@ -51,10 +49,9 @@ public class TrainerBot implements ChessBot {
             updateLatestMove(latestMove);
         }
         if (gamestate.playing == Side.BLACK) {
-            game.addAllLegalMoves(Side.BLACK);
-            ArrayList<Piece[][]> legalMoves = game.getLegalMoves();
-            int random = r.nextInt(legalMoves.size());
-            Piece[][] newBoard = legalMoves.get(random);
+            ArrayList<Piece[][]> moves = game.addAllLegalMoves(Side.BLACK);
+            int random = r.nextInt(moves.size());
+            Piece[][] newBoard = moves.get(random);
             String move = parseMove(game.getCurrentBoard(), newBoard);
             updateLatestMove(move);
             return move;

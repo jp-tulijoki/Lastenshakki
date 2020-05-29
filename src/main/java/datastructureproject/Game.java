@@ -10,13 +10,11 @@ import java.util.ArrayList;
  */
 public class Game {
     private Piece[][] currentBoard;
-    private ArrayList<Piece[][]> legalMoves;
     private Piece enPassant;
     private boolean[] castling;
 
     public Game() {
         this.currentBoard = new Piece[8][8];
-        this.legalMoves = new ArrayList();
         this.castling = new boolean[]{true, true, true, true, true, true, true, true};
     }
     
@@ -55,10 +53,6 @@ public class Game {
         return currentBoard[y][x];
     }
 
-    public ArrayList<Piece[][]> getLegalMoves() {
-        return legalMoves;
-    }
-
     public Piece[][] getCurrentBoard() {
         return currentBoard;
     }
@@ -93,7 +87,6 @@ public class Game {
         return castling;
     }
     
-    
     /**
      * This method moves a chesspiece to the new square and replaces the old 
      * location with empty square.
@@ -116,17 +109,17 @@ public class Game {
      * @param y the y-coordinate of the current location of the pawn piece
      * @param x the x-coordinate of the current location of the pawn piece
      */
-    public void addRegularPawnMove(Piece pawn, int y, int x) {           
+    public void addRegularPawnMove(ArrayList<Piece[][]> moves, Piece pawn, int y, int x) {           
         if (pawn.getSide() == Side.WHITE && currentBoard[y + 1][x].getType() == Type.EMPTY) {
             Piece[][] newBoard = copyCurrentBoard();
             movePiece(newBoard, y, x, y + 1, x);
-            legalMoves.add(newBoard);
+            moves.add(newBoard);
             return;
         }
         if (pawn.getSide() == Side.BLACK && currentBoard[y - 1][x].getType() == Type.EMPTY) {
             Piece[][] newBoard = copyCurrentBoard();
             movePiece(newBoard, y, x, y - 1, x);
-            legalMoves.add(newBoard);
+            moves.add(newBoard);
         }
     }
     
@@ -137,7 +130,7 @@ public class Game {
      * @param y the y-coordinate of the current location of the pawn piece
      * @param x the x-coordinate of the current location of the pawn piece
      */
-    public void addTwoStepPawnMove(Piece pawn, int y, int x) {
+    public void addTwoStepPawnMove(ArrayList<Piece[][]> moves, Piece pawn, int y, int x) {
         if (pawn.getSide() == Side.WHITE && y != 1) {
             return;
         }
@@ -148,14 +141,14 @@ public class Game {
                 Type.EMPTY && currentBoard[y + 2][x].getType() == Type.EMPTY) {
             Piece[][] newBoard = copyCurrentBoard();
             movePiece(newBoard, y, x, y + 2, x);
-            legalMoves.add(newBoard);
+            moves.add(newBoard);
             return;
         }
         if (pawn.getSide() == Side.BLACK && currentBoard[y - 1][x].getType() == 
                 Type.EMPTY && currentBoard[y - 2][x].getType() == Type.EMPTY) {
             Piece[][] newBoard = copyCurrentBoard();
             movePiece(newBoard, y, x, y - 2, x);
-            legalMoves.add(newBoard);
+            moves.add(newBoard);
         }
     }
     
@@ -165,46 +158,46 @@ public class Game {
      * @param y the y-coordinate of the current location of the pawn piece
      * @param x the x-coordinate of the current location of the pawn piece
      */
-    public void addPawnAttack(Piece pawn, int y, int x) {
+    public void addPawnAttack(ArrayList<Piece[][]> moves, Piece pawn, int y, int x) {
         if (x != 0) {
             if (pawn.getSide() == Side.WHITE && currentBoard[y + 1][x - 1].getSide() == Side.BLACK) {
                 Piece[][] newBoard = copyCurrentBoard();
                 movePiece(newBoard, y, x, y + 1, x - 1);
-                legalMoves.add(newBoard);
+                moves.add(newBoard);
             }
             if (pawn.getSide() == Side.BLACK && currentBoard[y - 1][x - 1].getSide() == Side.WHITE) {
                 Piece[][] newBoard = copyCurrentBoard();
                 movePiece(newBoard, y, x, y - 1, x - 1);
-                legalMoves.add(newBoard);
+                moves.add(newBoard);
             }
         }
         if (x != 7) {
             if (pawn.getSide() == Side.WHITE && currentBoard[y + 1][x + 1].getSide() == Side.BLACK) {
                 Piece[][] newBoard = copyCurrentBoard();
                 movePiece(newBoard, y, x, y + 1, x + 1);
-                legalMoves.add(newBoard);
+                moves.add(newBoard);
             }
             if (pawn.getSide() == Side.BLACK && currentBoard[y - 1][x + 1].getSide() == Side.WHITE) {
                 Piece[][] newBoard = copyCurrentBoard();
                 movePiece(newBoard, y, x, y - 1, x + 1);
-                legalMoves.add(newBoard);
+                moves.add(newBoard);
             }
         }
     }
     
-    public void addEnPassant(Piece pawn, int y, int x) {
+    public void addEnPassant(ArrayList<Piece[][]> moves, Piece pawn, int y, int x) {
         if (x > 0) {
             if (currentBoard[y][x - 1] == enPassant) {
                 if (pawn.getSide() == Side.WHITE) {
                     Piece[][] newBoard = copyCurrentBoard();
                     movePiece(newBoard, y, x, y + 1, x - 1);
                     newBoard[y][x - 1] = new Piece(Type.EMPTY);
-                    legalMoves.add(newBoard);
+                    moves.add(newBoard);
                 } else {
                     Piece[][] newBoard = copyCurrentBoard();
                     movePiece(newBoard, y, x, y - 1, x - 1);
                     newBoard[y][x - 1] = new Piece(Type.EMPTY);
-                    legalMoves.add(newBoard);
+                    moves.add(newBoard);
                 }
                 return;
             }
@@ -216,22 +209,22 @@ public class Game {
                     Piece[][] newBoard = copyCurrentBoard();
                     movePiece(newBoard, y, x, y + 1, x + 1);
                     newBoard[y][x + 1] = new Piece(Type.EMPTY);
-                    legalMoves.add(newBoard);
+                    moves.add(newBoard);
                 } else {
                     Piece[][] newBoard = copyCurrentBoard();
                     movePiece(newBoard, y, x, y - 1, x + 1);
                     newBoard[y][x + 1] = new Piece(Type.EMPTY);
-                    legalMoves.add(newBoard);
+                    moves.add(newBoard);
                 }
             }
         }
     }
     
-    public void addAllPawnMoves(Piece pawn, int y, int x) {
-        addRegularPawnMove(pawn, y, x);
-        addTwoStepPawnMove(pawn, y, x);
-        addPawnAttack(pawn, y, x);
-        addEnPassant(pawn, y, x);
+    public void addAllPawnMoves(ArrayList<Piece[][]> moves, Piece pawn, int y, int x) {
+        addRegularPawnMove(moves, pawn, y, x);
+        addTwoStepPawnMove(moves, pawn, y, x);
+        addPawnAttack(moves, pawn, y, x);
+        addEnPassant(moves, pawn, y, x);
     }
     
     /**
@@ -241,7 +234,7 @@ public class Game {
      * @param y the y-coordinate of the current location of the knight piece
      * @param x the x-coordinate of the current location of the knight piece
      */
-    public void addKnightMoves(Piece knight, int y, int x) {
+    public void addKnightMoves(ArrayList<Piece[][]> moves, Piece knight, int y, int x) {
         int[][] knightMoves = {{2, 2, 1, 1, -1, -1, -2, -2},
             {1, -1, 2, -2, 2, -2, 1, -1}};
         for (int i = 0; i < knightMoves[0].length; i++) {
@@ -255,7 +248,7 @@ public class Game {
             if (knight.getSide() != currentBoard[newY][newX].getSide()) {
                 Piece[][] newBoard = copyCurrentBoard();
                 movePiece(newBoard, y, x, newY, newX);
-                legalMoves.add(newBoard);
+                moves.add(newBoard);
             }
         }
     }
@@ -266,7 +259,7 @@ public class Game {
      * @param y the y-coordinate of the current location of the rook piece
      * @param x the x-coordinate of the current location of the rook piece
      */
-    public void addRookMoves(Piece rook, int y, int x) {
+    public void addRookMoves(ArrayList<Piece[][]> moves, Piece rook, int y, int x) {
         int up = y + 1;
         int down = y - 1;
         int right = x + 1;
@@ -278,7 +271,7 @@ public class Game {
             }
             Piece[][] newBoard = copyCurrentBoard();
             movePiece(newBoard, y, x, up, x);
-            legalMoves.add(newBoard);
+            moves.add(newBoard);
             if (currentBoard[up][x].getSide() != null) {
                 break;
             }
@@ -291,7 +284,7 @@ public class Game {
             }
             Piece[][] newBoard = copyCurrentBoard();
             movePiece(newBoard, y, x, down, x);
-            legalMoves.add(newBoard);
+            moves.add(newBoard);
             if (currentBoard[down][x].getSide() != null) {
                 break;
             }
@@ -304,7 +297,7 @@ public class Game {
             }
             Piece[][] newBoard = copyCurrentBoard();
             movePiece(newBoard, y, x, y, right);
-            legalMoves.add(newBoard);
+            moves.add(newBoard);
             if (currentBoard[y][right].getSide() != null) {
                 break;
             }
@@ -317,7 +310,7 @@ public class Game {
             }
             Piece[][] newBoard = copyCurrentBoard();
             movePiece(newBoard, y, x, y, left);
-            legalMoves.add(newBoard);
+            moves.add(newBoard);
             if (currentBoard[y][left].getSide() != null) {
                 break;
             }
@@ -332,7 +325,7 @@ public class Game {
      * @param y the y-coordinate of the current location of the bishop
      * @param x the x-coordinate of the current location of the bishop
      */
-    public void addBishopMoves(Piece bishop, int y, int x) {
+    public void addBishopMoves(ArrayList<Piece[][]> moves, Piece bishop, int y, int x) {
         int up = y + 1;
         int down = y - 1;
         int right = x + 1;
@@ -344,7 +337,7 @@ public class Game {
             }
             Piece[][] newBoard = copyCurrentBoard();
             movePiece(newBoard, y, x, up, right);
-            legalMoves.add(newBoard);
+            moves.add(newBoard);
             if (currentBoard[up][right].getSide() != null) {
                 break;
             }
@@ -360,7 +353,7 @@ public class Game {
             }
             Piece[][] newBoard = copyCurrentBoard();
             movePiece(newBoard, y, x, down, right);
-            legalMoves.add(newBoard);
+            moves.add(newBoard);
             if (currentBoard[down][right].getSide() != null) {
                 break;
             }
@@ -376,7 +369,7 @@ public class Game {
             }
             Piece[][] newBoard = copyCurrentBoard();
             movePiece(newBoard, y, x, up, left);
-            legalMoves.add(newBoard);
+            moves.add(newBoard);
             if (currentBoard[up][left].getSide() != null) {
                 break;
             }
@@ -391,7 +384,7 @@ public class Game {
             }
             Piece[][] newBoard = copyCurrentBoard();
             movePiece(newBoard, y, x, down, left);
-            legalMoves.add(newBoard);
+            moves.add(newBoard);
             if (currentBoard[down][left].getSide() != null) {
                 break;
             }
@@ -407,9 +400,9 @@ public class Game {
      * @param y the y-coordinate of the current location of the queen
      * @param x the x-coordinate of the current location of the queen
      */
-    public void addQueenMoves(Piece queen, int y, int x) {
-        addRookMoves(queen, y, x);
-        addBishopMoves(queen, y, x);
+    public void addQueenMoves(ArrayList<Piece[][]> moves, Piece queen, int y, int x) {
+        addRookMoves(moves, queen, y, x);
+        addBishopMoves(moves, queen, y, x);
     }
     
     /**
@@ -419,7 +412,7 @@ public class Game {
      * @param y the y-coordinate of the current location of the king
      * @param x the x-coordinate of the current location of the king
      */
-    public void addRegularKingMoves(Piece king, int y, int x) {
+    public void addRegularKingMoves(ArrayList<Piece[][]> moves, Piece king, int y, int x) {
         for (int newY = y - 1; newY <= y + 1; newY++) {
             for (int newX = x - 1; newX <= x + 1; newX++) {
                 if (newY == y && newX == x) {
@@ -433,12 +426,23 @@ public class Game {
                 }
                 Piece[][] newBoard = copyCurrentBoard();
                 movePiece(newBoard, y, x, newY, newX);
-                legalMoves.add(newBoard);
+                moves.add(newBoard);
             }
         }
     }
     
     public void checkWhiteCastling() {
+        if (!(currentBoard[0][4].getType() == Type.KING && currentBoard[0][4].getSide() == Side.WHITE)) {
+            castling[0] = false;
+            castling[1] = false;
+            return;
+        }
+        if (!(currentBoard[0][0].getType() == Type.ROOK && currentBoard[0][0].getSide() == Side.WHITE)) {
+            castling[0] = false;
+        }
+        if (!(currentBoard[0][7].getType() == Type.ROOK && currentBoard[0][7].getSide() == Side.WHITE)) {
+            castling[1] = false;
+        }
         castling[4] = true;
         castling[5] = true;
         if (castling[0] == false) {
@@ -459,8 +463,8 @@ public class Game {
         if (castling[4] == false & castling[5] == false) {
             return;
         }
-        addAllLegalMoves(Side.BLACK);
-        for (Piece[][] move : legalMoves) {
+        ArrayList<Piece[][]> moves = addAllLegalMoves(Side.BLACK);
+        for (Piece[][] move : moves) {
             if (move[0][2].getType() != Type.EMPTY || move[0][3].getType() != Type.EMPTY || move[0][4].getType() != Type.KING) {
                 castling[4] = false;
             }
@@ -474,6 +478,19 @@ public class Game {
     }       
     
     public void checkBlackCastling() {
+        if (!(currentBoard[7][4].getType() == Type.KING && currentBoard[7][4].getSide() == Side.BLACK)) {
+            castling[2] = false;
+            castling[3] = false;
+            return;
+        }
+        if (!(currentBoard[7][0].getType() == Type.ROOK && currentBoard[7][0].getSide() == Side.BLACK)) {
+            castling[2] = false;
+        }
+        if (!(currentBoard[7][7].getType() == Type.ROOK && currentBoard[7][7].getSide() == Side.BLACK)) {
+            castling[3] = false;
+        }
+        castling[6] = true;
+        castling[7] = true;
         if (castling[2] == false) {
             castling[6] = false;
         }
@@ -483,17 +500,8 @@ public class Game {
         if (castling[6] == false & castling[7] == false) {
             return;
         }
-        if (currentBoard[7][1].getType() == Type.EMPTY && currentBoard[7][2].getType() == Type.EMPTY && currentBoard[7][3].getType() == Type.EMPTY) {
-            castling[6] = true;
-        }
-        if (currentBoard[7][5].getType() == Type.EMPTY && currentBoard[7][6].getType() == Type.EMPTY) {
-            castling[7] = true;
-        }
-        if (castling[6] == false & castling[7] == false) {
-            return;
-        }
-        addAllLegalMoves(Side.WHITE);
-        for (Piece[][] move : legalMoves) {
+        ArrayList<Piece[][]> moves = addAllLegalMoves(Side.WHITE);
+        for (Piece[][] move : moves) {
             if (move[7][2].getType() != Type.EMPTY || move[7][3].getType() != Type.EMPTY || move[7][4].getType() != Type.KING) {
                 castling[6] = false;
             }
@@ -506,7 +514,7 @@ public class Game {
         }
     }       
     
-    public void addWhiteCastling(Piece whiteKing, int y, int x) {
+    public void addWhiteCastling(ArrayList<Piece[][]> moves, Piece whiteKing, int y, int x) {
         if (castling[4] == false && castling[5] == false) {
             return;
         }
@@ -514,17 +522,17 @@ public class Game {
             Piece[][] newBoard = copyCurrentBoard();
             movePiece(newBoard, y, x, y, x - 2);
             movePiece(newBoard, y, 0, y, 3);
-            legalMoves.add(newBoard);
+            moves.add(newBoard);
         }
         if (castling[5]) {
             Piece[][] newBoard = copyCurrentBoard();
             movePiece(newBoard, y, x, y, x + 2);
             movePiece(newBoard, y, 7, y, 5);
-            legalMoves.add(newBoard);
+            moves.add(newBoard);
         }
     }
     
-    public void addBlackCastling(Piece blackKing, int y, int x) {
+    public void addBlackCastling(ArrayList<Piece[][]> moves, Piece blackKing, int y, int x) {
         if (castling[6] == false && castling[7] == false) {
             return;
         }
@@ -532,22 +540,22 @@ public class Game {
             Piece[][] newBoard = copyCurrentBoard();
             movePiece(newBoard, y, x, y, x - 2);
             movePiece(newBoard, y, 0, y, 3);
-            legalMoves.add(newBoard);
+            moves.add(newBoard);
         }
         if (castling[5]) {
             Piece[][] newBoard = copyCurrentBoard();
             movePiece(newBoard, y, x, y, x + 2);
             movePiece(newBoard, y, 7, y, 5);
-            legalMoves.add(newBoard);
+            moves.add(newBoard);
         }
     }
     
-    public void addAllKingMoves(Piece king, int y, int x) {
-        addRegularKingMoves(king, y, x);
+    public void addAllKingMoves(ArrayList<Piece[][]> moves, Piece king, int y, int x) {
+        addRegularKingMoves(moves, king, y, x);
         if (king.getSide() == Side.WHITE) {
-            addWhiteCastling(king, y, x);
+            addWhiteCastling(moves, king, y, x);
         } else {
-            addBlackCastling(king, y, x);
+            addBlackCastling(moves, king, y, x);
         }
     }
     
@@ -572,8 +580,8 @@ public class Game {
         return dead;
     }
     
-    public void addAllLegalMoves(Side side) {
-        legalMoves = new ArrayList();
+    public ArrayList<Piece[][]> addAllLegalMoves(Side side) {
+        ArrayList<Piece[][]> moves = new ArrayList();
         for (int y = 0; y <= 7; y++) {
             for (int x = 0; x <=7; x++) {
                 Piece piece = currentBoard[y][x];
@@ -581,39 +589,40 @@ public class Game {
                     continue;
                 }
                 if (piece.getType() == Type.PAWN) {
-                    addAllPawnMoves(piece, y, x);
+                    addAllPawnMoves(moves, piece, y, x);
                 } else if (piece.getType() == Type.KNIGHT) {
-                    addKnightMoves(piece, y, x);
+                    addKnightMoves(moves, piece, y, x);
                 } else if (piece.getType() == Type.ROOK) {
-                    addRookMoves(piece, y, x);
+                    addRookMoves(moves, piece, y, x);
                 } else if (piece.getType() == Type.BISHOP) {
-                    addBishopMoves(piece, y, x);
+                    addBishopMoves(moves, piece, y, x);
                 } else if (piece.getType() == Type.QUEEN) {
-                    addQueenMoves(piece, y, x);
+                    addQueenMoves(moves, piece, y, x);
                 } else if (piece.getType() == Type.KING) {
-                    addAllKingMoves(piece, y, x);
+                    addAllKingMoves(moves, piece, y, x);
                 }
             }
         }
+        return moves;
     }
     
     public ArrayList<Piece[][]> getOnePieceMoves(Piece[][] board, int y, int x) {
-        legalMoves = new ArrayList();
+        ArrayList<Piece[][]> moves = new ArrayList();
         Piece piece = board[y][x];
         if (piece.getType() == Type.PAWN) {
-            addAllPawnMoves(piece, y, x);
+            addAllPawnMoves(moves, piece, y, x);
         } else if (piece.getType() == Type.KNIGHT) {
-            addKnightMoves(piece, y, x);
+            addKnightMoves(moves, piece, y, x);
         } else if (piece.getType() == Type.ROOK) {
-            addRookMoves(piece, y, x);
+            addRookMoves(moves, piece, y, x);
         } else if (piece.getType() == Type.BISHOP) {
-            addBishopMoves(piece, y, x);
+            addBishopMoves(moves, piece, y, x);
         } else if (piece.getType() == Type.QUEEN) {
-            addQueenMoves(piece, y, x);
+            addQueenMoves(moves, piece, y, x);
         } else if (piece.getType() == Type.KING) {
-            addAllKingMoves(piece, y, x);
+            addAllKingMoves(moves, piece, y, x);
         }
-        return legalMoves;
+        return moves;
     }
     
 }
