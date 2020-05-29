@@ -154,6 +154,7 @@ public class MoveSelector {
                 continue;
             } else {
                 selectedMove = move;
+                break;
             }
         }
         game.setCurrentBoard(currentBoard);
