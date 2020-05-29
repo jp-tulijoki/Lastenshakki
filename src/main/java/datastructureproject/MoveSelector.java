@@ -187,7 +187,7 @@ public class MoveSelector {
             game.checkWhiteCastling();
         }
         ArrayList<Piece[][]> moves = game.addAllLegalMoves(side);
-        Collections.shuffle(moves);
+//        Collections.shuffle(moves);
         Piece[][] currentBoard = game.copyCurrentBoard();
         Piece[][] selectedMove = null;
         

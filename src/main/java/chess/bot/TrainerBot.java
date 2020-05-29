@@ -84,7 +84,7 @@ public class TrainerBot implements ChessBot {
             }
             if (currentBoard[7][4].getType() == Type.KING && currentBoard[7][4].getSide() == Side.BLACK 
                     && newBoard[7][6].getType() == Type.KING && newBoard[7][6].getSide() == Side.BLACK) {
-                return "e8g18";
+                return "e8g8";
             }
         }
         return "";
@@ -123,6 +123,10 @@ public class TrainerBot implements ChessBot {
         int currentX = (int) move.charAt(0) - 97;
         int newY = Character.getNumericValue(move.charAt(3)) - 1;
         int newX = (int) move.charAt(2) - 97;
+        if (move.length() == 5) {
+            Side pawnSide = board[currentX][currentY].getSide();
+            board[currentX][currentY] = new Piece(Type.QUEEN, pawnSide);
+        }
         game.movePiece(board, currentY, currentX, newY, newX);
         if (board[newY][newX].getType() == Type.PAWN && Math.abs(newY - currentY) == 2) {
             game.setEnPassant(board[newY][newX]);
