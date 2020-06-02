@@ -73,11 +73,11 @@ public class Game {
         this.currentBoard = board;
     }
     
-    public Piece[][] copyCurrentBoard() {
+    public Piece[][] copyBoard(Piece[][] board) {
         Piece[][] newBoard = new Piece[8][8];
         for (int y = 0; y <= 7; y++) {
             for (int x = 0; x <= 7; x++) {
-                newBoard[y][x] = currentBoard[y][x];
+                newBoard[y][x] = board[y][x];
             }
         }
         return newBoard;
@@ -118,15 +118,15 @@ public class Game {
      * @param y the y-coordinate of the current location of the pawn piece
      * @param x the x-coordinate of the current location of the pawn piece
      */
-    public void addRegularPawnMove(ArrayList<Piece[][]> moves, Piece pawn, int y, int x) {           
-        if (pawn.getSide() == Side.WHITE && currentBoard[y + 1][x].getType() == Type.EMPTY) {
-            Piece[][] newBoard = copyCurrentBoard();
+    public void addRegularPawnMove(Piece[][] board, ArrayList<Piece[][]> moves, Piece pawn, int y, int x) {           
+        if (pawn.getSide() == Side.WHITE && board[y + 1][x].getType() == Type.EMPTY) {
+            Piece[][] newBoard = copyBoard(board);
             movePiece(newBoard, y, x, y + 1, x);
             moves.add(newBoard);
             return;
         }
-        if (pawn.getSide() == Side.BLACK && currentBoard[y - 1][x].getType() == Type.EMPTY) {
-            Piece[][] newBoard = copyCurrentBoard();
+        if (pawn.getSide() == Side.BLACK && board[y - 1][x].getType() == Type.EMPTY) {
+            Piece[][] newBoard = copyBoard(board);
             movePiece(newBoard, y, x, y - 1, x);
             moves.add(newBoard);
         }
@@ -140,23 +140,23 @@ public class Game {
      * @param y the y-coordinate of the current location of the pawn piece
      * @param x the x-coordinate of the current location of the pawn piece
      */
-    public void addTwoStepPawnMove(ArrayList<Piece[][]> moves, Piece pawn, int y, int x) {
+    public void addTwoStepPawnMove(Piece[][] board, ArrayList<Piece[][]> moves, Piece pawn, int y, int x) {
         if (pawn.getSide() == Side.WHITE && y != 1) {
             return;
         }
         if (pawn.getSide() == Side.BLACK && y != 6) {
             return;
         }
-        if (pawn.getSide() == Side.WHITE && currentBoard[y + 1][x].getType() 
-                == Type.EMPTY && currentBoard[y + 2][x].getType() == Type.EMPTY) {
-            Piece[][] newBoard = copyCurrentBoard();
+        if (pawn.getSide() == Side.WHITE && board[y + 1][x].getType() 
+                == Type.EMPTY && board[y + 2][x].getType() == Type.EMPTY) {
+            Piece[][] newBoard = copyBoard(board);
             movePiece(newBoard, y, x, y + 2, x);
             moves.add(newBoard);
             return;
         }
-        if (pawn.getSide() == Side.BLACK && currentBoard[y - 1][x].getType() 
-                == Type.EMPTY && currentBoard[y - 2][x].getType() == Type.EMPTY) {
-            Piece[][] newBoard = copyCurrentBoard();
+        if (pawn.getSide() == Side.BLACK && board[y - 1][x].getType() 
+                == Type.EMPTY && board[y - 2][x].getType() == Type.EMPTY) {
+            Piece[][] newBoard = copyBoard(board);
             movePiece(newBoard, y, x, y - 2, x);
             moves.add(newBoard);
         }
@@ -169,27 +169,27 @@ public class Game {
      * @param y the y-coordinate of the current location of the pawn piece
      * @param x the x-coordinate of the current location of the pawn piece
      */
-    public void addPawnAttack(ArrayList<Piece[][]> moves, Piece pawn, int y, int x) {
+    public void addPawnAttack(Piece[][] board, ArrayList<Piece[][]> moves, Piece pawn, int y, int x) {
         if (x != 0) {
-            if (pawn.getSide() == Side.WHITE && currentBoard[y + 1][x - 1].getSide() == Side.BLACK) {
-                Piece[][] newBoard = copyCurrentBoard();
+            if (pawn.getSide() == Side.WHITE && board[y + 1][x - 1].getSide() == Side.BLACK) {
+                Piece[][] newBoard = copyBoard(board);
                 movePiece(newBoard, y, x, y + 1, x - 1);
                 moves.add(newBoard);
             }
-            if (pawn.getSide() == Side.BLACK && currentBoard[y - 1][x - 1].getSide() == Side.WHITE) {
-                Piece[][] newBoard = copyCurrentBoard();
+            if (pawn.getSide() == Side.BLACK && board[y - 1][x - 1].getSide() == Side.WHITE) {
+                Piece[][] newBoard = copyBoard(board);
                 movePiece(newBoard, y, x, y - 1, x - 1);
                 moves.add(newBoard);
             }
         }
         if (x != 7) {
-            if (pawn.getSide() == Side.WHITE && currentBoard[y + 1][x + 1].getSide() == Side.BLACK) {
-                Piece[][] newBoard = copyCurrentBoard();
+            if (pawn.getSide() == Side.WHITE && board[y + 1][x + 1].getSide() == Side.BLACK) {
+                Piece[][] newBoard = copyBoard(board);
                 movePiece(newBoard, y, x, y + 1, x + 1);
                 moves.add(newBoard);
             }
-            if (pawn.getSide() == Side.BLACK && currentBoard[y - 1][x + 1].getSide() == Side.WHITE) {
-                Piece[][] newBoard = copyCurrentBoard();
+            if (pawn.getSide() == Side.BLACK && board[y - 1][x + 1].getSide() == Side.WHITE) {
+                Piece[][] newBoard = copyBoard(board);
                 movePiece(newBoard, y, x, y - 1, x + 1);
                 moves.add(newBoard);
             }
@@ -203,16 +203,16 @@ public class Game {
      * @param y the y-coordinate of the current location of the pawn piece
      * @param x the x-coordinate of the current location of the pawn piece
      */
-    public void addEnPassant(ArrayList<Piece[][]> moves, Piece pawn, int y, int x) {
+    public void addEnPassant(Piece[][] board, ArrayList<Piece[][]> moves, Piece pawn, int y, int x) {
         if (x > 0) {
-            if (currentBoard[y][x - 1] == enPassant) {
+            if (board[y][x - 1] == enPassant) {
                 if (pawn.getSide() == Side.WHITE) {
-                    Piece[][] newBoard = copyCurrentBoard();
+                    Piece[][] newBoard = copyBoard(board);
                     movePiece(newBoard, y, x, y + 1, x - 1);
                     newBoard[y][x - 1] = new Piece(Type.EMPTY);
                     moves.add(newBoard);
                 } else {
-                    Piece[][] newBoard = copyCurrentBoard();
+                    Piece[][] newBoard = copyBoard(board);
                     movePiece(newBoard, y, x, y - 1, x - 1);
                     newBoard[y][x - 1] = new Piece(Type.EMPTY);
                     moves.add(newBoard);
@@ -222,14 +222,14 @@ public class Game {
         }
         
         if (x < 7) {
-            if (currentBoard[y][x + 1] == enPassant) {
+            if (board[y][x + 1] == enPassant) {
                 if (pawn.getSide() == Side.WHITE) {
-                    Piece[][] newBoard = copyCurrentBoard();
+                    Piece[][] newBoard = copyBoard(board);
                     movePiece(newBoard, y, x, y + 1, x + 1);
                     newBoard[y][x + 1] = new Piece(Type.EMPTY);
                     moves.add(newBoard);
                 } else {
-                    Piece[][] newBoard = copyCurrentBoard();
+                    Piece[][] newBoard = copyBoard(board);
                     movePiece(newBoard, y, x, y - 1, x + 1);
                     newBoard[y][x + 1] = new Piece(Type.EMPTY);
                     moves.add(newBoard);
@@ -245,11 +245,11 @@ public class Game {
      * @param y the y-coordinate of the current location of the pawn piece
      * @param x the x-coordinate of the current location of the pawn piece
      */
-    public void addAllPawnMoves(ArrayList<Piece[][]> moves, Piece pawn, int y, int x) {
-        addRegularPawnMove(moves, pawn, y, x);
-        addTwoStepPawnMove(moves, pawn, y, x);
-        addPawnAttack(moves, pawn, y, x);
-        addEnPassant(moves, pawn, y, x);
+    public void addAllPawnMoves(Piece[][] board, ArrayList<Piece[][]> moves, Piece pawn, int y, int x) {
+        addRegularPawnMove(board, moves, pawn, y, x);
+        addTwoStepPawnMove(board, moves, pawn, y, x);
+        addPawnAttack(board, moves, pawn, y, x);
+        addEnPassant(board, moves, pawn, y, x);
     }
     
     /**
@@ -260,7 +260,7 @@ public class Game {
      * @param y the y-coordinate of the current location of the knight piece
      * @param x the x-coordinate of the current location of the knight piece
      */
-    public void addKnightMoves(ArrayList<Piece[][]> moves, Piece knight, int y, int x) {
+    public void addKnightMoves(Piece[][] board, ArrayList<Piece[][]> moves, Piece knight, int y, int x) {
         int[][] knightMoves = {{2, 2, 1, 1, -1, -1, -2, -2},
             {1, -1, 2, -2, 2, -2, 1, -1}};
         for (int i = 0; i < knightMoves[0].length; i++) {
@@ -271,8 +271,8 @@ public class Game {
                 continue;
             }
             
-            if (knight.getSide() != currentBoard[newY][newX].getSide()) {
-                Piece[][] newBoard = copyCurrentBoard();
+            if (knight.getSide() != board[newY][newX].getSide()) {
+                Piece[][] newBoard = copyBoard(board);
                 movePiece(newBoard, y, x, newY, newX);
                 moves.add(newBoard);
             }
@@ -286,59 +286,59 @@ public class Game {
      * @param y the y-coordinate of the current location of the rook piece
      * @param x the x-coordinate of the current location of the rook piece
      */
-    public void addRookMoves(ArrayList<Piece[][]> moves, Piece rook, int y, int x) {
+    public void addRookMoves(Piece[][] board, ArrayList<Piece[][]> moves, Piece rook, int y, int x) {
         int up = y + 1;
         int down = y - 1;
         int right = x + 1;
         int left = x - 1;
         
         while (up <= 7) {
-            if (currentBoard[up][x].getSide() == rook.getSide()) {
+            if (board[up][x].getSide() == rook.getSide()) {
                 break;
             }
-            Piece[][] newBoard = copyCurrentBoard();
+            Piece[][] newBoard = copyBoard(board);
             movePiece(newBoard, y, x, up, x);
             moves.add(newBoard);
-            if (currentBoard[up][x].getSide() != null) {
+            if (board[up][x].getSide() != null) {
                 break;
             }
             up++;
         }
         
         while (down >= 0) {
-            if (currentBoard[down][x].getSide() == rook.getSide()) {
+            if (board[down][x].getSide() == rook.getSide()) {
                 break;
             }
-            Piece[][] newBoard = copyCurrentBoard();
+            Piece[][] newBoard = copyBoard(board);
             movePiece(newBoard, y, x, down, x);
             moves.add(newBoard);
-            if (currentBoard[down][x].getSide() != null) {
+            if (board[down][x].getSide() != null) {
                 break;
             }
             down--;
         }
         
         while (right <= 7) {
-            if (currentBoard[y][right].getSide() == rook.getSide()) {
+            if (board[y][right].getSide() == rook.getSide()) {
                 break;
             }
-            Piece[][] newBoard = copyCurrentBoard();
+            Piece[][] newBoard = copyBoard(board);
             movePiece(newBoard, y, x, y, right);
             moves.add(newBoard);
-            if (currentBoard[y][right].getSide() != null) {
+            if (board[y][right].getSide() != null) {
                 break;
             }
             right++;
         }
         
         while (left >= 0) {
-            if (currentBoard[y][left].getSide() == rook.getSide()) {
+            if (board[y][left].getSide() == rook.getSide()) {
                 break;
             }
-            Piece[][] newBoard = copyCurrentBoard();
+            Piece[][] newBoard = copyBoard(board);
             movePiece(newBoard, y, x, y, left);
             moves.add(newBoard);
-            if (currentBoard[y][left].getSide() != null) {
+            if (board[y][left].getSide() != null) {
                 break;
             }
             left--;
@@ -353,20 +353,20 @@ public class Game {
      * @param y the y-coordinate of the current location of the bishop
      * @param x the x-coordinate of the current location of the bishop
      */
-    public void addBishopMoves(ArrayList<Piece[][]> moves, Piece bishop, int y, int x) {
+    public void addBishopMoves(Piece[][] board, ArrayList<Piece[][]> moves, Piece bishop, int y, int x) {
         int up = y + 1;
         int down = y - 1;
         int right = x + 1;
         int left = x - 1;
         
         while (up <= 7 && right <= 7) {
-            if (currentBoard[up][right].getSide() == bishop.getSide()) {
+            if (board[up][right].getSide() == bishop.getSide()) {
                 break;
             }
-            Piece[][] newBoard = copyCurrentBoard();
+            Piece[][] newBoard = copyBoard(board);
             movePiece(newBoard, y, x, up, right);
             moves.add(newBoard);
-            if (currentBoard[up][right].getSide() != null) {
+            if (board[up][right].getSide() != null) {
                 break;
             }
             up++;
@@ -376,13 +376,13 @@ public class Game {
         right = x + 1;
         
         while (down >= 0 && right <= 7) {
-            if (currentBoard[down][right].getSide() == bishop.getSide()) {
+            if (board[down][right].getSide() == bishop.getSide()) {
                 break;
             }
-            Piece[][] newBoard = copyCurrentBoard();
+            Piece[][] newBoard = copyBoard(board);
             movePiece(newBoard, y, x, down, right);
             moves.add(newBoard);
-            if (currentBoard[down][right].getSide() != null) {
+            if (board[down][right].getSide() != null) {
                 break;
             }
             down--;
@@ -392,13 +392,13 @@ public class Game {
         right = x + 1;
         
         while (up <= 7 && left >= 0) {
-            if (currentBoard[up][left].getSide() == bishop.getSide()) {
+            if (board[up][left].getSide() == bishop.getSide()) {
                 break;
             }
-            Piece[][] newBoard = copyCurrentBoard();
+            Piece[][] newBoard = copyBoard(board);
             movePiece(newBoard, y, x, up, left);
             moves.add(newBoard);
-            if (currentBoard[up][left].getSide() != null) {
+            if (board[up][left].getSide() != null) {
                 break;
             }
             up++;
@@ -407,13 +407,13 @@ public class Game {
         left = x - 1;
         
         while (down >= 0 && left >= 0) {
-            if (currentBoard[down][left].getSide() == bishop.getSide()) {
+            if (board[down][left].getSide() == bishop.getSide()) {
                 break;
             }
-            Piece[][] newBoard = copyCurrentBoard();
+            Piece[][] newBoard = copyBoard(board);
             movePiece(newBoard, y, x, down, left);
             moves.add(newBoard);
-            if (currentBoard[down][left].getSide() != null) {
+            if (board[down][left].getSide() != null) {
                 break;
             }
             down--;
@@ -429,9 +429,9 @@ public class Game {
      * @param y the y-coordinate of the current location of the queen
      * @param x the x-coordinate of the current location of the queen
      */
-    public void addQueenMoves(ArrayList<Piece[][]> moves, Piece queen, int y, int x) {
-        addRookMoves(moves, queen, y, x);
-        addBishopMoves(moves, queen, y, x);
+    public void addQueenMoves(Piece[][] board, ArrayList<Piece[][]> moves, Piece queen, int y, int x) {
+        addRookMoves(board, moves, queen, y, x);
+        addBishopMoves(board, moves, queen, y, x);
     }
     
     /**
@@ -442,7 +442,7 @@ public class Game {
      * @param y the y-coordinate of the current location of the king
      * @param x the x-coordinate of the current location of the king
      */
-    public void addRegularKingMoves(ArrayList<Piece[][]> moves, Piece king, int y, int x) {
+    public void addRegularKingMoves(Piece[][] board, ArrayList<Piece[][]> moves, Piece king, int y, int x) {
         for (int newY = y - 1; newY <= y + 1; newY++) {
             for (int newX = x - 1; newX <= x + 1; newX++) {
                 if (newY == y && newX == x) {
@@ -451,10 +451,10 @@ public class Game {
                 if (newY < 0 || newY > 7 || newX < 0 || newX > 7) {
                     continue;
                 }
-                if (currentBoard[newY][newX].getSide() == king.getSide()) {
+                if (board[newY][newX].getSide() == king.getSide()) {
                     continue;
                 }
-                Piece[][] newBoard = copyCurrentBoard();
+                Piece[][] newBoard = copyBoard(board);
                 movePiece(newBoard, y, x, newY, newX);
                 moves.add(newBoard);
             }
@@ -498,7 +498,7 @@ public class Game {
         if (!castling[4] && !castling[5]) {
             return;
         }
-        ArrayList<Piece[][]> moves = addAllLegalMoves(Side.BLACK);
+        ArrayList<Piece[][]> moves = addAllLegalMoves(currentBoard, Side.BLACK);
         for (Piece[][] move : moves) {
             if (move[0][2].getType() != Type.EMPTY || move[0][3].getType() 
                     != Type.EMPTY || move[0][4].getType() != Type.KING) {
@@ -541,7 +541,7 @@ public class Game {
         if (!castling[6] && !castling[7]) {
             return;
         }
-        ArrayList<Piece[][]> moves = addAllLegalMoves(Side.WHITE);
+        ArrayList<Piece[][]> moves = addAllLegalMoves(currentBoard, Side.WHITE);
         for (Piece[][] move : moves) {
             if (move[7][2].getType() != Type.EMPTY || move[7][3].getType() 
                     != Type.EMPTY || move[7][4].getType() != Type.KING) {
@@ -565,18 +565,18 @@ public class Game {
      * @param y the y-coordinate of the current location of the king
      * @param x the x-coordinate of the current location of the king
      */
-    public void addWhiteCastling(ArrayList<Piece[][]> moves, Piece whiteKing, int y, int x) {
+    public void addWhiteCastling(Piece[][] board, ArrayList<Piece[][]> moves, Piece whiteKing, int y, int x) {
         if (!castling[4] && !castling[5]) {
             return;
         }
         if (castling[4]) {
-            Piece[][] newBoard = copyCurrentBoard();
+            Piece[][] newBoard = copyBoard(board);
             movePiece(newBoard, y, x, y, x - 2);
             movePiece(newBoard, y, 0, y, 3);
             moves.add(newBoard);
         }
         if (castling[5]) {
-            Piece[][] newBoard = copyCurrentBoard();
+            Piece[][] newBoard = copyBoard(board);
             movePiece(newBoard, y, x, y, x + 2);
             movePiece(newBoard, y, 7, y, 5);
             moves.add(newBoard);
@@ -591,18 +591,18 @@ public class Game {
      * @param y the y-coordinate of the current location of the king
      * @param x the x-coordinate of the current location of the king
      */
-    public void addBlackCastling(ArrayList<Piece[][]> moves, Piece blackKing, int y, int x) {
+    public void addBlackCastling(Piece[][] board, ArrayList<Piece[][]> moves, Piece blackKing, int y, int x) {
         if (!castling[6] && !castling[7]) {
             return;
         }
         if (castling[6]) {
-            Piece[][] newBoard = copyCurrentBoard();
+            Piece[][] newBoard = copyBoard(board);
             movePiece(newBoard, y, x, y, x - 2);
             movePiece(newBoard, y, 0, y, 3);
             moves.add(newBoard);
         }
         if (castling[5]) {
-            Piece[][] newBoard = copyCurrentBoard();
+            Piece[][] newBoard = copyBoard(board);
             movePiece(newBoard, y, x, y, x + 2);
             movePiece(newBoard, y, 7, y, 5);
             moves.add(newBoard);
@@ -617,12 +617,12 @@ public class Game {
      * @param y the y-coordinate of the current location of the king
      * @param x the x-coordinate of the current location of the king
      */
-    public void addAllKingMoves(ArrayList<Piece[][]> moves, Piece king, int y, int x) {
-        addRegularKingMoves(moves, king, y, x);
+    public void addAllKingMoves(Piece[][] board, ArrayList<Piece[][]> moves, Piece king, int y, int x) {
+        addRegularKingMoves(board, moves, king, y, x);
         if (king.getSide() == Side.WHITE) {
-            addWhiteCastling(moves, king, y, x);
+            addWhiteCastling(board, moves, king, y, x);
         } else {
-            addBlackCastling(moves, king, y, x);
+            addBlackCastling(board, moves, king, y, x);
         }
     }
     
@@ -654,26 +654,26 @@ public class Game {
      * but legality concerning the entire game situation, e.g. check is not 
      * controlled.
      */
-    public ArrayList<Piece[][]> addAllLegalMoves(Side side) {
+    public ArrayList<Piece[][]> addAllLegalMoves(Piece[][] board, Side side) {
         ArrayList<Piece[][]> moves = new ArrayList();
         for (int y = 0; y <= 7; y++) {
             for (int x = 0; x <= 7; x++) {
-                Piece piece = currentBoard[y][x];
+                Piece piece = board[y][x];
                 if (piece.getSide() != side) {
                     continue;
                 }
                 if (piece.getType() == Type.PAWN) {
-                    addAllPawnMoves(moves, piece, y, x);
+                    addAllPawnMoves(board, moves, piece, y, x);
                 } else if (piece.getType() == Type.KNIGHT) {
-                    addKnightMoves(moves, piece, y, x);
+                    addKnightMoves(board, moves, piece, y, x);
                 } else if (piece.getType() == Type.ROOK) {
-                    addRookMoves(moves, piece, y, x);
+                    addRookMoves(board, moves, piece, y, x);
                 } else if (piece.getType() == Type.BISHOP) {
-                    addBishopMoves(moves, piece, y, x);
+                    addBishopMoves(board, moves, piece, y, x);
                 } else if (piece.getType() == Type.QUEEN) {
-                    addQueenMoves(moves, piece, y, x);
+                    addQueenMoves(board, moves, piece, y, x);
                 } else if (piece.getType() == Type.KING) {
-                    addAllKingMoves(moves, piece, y, x);
+                    addAllKingMoves(board, moves, piece, y, x);
                 }
             }
         }
@@ -693,17 +693,17 @@ public class Game {
         ArrayList<Piece[][]> moves = new ArrayList();
         Piece piece = board[y][x];
         if (piece.getType() == Type.PAWN) {
-            addAllPawnMoves(moves, piece, y, x);
+            addAllPawnMoves(board, moves, piece, y, x);
         } else if (piece.getType() == Type.KNIGHT) {
-            addKnightMoves(moves, piece, y, x);
+            addKnightMoves(board, moves, piece, y, x);
         } else if (piece.getType() == Type.ROOK) {
-            addRookMoves(moves, piece, y, x);
+            addRookMoves(board, moves, piece, y, x);
         } else if (piece.getType() == Type.BISHOP) {
-            addBishopMoves(moves, piece, y, x);
+            addBishopMoves(board, moves, piece, y, x);
         } else if (piece.getType() == Type.QUEEN) {
-            addQueenMoves(moves, piece, y, x);
+            addQueenMoves(board, moves, piece, y, x);
         } else if (piece.getType() == Type.KING) {
-            addAllKingMoves(moves, piece, y, x);
+            addAllKingMoves(board,moves, piece, y, x);
         }
         return moves;
     }

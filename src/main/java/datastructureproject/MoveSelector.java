@@ -174,6 +174,69 @@ public class MoveSelector {
         }
     }
     
+    public double maxBoardValue(Piece[][] board, int depth, double alpha, double beta) {
+        if (game.isKingDead(board, Side.WHITE)) {
+            return -999999.99;
+        }
+        if (game.isKingDead(board, Side.BLACK)) {
+            return 999999.99;
+        }
+        if (depth == 0) {
+            return evaluateBoard(board);
+        }
+        double bestValue = -99999.99;
+        ArrayList<Piece[][]> moves = game.addAllLegalMoves(board, Side.WHITE);
+        for (Piece[][] move : moves) {
+            double value = minBoardValue(move, depth - 1, alpha, beta);
+            bestValue = Math.max(value, bestValue);
+            alpha = Math.max(alpha, bestValue);
+            if (beta <= alpha) {
+                break;
+            }
+        }
+        return bestValue;
+    }
+        
+    public double minBoardValue(Piece[][] board, int depth, double alpha, double beta) {
+        if (game.isKingDead(board, Side.WHITE)) {
+            return -999999.99;
+        }
+        if (game.isKingDead(board, Side.BLACK)) {
+            return 999999.99;
+        }
+        if (depth == 0) {
+            return evaluateBoard(board);
+        }    
+        double bestValue = 99999.99;
+        ArrayList<Piece[][]> moves = game.addAllLegalMoves(board, Side.BLACK);
+        for (Piece[][] move : moves) {
+            double value = maxBoardValue(move, depth - 1, alpha, beta);
+            bestValue = Math.min(value, bestValue);
+            beta = Math.min(beta, bestValue);
+            if (beta <= alpha) {
+                break;
+            }
+        }
+        return bestValue;
+    }
+    
+    public Piece[][] getBestBlackMove() {
+        game.checkBlackCastling();
+        game.checkWhiteCastling();
+        Piece[][] board = game.getCurrentBoard();
+        ArrayList<Piece[][]> moves = game.addAllLegalMoves(board, Side.BLACK);
+        double bestValue = 99999.99;
+        Piece[][] bestMove = null;
+        for (Piece[][] move : moves) {
+            double value = maxBoardValue(move, 2, -99999, 99999);
+            if (value < bestValue) {
+                bestValue = value;
+                bestMove = move;
+            }
+        }
+        return bestMove;
+    }
+    
     /**
      * This method selects the next move for the bot. (At this point, it selects
      * a random legal move.)
@@ -186,15 +249,15 @@ public class MoveSelector {
         } else {
             game.checkWhiteCastling();
         }
-        ArrayList<Piece[][]> moves = game.addAllLegalMoves(side);
+        Piece[][] currentBoard = game.getCurrentBoard();
+        ArrayList<Piece[][]> moves = game.addAllLegalMoves(currentBoard, side);
         Collections.shuffle(moves);
-        Piece[][] currentBoard = game.copyCurrentBoard();
+        
         Piece[][] selectedMove = null;
         
         for (Piece[][] move : moves) {
             boolean illegalMove = false;
-            game.setCurrentBoard(move);
-            ArrayList<Piece[][]> oppositeMoves = game.addAllLegalMoves(getOppositeSide(side));
+            ArrayList<Piece[][]> oppositeMoves = game.addAllLegalMoves(move, getOppositeSide(side));
             for (Piece[][] oppositeMove : oppositeMoves) {
                 if (game.isKingDead(oppositeMove, side)) {
                     illegalMove = true;

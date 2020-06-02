@@ -26,7 +26,7 @@ public class BotTest {
     public void moveParserWorksProperly() {
         Game game = bot.getGame();
         Piece[][] currentBoard = game.getCurrentBoard();
-        Piece[][] newBoard = game.copyCurrentBoard();
+        Piece[][] newBoard = game.copyBoard(currentBoard);
         game.movePiece(newBoard, 1, 0, 3, 0);
         String move = bot.parseMove(Side.WHITE, currentBoard, newBoard);
         assertEquals("a2a4", move);
@@ -46,7 +46,7 @@ public class BotTest {
         currentBoard[7][7] = blackRook;
         currentBoard[7][4] = blackKing;
         game.setCurrentBoard(currentBoard);
-        Piece[][] newBoard = game.copyCurrentBoard();
+        Piece[][] newBoard = game.copyBoard(currentBoard);
         game.movePiece(newBoard, 7, 7, 7, 5);
         game.movePiece(newBoard, 7, 4, 7, 6);
         String move = bot.parseMove(Side.BLACK, currentBoard, newBoard);
@@ -64,7 +64,7 @@ public class BotTest {
         }
         currentBoard[6][0] = new Piece(Type.PAWN, Side.WHITE);
         game.setCurrentBoard(currentBoard);
-        Piece[][] newBoard = game.copyCurrentBoard();
+        Piece[][] newBoard = game.copyBoard(currentBoard);
         game.movePiece(newBoard, 6, 0, 7, 0);
         String move = bot.parseMove(Side.WHITE, currentBoard, newBoard);
         assertEquals("a7a8q", move);

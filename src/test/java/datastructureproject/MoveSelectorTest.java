@@ -34,5 +34,11 @@ public class MoveSelectorTest {
         assertEquals(0, value, 0.01);
     }
     
+    @Test
+    public void moveSelectorReturnsMove() {
+        game.initBoard();
+        Piece[][] move = ms.getBestBlackMove();
+        assertTrue(move != null);
+    }
     
 }

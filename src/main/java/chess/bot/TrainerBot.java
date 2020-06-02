@@ -3,6 +3,7 @@ package chess.bot;
 import chess.engine.GameState;
 import chess.model.Side;
 import datastructureproject.*;
+import java.util.ArrayList;
 
 /**
  * This class is the chess bot implementation that communicates the moves to the
@@ -104,7 +105,7 @@ public class TrainerBot implements ChessBot {
             updateLatestMove(latestMove);
         }
         if (gamestate.playing == Side.BLACK) {
-            Piece[][] newBoard = ms.selectMove(Side.BLACK);
+            Piece[][] newBoard = ms.getBestBlackMove();
             String move = parseMove(Side.BLACK, game.getCurrentBoard(), newBoard);
             updateLatestMove(move);
             return move;
@@ -118,7 +119,7 @@ public class TrainerBot implements ChessBot {
      * @param move the move in UCI format
      */
     public void updateLatestMove(String move) {
-        Piece[][] board = game.copyCurrentBoard();
+        Piece[][] board = game.getCurrentBoard();
         int currentY = Character.getNumericValue(move.charAt(1)) - 1;
         int currentX = (int) move.charAt(0) - 97;
         int newY = Character.getNumericValue(move.charAt(3)) - 1;
