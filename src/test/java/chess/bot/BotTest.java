@@ -71,6 +71,54 @@ public class BotTest {
     }
     
     @Test
+    public void castlingArrayUpdatesQueensideRookMoves() {
+        Game game = bot.getGame();
+        game.initBoard();
+        bot.updateLatestMove("a1a3");
+        assertFalse(game.getCastling()[0]);
+        assertTrue(game.getCastling()[1]);
+        assertTrue(game.getCastling()[2]);
+        assertTrue(game.getCastling()[3]);
+        bot.updateLatestMove("a8a6");
+        assertFalse(game.getCastling()[0]);
+        assertTrue(game.getCastling()[1]);
+        assertFalse(game.getCastling()[2]);
+        assertTrue(game.getCastling()[3]);
+    }
+    
+    @Test
+    public void castlingArrayUpdatesKingsideRookMoves() {
+        Game game = bot.getGame();
+        game.initBoard();
+        bot.updateLatestMove("h1h3");
+        assertTrue(game.getCastling()[0]);
+        assertFalse(game.getCastling()[1]);
+        assertTrue(game.getCastling()[2]);
+        assertTrue(game.getCastling()[3]);
+        bot.updateLatestMove("h8h6");
+        assertTrue(game.getCastling()[0]);
+        assertFalse(game.getCastling()[1]);
+        assertTrue(game.getCastling()[2]);
+        assertFalse(game.getCastling()[3]);
+    }
+    
+    @Test
+    public void castlingArrayUpdatesKingMoves() {
+        Game game = bot.getGame();
+        game.initBoard();
+        bot.updateLatestMove("e1e3");
+        assertFalse(game.getCastling()[0]);
+        assertFalse(game.getCastling()[1]);
+        assertTrue(game.getCastling()[2]);
+        assertTrue(game.getCastling()[3]);
+        bot.updateLatestMove("e8e6");
+        assertFalse(game.getCastling()[0]);
+        assertFalse(game.getCastling()[1]);
+        assertFalse(game.getCastling()[2]);
+        assertFalse(game.getCastling()[3]);
+    }
+    
+    @Test
     public void moveUpdaterWorksProperly() {
         Game game = bot.getGame();
         game.initBoard();

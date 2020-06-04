@@ -94,6 +94,12 @@ public class Game {
     public boolean[] getCastling() {
         return castling;
     }
+
+    public void setCastling(boolean[] castling) {
+        this.castling = castling;
+    }
+    
+    
     
     /**
      * This method moves a chesspiece to the new square and replaces the old 

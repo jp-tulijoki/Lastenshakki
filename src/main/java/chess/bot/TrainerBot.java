@@ -113,6 +113,33 @@ public class TrainerBot implements ChessBot {
         return null;
     }
     
+    public void updateCastlingStatus(int currentY, int currentX) {
+        boolean[] castling = game.getCastling();
+        if (!castling[0] && !castling[1] && !castling[2] && !castling[3]) {
+            return;
+        }
+        if (currentY == 0) {
+            if (currentX == 4) {
+                castling[0] = false;
+                castling[1] = false;
+            } else if (currentX == 0) {
+                castling[0] = false;
+            } else if (currentX == 7) {
+                castling[1] = false;
+            } 
+        } else if (currentY == 7) {
+            if (currentX == 4) {
+                castling[2] = false;
+                castling[3] = false;
+            } else if (currentX == 0) {
+                castling[2] = false;
+            } else if (currentX == 7) {
+                castling[3] = false;
+            } 
+        }
+    }
+    
+    
     /**
      * This method is called by the nextMove method and takes care of updating
      * the latest UCI format move to the current game object.
@@ -134,6 +161,7 @@ public class TrainerBot implements ChessBot {
         } else {
             game.setEnPassant(null);
         }
+        updateCastlingStatus(currentY, currentX);
         game.setCurrentBoard(board);
     }
     
