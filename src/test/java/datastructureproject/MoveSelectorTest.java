@@ -31,7 +31,7 @@ public class MoveSelectorTest {
         game.initBoard();
         Piece[][] board = game.getCurrentBoard();
         double value = ms.evaluateBoard(board);
-        assertEquals(0, value, 0.01);
+        assertEquals(0, value, 0.1);
     }
     
     @Test

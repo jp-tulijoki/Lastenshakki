@@ -221,14 +221,12 @@ public class MoveSelector {
     }
     
     public Piece[][] getBestBlackMove() {
-        game.checkBlackCastling();
-        game.checkWhiteCastling();
         Piece[][] board = game.getCurrentBoard();
         ArrayList<Piece[][]> moves = game.addAllLegalMoves(board, Side.BLACK);
         double bestValue = 99999.99;
         Piece[][] bestMove = null;
         for (Piece[][] move : moves) {
-            double value = maxBoardValue(move, 2, -99999, 99999);
+            double value = maxBoardValue(move, 2, -99999, 99990);
             if (value < bestValue) {
                 bestValue = value;
                 bestMove = move;
@@ -244,11 +242,6 @@ public class MoveSelector {
      * @return returns a move as a chessboard representation.
      */
     public Piece[][] selectMove(Side side) {
-        if (side == Side.BLACK) {
-            game.checkBlackCastling();
-        } else {
-            game.checkWhiteCastling();
-        }
         Piece[][] currentBoard = game.getCurrentBoard();
         ArrayList<Piece[][]> moves = game.addAllLegalMoves(currentBoard, side);
         Collections.shuffle(moves);

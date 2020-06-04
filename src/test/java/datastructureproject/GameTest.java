@@ -284,7 +284,7 @@ public class GameTest {
         board[0][0] = whiteRook;
         board[0][4] = whiteKing;
         board[3][4] = new Piece(Type.BISHOP, Side.BLACK);
-        game.checkWhiteCastling();
+        game.checkWhiteCastling(board);
         assertTrue(game.getCastling()[4]);
         assertFalse(game.getCastling()[5]);
         ArrayList<Piece[][]> moves = new ArrayList();
@@ -311,7 +311,7 @@ public class GameTest {
         board[7][7] = blackRook;
         board[7][4] = blackKing;
         board[3][3] = new Piece(Type.BISHOP, Side.WHITE);
-        game.checkBlackCastling();
+        game.checkBlackCastling(board);
         assertTrue(game.getCastling()[7]);
         assertFalse(game.getCastling()[6]);
         ArrayList<Piece[][]> moves = new ArrayList();
@@ -340,7 +340,7 @@ public class GameTest {
         board[0][7] = whiteRook2;
         board[0][4] = whiteKing;
         board[4][0] = new Piece(Type.BISHOP, Side.BLACK);
-        game.checkWhiteCastling();
+        game.checkWhiteCastling(board);
         assertFalse(game.getCastling()[4]);
         assertFalse(game.getCastling()[5]);
     }
@@ -361,7 +361,7 @@ public class GameTest {
         board[7][7] = blackRook2;
         board[7][4] = blackKing;
         board[6][4] = new Piece(Type.BISHOP, Side.WHITE);
-        game.checkBlackCastling();
+        game.checkBlackCastling(board);
         assertFalse(game.getCastling()[6]);
         assertFalse(game.getCastling()[7]);
     }
@@ -405,7 +405,6 @@ public class GameTest {
     @Test
     public void correctNumberOfMovesInTheBeginning() {
         game.initBoard();
-        game.checkWhiteCastling();
         Piece[][] board = game.getCurrentBoard();
         ArrayList<Piece[][]> moves = game.addAllLegalMoves(board, Side.WHITE);
         assertEquals(20, moves.size());
