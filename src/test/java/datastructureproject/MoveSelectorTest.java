@@ -5,6 +5,7 @@
  */
 package datastructureproject;
 
+import chess.model.Side;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -37,8 +38,23 @@ public class MoveSelectorTest {
     @Test
     public void moveSelectorReturnsMove() {
         game.initBoard();
-        Piece[][] move = ms.getBestBlackMove();
-        assertTrue(move != null);
+        Piece[][] whiteMove = ms.getBestWhiteMove();
+        assertTrue(whiteMove != null);
+        Piece[][] blackMove = ms.getBestBlackMove();
+        assertTrue(blackMove != null);
     }
     
+    @Test
+    public void moveSelectorDoesNotFailIn20Rounds() {
+        game.initBoard();
+        Piece[][] board = game.getCurrentBoard();
+        for (int i = 1; i <= 20; i++) {
+            board = ms.getBestWhiteMove();
+            assertTrue(board != null);
+            assertFalse(game.isKingDead(board, Side.BLACK));
+            board = ms.getBestBlackMove();
+            assertTrue(board != null);
+            assertFalse(game.isKingDead(board, Side.WHITE));
+        }
+    }
 }

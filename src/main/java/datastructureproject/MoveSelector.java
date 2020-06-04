@@ -90,7 +90,7 @@ public class MoveSelector {
             if (checkDoubledPawns(board, y, x)) {
                 value -= 0.5;
             }
-            value += addCloseToPromotionBonus(board, y, x);
+            value += addPromotionBonus(board, y, x);
         }
         value += moves.size() * 0.1;
         return value;
@@ -149,19 +149,24 @@ public class MoveSelector {
      * @return returns 1 if the pawn has two steps to promotion, 2 if only one 
      * step and otherwise 0.
      */
-    public int addCloseToPromotionBonus(Piece[][] board, int y, int x) {
+    public int addPromotionBonus(Piece[][] board, int y, int x) {
         Piece pawn = board[y][x];
-        if (pawn.getSide() == Side.WHITE && y == 5) {
-            return 1;
-        }
-        if (pawn.getSide() == Side.WHITE && y == 6) {
-            return 2;
-        }
-        if (pawn.getSide() == Side.BLACK && y == 2) {
-            return 1;
-        }
-        if (pawn.getSide() == Side.BLACK && y == 1) {
-            return 2;
+        if (pawn.getSide() == Side.WHITE) {
+            if (y == 5) {
+                return 1;
+            } else if (y == 6) {
+                return 2;
+            } else if (y == 7) {
+                return 9;
+            }
+        } else {
+            if (y == 2) {
+                return 1;
+            } else if (y == 1) {
+                return 2;
+            } else if (y == 0) {
+                return 9;
+            }
         }
         return 0;
     }
@@ -220,13 +225,28 @@ public class MoveSelector {
         return bestValue;
     }
     
+    public Piece[][] getBestWhiteMove() {
+        Piece[][] board = game.getCurrentBoard();
+        ArrayList<Piece[][]> moves = game.addAllLegalMoves(board, Side.WHITE);
+        double bestValue = -99999.99;
+        Piece[][] bestMove = null;
+        for (Piece[][] move : moves) {
+            double value = minBoardValue(move, 2, -99999, 99999);
+            if (value > bestValue) {
+                bestValue = value;
+                bestMove = move;
+            }
+        }
+        return bestMove;
+    }
+    
     public Piece[][] getBestBlackMove() {
         Piece[][] board = game.getCurrentBoard();
         ArrayList<Piece[][]> moves = game.addAllLegalMoves(board, Side.BLACK);
         double bestValue = 99999.99;
         Piece[][] bestMove = null;
         for (Piece[][] move : moves) {
-            double value = maxBoardValue(move, 2, -99999, 99990);
+            double value = maxBoardValue(move, 2, -99999, 99999);
             if (value < bestValue) {
                 bestValue = value;
                 bestMove = move;
