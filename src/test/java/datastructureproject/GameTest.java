@@ -95,6 +95,21 @@ public class GameTest {
     }
     
     @Test
+    public void twoStepMoveDoesNotEndInOccupiedSquare() {
+        game.initBoard();
+        Piece[][] currentBoard = game.getCurrentBoard();
+        Piece whitePawn = game.getPiece(1, 0);
+        Piece blackPawn = game.getPiece(6, 0);
+        game.movePiece(currentBoard, 0, 1, 3, 0); // white knight
+        game.movePiece(currentBoard, 0, 0, 4, 0); // white rook
+        Piece[][] board = game.getCurrentBoard();
+        ArrayList<Piece[][]> moves = new ArrayList();
+        game.addTwoStepPawnMove(board, moves, whitePawn, 1, 0);
+        game.addTwoStepPawnMove(board, moves, blackPawn, 6, 0);
+        assertTrue(moves.isEmpty());
+    }
+    
+    @Test
     public void hinderedPawnsDoNotMove() {
         game.initBoard();
         Piece[][] currentBoard = game.getCurrentBoard();
@@ -172,6 +187,35 @@ public class GameTest {
         assertEquals(Side.WHITE, newBoard[5][5].getSide());
         assertEquals(Type.PAWN, newBoard[5][5].getType());
         assertEquals(Type.EMPTY, newBoard[4][5].getType());
+    }
+    
+    @Test
+    public void pawnPromotionOnNormalMoveWorksProperly() {
+        game.initBoard();
+        Piece[][] currentBoard = game.getCurrentBoard();
+        currentBoard[0][5] = new Piece(Type.EMPTY);
+        currentBoard[0][6] = new Piece(Type.EMPTY);
+        currentBoard[0][7] = new Piece(Type.EMPTY);
+        game.movePiece(currentBoard, 6, 6, 1, 6);
+        Piece blackPawn = game.getPiece(1, 6);
+        ArrayList<Piece[][]> moves = new ArrayList();
+        game.addAllPawnMoves(currentBoard, moves, blackPawn, 1, 6);
+        assertTrue(moves.size() == 1);
+        assertEquals(Type.QUEEN, moves.get(0)[0][6].getType());
+        assertEquals(Side.BLACK, moves.get(0)[0][6].getSide());
+    }
+    
+    @Test
+    public void pawnPromotionOnAttackWorksProperly() {
+        game.initBoard();
+        Piece[][] currentBoard = game.getCurrentBoard();
+        game.movePiece(currentBoard, 1, 0, 6, 0);
+        Piece whitePawn = game.getPiece(6, 0);
+        ArrayList<Piece[][]> moves = new ArrayList();
+        game.addAllPawnMoves(currentBoard, moves, whitePawn, 6, 0);
+        assertTrue(moves.size() == 1);
+        assertEquals(Type.QUEEN, moves.get(0)[7][1].getType());
+        assertEquals(Side.WHITE, moves.get(0)[7][1].getSide());
     }
     
     @Test

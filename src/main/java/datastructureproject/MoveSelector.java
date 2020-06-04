@@ -90,7 +90,7 @@ public class MoveSelector {
             if (checkDoubledPawns(board, y, x)) {
                 value -= 0.5;
             }
-            value += addPromotionBonus(board, y, x);
+            value += addCloseToPromotionBonus(board, y, x);
         }
         value += moves.size() * 0.1;
         return value;
@@ -149,23 +149,19 @@ public class MoveSelector {
      * @return returns 1 if the pawn has two steps to promotion, 2 if only one 
      * step and otherwise 0.
      */
-    public int addPromotionBonus(Piece[][] board, int y, int x) {
+    public int addCloseToPromotionBonus(Piece[][] board, int y, int x) {
         Piece pawn = board[y][x];
         if (pawn.getSide() == Side.WHITE) {
             if (y == 5) {
                 return 1;
             } else if (y == 6) {
                 return 2;
-            } else if (y == 7) {
-                return 9;
             }
         } else {
             if (y == 2) {
                 return 1;
             } else if (y == 1) {
                 return 2;
-            } else if (y == 0) {
-                return 9;
             }
         }
         return 0;
@@ -181,10 +177,10 @@ public class MoveSelector {
     
     public double maxBoardValue(Piece[][] board, int depth, double alpha, double beta) {
         if (game.isKingDead(board, Side.WHITE)) {
-            return -999999.99;
+            return -99999.99;
         }
         if (game.isKingDead(board, Side.BLACK)) {
-            return 999999.99;
+            return 99999.99;
         }
         if (depth == 0) {
             return evaluateBoard(board);
@@ -204,10 +200,10 @@ public class MoveSelector {
         
     public double minBoardValue(Piece[][] board, int depth, double alpha, double beta) {
         if (game.isKingDead(board, Side.WHITE)) {
-            return -999999.99;
+            return -99999.99;
         }
         if (game.isKingDead(board, Side.BLACK)) {
-            return 999999.99;
+            return 99999.99;
         }
         if (depth == 0) {
             return evaluateBoard(board);
@@ -231,7 +227,7 @@ public class MoveSelector {
         double bestValue = -99999.99;
         Piece[][] bestMove = null;
         for (Piece[][] move : moves) {
-            double value = minBoardValue(move, 2, -99999, 99999);
+            double value = minBoardValue(move, 1, -99999, 99999);
             if (value > bestValue) {
                 bestValue = value;
                 bestMove = move;
@@ -246,7 +242,7 @@ public class MoveSelector {
         double bestValue = 99999.99;
         Piece[][] bestMove = null;
         for (Piece[][] move : moves) {
-            double value = maxBoardValue(move, 2, -99999, 99999);
+            double value = maxBoardValue(move, 1, -99999, 99999);
             if (value < bestValue) {
                 bestValue = value;
                 bestMove = move;

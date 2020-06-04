@@ -39,6 +39,7 @@ public class TrainerBot implements ChessBot {
         if (!move.isEmpty()) {
             return move;
         }
+        boolean promotion = false;
         for (int y = 0; y <= 7; y++) {
             for (int x = 0; x <= 7; x++) {
                 Piece currentBoardPiece = currentBoard[y][x];
@@ -46,16 +47,21 @@ public class TrainerBot implements ChessBot {
                 if (currentBoardPiece != newBoardPiece) {
                     if (newBoardPiece.getType() == Type.EMPTY) {
                         start += (char) (x + 97) + String.valueOf(y + 1);
+                        if ((y == 6) && currentBoardPiece.getType() == Type.PAWN && currentBoardPiece.getSide() == Side.WHITE) {
+                            promotion = true;
+                        } else if ((y == 1) && currentBoardPiece.getType() == Type.PAWN && currentBoardPiece.getSide() == Side.BLACK) {
+                            promotion = true;
+                        }
                     } else {
                         end += (char) (x + 97) + String.valueOf(y + 1);
-                        if ((y == 0 || y == 7) && newBoardPiece.getType() == Type.PAWN) {
-                            end += 'q';
-                        }
                     }
                 }
             }
         }
         move = start + end;
+        if (promotion) {
+            move += "q";
+        }
         return move;
     }
     
@@ -164,5 +170,4 @@ public class TrainerBot implements ChessBot {
         updateCastlingStatus(currentY, currentX);
         game.setCurrentBoard(board);
     }
-    
 }

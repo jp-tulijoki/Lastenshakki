@@ -128,13 +128,16 @@ public class Game {
         if (pawn.getSide() == Side.WHITE && board[y + 1][x].getType() == Type.EMPTY) {
             Piece[][] newBoard = copyBoard(board);
             movePiece(newBoard, y, x, y + 1, x);
+            promotePawn(newBoard, y + 1, x);
             moves.add(newBoard);
             return;
         }
         if (pawn.getSide() == Side.BLACK && board[y - 1][x].getType() == Type.EMPTY) {
             Piece[][] newBoard = copyBoard(board);
             movePiece(newBoard, y, x, y - 1, x);
+            promotePawn(newBoard, y - 1, x);
             moves.add(newBoard);
+            
         }
     }
     
@@ -180,11 +183,13 @@ public class Game {
             if (pawn.getSide() == Side.WHITE && board[y + 1][x - 1].getSide() == Side.BLACK) {
                 Piece[][] newBoard = copyBoard(board);
                 movePiece(newBoard, y, x, y + 1, x - 1);
+                promotePawn(newBoard, y + 1, x - 1);
                 moves.add(newBoard);
             }
             if (pawn.getSide() == Side.BLACK && board[y - 1][x - 1].getSide() == Side.WHITE) {
                 Piece[][] newBoard = copyBoard(board);
                 movePiece(newBoard, y, x, y - 1, x - 1);
+                promotePawn(newBoard, y - 1, x - 1);
                 moves.add(newBoard);
             }
         }
@@ -192,11 +197,13 @@ public class Game {
             if (pawn.getSide() == Side.WHITE && board[y + 1][x + 1].getSide() == Side.BLACK) {
                 Piece[][] newBoard = copyBoard(board);
                 movePiece(newBoard, y, x, y + 1, x + 1);
+                promotePawn(newBoard, y + 1, x + 1);
                 moves.add(newBoard);
             }
             if (pawn.getSide() == Side.BLACK && board[y - 1][x + 1].getSide() == Side.WHITE) {
                 Piece[][] newBoard = copyBoard(board);
                 movePiece(newBoard, y, x, y - 1, x + 1);
+                promotePawn(newBoard, y - 1, x + 1);
                 moves.add(newBoard);
             }
         }
@@ -241,6 +248,14 @@ public class Game {
                     moves.add(newBoard);
                 }
             }
+        }
+    }
+    
+    public void promotePawn(Piece[][] board, int y, int x) {
+        if (y == 7) {
+            board[y][x] = new Piece(Type.QUEEN, Side.WHITE);
+        } else if (y == 0) {
+            board[y][x] = new Piece(Type.QUEEN, Side.BLACK);
         }
     }
     
