@@ -167,14 +167,14 @@ public class MoveSelector {
         return 0;
     }
     
-    public Side getOppositeSide(Side side) {
-        if (side == Side.WHITE) {
-            return Side.BLACK;
-        } else {
-            return Side.WHITE;
-        }
-    }
-    
+    /**
+     * This method is the max part of the minimax algorithm.
+     * @param board the given chessboard to be analyzed.
+     * @param depth the depth of the recursion.
+     * @param alpha the alpha variable of alpha-beta-pruning.
+     * @param beta the beta variable of alpha-beta-pruning.
+     * @return returns max board value, i.e. best value for the white player
+     */
     public double maxBoardValue(Piece[][] board, int depth, double alpha, double beta) {
         if (game.isKingDead(board, Side.WHITE)) {
             return -99999.99;
@@ -197,7 +197,16 @@ public class MoveSelector {
         }
         return bestValue;
     }
-        
+    
+
+    /**
+     * This method is the min part of the minimax algorithm.
+     * @param board the given chessboard to be analyzed.
+     * @param depth the depth of the recursion.
+     * @param alpha the alpha variable of alpha-beta-pruning.
+     * @param beta the beta variable of alpha-beta-pruning.
+     * @return returns min board value, i.e. best value for the black player
+     */    
     public double minBoardValue(Piece[][] board, int depth, double alpha, double beta) {
         if (game.isKingDead(board, Side.WHITE)) {
             return -99999.99;
@@ -221,6 +230,10 @@ public class MoveSelector {
         return bestValue;
     }
     
+    /**
+     * This method selects the best move for the white player.
+     * @return returns a chessboard representation of the best move
+     */
     public Piece[][] getBestWhiteMove() {
         Piece[][] board = game.getCurrentBoard();
         ArrayList<Piece[][]> moves = game.addAllLegalMoves(board, Side.WHITE);
@@ -236,6 +249,10 @@ public class MoveSelector {
         return bestMove;
     }
     
+    /**
+     * This method selects the best move for the black player.
+     * @return returns a chessboard representation of the best move
+     */
     public Piece[][] getBestBlackMove() {
         Piece[][] board = game.getCurrentBoard();
         ArrayList<Piece[][]> moves = game.addAllLegalMoves(board, Side.BLACK);
@@ -251,9 +268,16 @@ public class MoveSelector {
         return bestMove;
     }
     
+    public Side getOppositeSide(Side side) {
+        if (side == side.WHITE) {
+            return Side.BLACK;
+        } else {
+            return Side.WHITE;
+        }
+    }
+    
     /**
-     * This method selects the next move for the bot. (At this point, it selects
-     * a random legal move.)
+     * This method selects the random move for the bot (for testing purposes). 
      * @param side the side of the player
      * @return returns a move as a chessboard representation.
      */

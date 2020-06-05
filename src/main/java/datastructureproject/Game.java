@@ -729,7 +729,7 @@ public class Game {
         } else if (piece.getType() == Type.QUEEN) {
             addQueenMoves(board, moves, piece, y, x);
         } else if (piece.getType() == Type.KING) {
-            addAllKingMoves(board,moves, piece, y, x);
+            addAllKingMoves(board, moves, piece, y, x);
             if (piece.getSide() == Side.WHITE) {
                 checkWhiteCastling(board);
             } else {

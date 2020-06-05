@@ -3,7 +3,6 @@ package chess.bot;
 import chess.engine.GameState;
 import chess.model.Side;
 import datastructureproject.*;
-import java.util.ArrayList;
 
 /**
  * This class is the chess bot implementation that communicates the moves to the
