@@ -539,10 +539,10 @@ public class Game {
         }
         if (board[7][1].getType() != Type.EMPTY || board[7][2].getType() 
                 != Type.EMPTY || board[7][3].getType() != Type.EMPTY) {
-            castling[4] = false;
+            castling[6] = false;
         }
-        if (board[7][5].getType() != Type.EMPTY || board[7][6].getType() == Type.EMPTY) {
-            castling[5] = false;
+        if (board[7][5].getType() != Type.EMPTY || board[7][6].getType() != Type.EMPTY) {
+            castling[7] = false;
         }
         if (!castling[6] && !castling[7]) {
             return;

@@ -151,5 +151,24 @@ public class BotTest {
         bot.updateLatestMove("g7h8q");
         assertEquals(Type.QUEEN, game.getCurrentBoard()[7][7].getType());
         assertEquals(Side.WHITE, game.getCurrentBoard()[7][7].getSide());
+        
     }
+    
+    @Test
+    public void pawnPromotionTestTwo() {
+        Game game = bot.getGame();
+        game.initBoard();
+        Piece[][] board = game.getCurrentBoard();
+        game.movePiece(board, 1, 6, 6, 6);
+        game.setCurrentBoard(board);
+        Piece[][] newBoard = game.copyBoard(board);
+        game.movePiece(newBoard, 6, 6, 7, 7);
+        String move = bot.parseMove(Side.WHITE, board, newBoard);
+        assertEquals("g7h8q", move);
+        bot.updateLatestMove(move);
+        assertEquals(Type.QUEEN, game.getCurrentBoard()[7][7].getType());
+        assertEquals(Side.WHITE, game.getCurrentBoard()[7][7].getSide());
+        
+    }
+    
 }

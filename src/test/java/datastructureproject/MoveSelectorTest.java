@@ -6,6 +6,7 @@
 package datastructureproject;
 
 import chess.model.Side;
+import java.util.ArrayList;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -40,7 +41,7 @@ public class MoveSelectorTest {
         game.initBoard();
         Piece[][] whiteMove = ms.getBestWhiteMove();
         assertTrue(whiteMove != null);
-        Piece[][] blackMove = ms.getBestBlackMove();
+        Piece[][] blackMove = ms.getBestBlackMove(1);
         assertTrue(blackMove != null);
     }
     
@@ -52,7 +53,7 @@ public class MoveSelectorTest {
             board = ms.getBestWhiteMove();
             assertTrue(board != null);
             assertFalse(game.isKingDead(board, Side.BLACK));
-            board = ms.getBestBlackMove();
+            board = ms.getBestBlackMove(1);
             assertTrue(board != null);
             assertFalse(game.isKingDead(board, Side.WHITE));
         }
@@ -63,6 +64,21 @@ public class MoveSelectorTest {
         game.initBoard();
         Piece[][] board = game.getCurrentBoard();
         game.movePiece(board, 1, 6, 3, 6);
-        ms.getBestBlackMove();
+        Piece[][] move = ms.getBestBlackMove(1);
+        assertTrue(move != null);
+    }
+    
+    @Test
+    public void problemMoveTwo() {
+        game.initBoard();
+        Piece[][] board = game.getCurrentBoard();
+        board[7][5] = new Piece(Type.EMPTY);
+        game.movePiece(board, 1, 6, 6, 6);
+        ArrayList<Piece[][]> moves = new ArrayList();
+        game.addPawnAttack(board, moves, board[6][6], 6, 6);
+        board = moves.get(0);
+        assertEquals(Type.QUEEN, board[7][7].getType());
+        Piece[][] move = ms.getBestBlackMove(2);
+        assertTrue(move != null);
     }
 }

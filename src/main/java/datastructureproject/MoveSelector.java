@@ -241,7 +241,7 @@ public class MoveSelector {
         double bestValue = -99999.99;
         Piece[][] bestMove = null;
         for (Piece[][] move : moves) {
-            double value = minBoardValue(move, 1, -99999, 99999);
+            double value = minBoardValue(move, 2, -99999, 99999);
             if (value > bestValue) {
                 bestValue = value;
                 bestMove = move;
@@ -254,17 +254,20 @@ public class MoveSelector {
      * This method selects the best move for the black player.
      * @return returns a chessboard representation of the best move
      */
-    public Piece[][] getBestBlackMove() {
+    public Piece[][] getBestBlackMove(int turn) {
         Piece[][] board = game.getCurrentBoard();
         game.checkBlackCastling(board);
         ArrayList<Piece[][]> moves = game.addAllLegalMoves(board, Side.BLACK);
         double bestValue = 99999.99;
         Piece[][] bestMove = null;
         for (Piece[][] move : moves) {
-            double value = maxBoardValue(move, 1, -99999, 99999);
+            double value = maxBoardValue(move, 2, -99999.99, 99999.99);
             if (value < bestValue) {
                 bestValue = value;
                 bestMove = move;
+                if (bestValue < -1 * turn) {
+                    break;
+                }
             }
         }
         return bestMove;
