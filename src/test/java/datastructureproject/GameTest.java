@@ -357,11 +357,9 @@ public class GameTest {
         board[3][3] = new Piece(Type.BISHOP, Side.WHITE);
         game.checkBlackCastling(board);
         assertTrue(game.getCastling()[7]);
-        assertFalse(game.getCastling()[6]);
         ArrayList<Piece[][]> moves = new ArrayList();
         game.addBlackCastling(board, moves, blackKing, 7, 4);
-        assertEquals(1, moves.size());
-        Piece[][] castling = moves.get(0);
+        Piece[][] castling = moves.get(1);
         assertEquals(blackKing, castling[7][6]);
         assertEquals(blackRook, castling[7][5]);
         assertEquals(Type.EMPTY, castling[7][4].getType());
@@ -450,6 +448,8 @@ public class GameTest {
     public void correctNumberOfMovesInTheBeginning() {
         game.initBoard();
         Piece[][] board = game.getCurrentBoard();
+        game.checkWhiteCastling(board);
+        game.checkBlackCastling(board);
         ArrayList<Piece[][]> moves = game.addAllLegalMoves(board, Side.WHITE);
         assertEquals(20, moves.size());
     }

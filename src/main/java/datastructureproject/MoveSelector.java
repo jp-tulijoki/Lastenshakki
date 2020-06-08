@@ -236,6 +236,7 @@ public class MoveSelector {
      */
     public Piece[][] getBestWhiteMove() {
         Piece[][] board = game.getCurrentBoard();
+        game.checkWhiteCastling(board);
         ArrayList<Piece[][]> moves = game.addAllLegalMoves(board, Side.WHITE);
         double bestValue = -99999.99;
         Piece[][] bestMove = null;
@@ -255,6 +256,7 @@ public class MoveSelector {
      */
     public Piece[][] getBestBlackMove() {
         Piece[][] board = game.getCurrentBoard();
+        game.checkBlackCastling(board);
         ArrayList<Piece[][]> moves = game.addAllLegalMoves(board, Side.BLACK);
         double bestValue = 99999.99;
         Piece[][] bestMove = null;

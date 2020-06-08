@@ -57,4 +57,12 @@ public class MoveSelectorTest {
             assertFalse(game.isKingDead(board, Side.WHITE));
         }
     }
+    
+    @Test 
+    public void problemMoveOne() {
+        game.initBoard();
+        Piece[][] board = game.getCurrentBoard();
+        game.movePiece(board, 1, 6, 3, 6);
+        ms.getBestBlackMove();
+    }
 }

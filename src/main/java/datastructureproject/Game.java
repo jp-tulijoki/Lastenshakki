@@ -27,7 +27,7 @@ public class Game {
      */
     public Game() {
         this.currentBoard = new Piece[8][8];
-        this.castling = new boolean[]{true, true, true, true, true, true, true, true};
+        this.castling = new boolean[]{true, true, true, true, false, false, false, false};
     }
     
     /**
@@ -487,17 +487,6 @@ public class Game {
      * player. See constructor for value clarifications.
      */
     public void checkWhiteCastling(Piece[][] board) {
-        if (!(board[0][4].getType() == Type.KING && board[0][4].getSide() == Side.WHITE)) {
-            castling[0] = false;
-            castling[1] = false;
-            return;
-        }
-        if (!(board[0][0].getType() == Type.ROOK && board[0][0].getSide() == Side.WHITE)) {
-            castling[0] = false;
-        }
-        if (!(board[0][7].getType() == Type.ROOK && board[0][7].getSide() == Side.WHITE)) {
-            castling[1] = false;
-        }
         castling[4] = true;
         castling[5] = true;
         if (!castling[0]) {
@@ -540,17 +529,6 @@ public class Game {
      * player. See constructor for value clarifications.
      */
     public void checkBlackCastling(Piece[][] board) {
-        if (!(board[7][4].getType() == Type.KING && board[7][4].getSide() == Side.BLACK)) {
-            castling[2] = false;
-            castling[3] = false;
-            return;
-        }
-        if (!(board[7][0].getType() == Type.ROOK && board[7][0].getSide() == Side.BLACK)) {
-            castling[2] = false;
-        }
-        if (!(board[7][7].getType() == Type.ROOK && board[7][7].getSide() == Side.BLACK)) {
-            castling[3] = false;
-        }
         castling[6] = true;
         castling[7] = true;
         if (!castling[2]) {
@@ -558,6 +536,13 @@ public class Game {
         }
         if (!castling[3]) {
             castling[7] = false;
+        }
+        if (board[7][1].getType() != Type.EMPTY || board[7][2].getType() 
+                != Type.EMPTY || board[7][3].getType() != Type.EMPTY) {
+            castling[4] = false;
+        }
+        if (board[7][5].getType() != Type.EMPTY || board[7][6].getType() == Type.EMPTY) {
+            castling[5] = false;
         }
         if (!castling[6] && !castling[7]) {
             return;
@@ -622,7 +607,7 @@ public class Game {
             movePiece(newBoard, y, 0, y, 3);
             moves.add(newBoard);
         }
-        if (castling[5]) {
+        if (castling[7]) {
             Piece[][] newBoard = copyBoard(board);
             movePiece(newBoard, y, x, y, x + 2);
             movePiece(newBoard, y, 7, y, 5);
@@ -676,11 +661,6 @@ public class Game {
      * controlled.
      */
     public ArrayList<Piece[][]> addAllLegalMoves(Piece[][] board, Side side) {
-        if (side == Side.WHITE) {
-            checkWhiteCastling(board);
-        } else {
-            checkBlackCastling(board);
-        }
         ArrayList<Piece[][]> moves = new ArrayList();
         for (int y = 0; y <= 7; y++) {
             for (int x = 0; x <= 7; x++) {
@@ -729,12 +709,7 @@ public class Game {
         } else if (piece.getType() == Type.QUEEN) {
             addQueenMoves(board, moves, piece, y, x);
         } else if (piece.getType() == Type.KING) {
-            addAllKingMoves(board, moves, piece, y, x);
-            if (piece.getSide() == Side.WHITE) {
-                checkWhiteCastling(board);
-            } else {
-                checkBlackCastling(board);
-            }
+            addRegularKingMoves(board, moves, piece, y, x);
         }
         return moves;
     }
