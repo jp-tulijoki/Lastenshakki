@@ -260,6 +260,7 @@ public class MoveSelector {
         ArrayList<Piece[][]> moves = game.addAllLegalMoves(board, Side.BLACK);
         double bestValue = 99999.99;
         Piece[][] bestMove = null;
+        try {
         for (Piece[][] move : moves) {
             double value = maxBoardValue(move, 2, -99999.99, 99999.99);
             if (value < bestValue) {
@@ -269,6 +270,9 @@ public class MoveSelector {
                     break;
                 }
             }
+        }
+        } catch (Exception e) {
+            bestMove = selectRandomMove(Side.BLACK);
         }
         return bestMove;
     }
@@ -286,7 +290,7 @@ public class MoveSelector {
      * @param side the side of the player
      * @return returns a move as a chessboard representation.
      */
-    public Piece[][] selectMove(Side side) {
+    public Piece[][] selectRandomMove(Side side) {
         Piece[][] currentBoard = game.getCurrentBoard();
         ArrayList<Piece[][]> moves = game.addAllLegalMoves(currentBoard, side);
         Collections.shuffle(moves);
@@ -309,8 +313,6 @@ public class MoveSelector {
                 break;
             }
         }
-        game.setCurrentBoard(currentBoard);
         return selectedMove;
     }
-
 }
