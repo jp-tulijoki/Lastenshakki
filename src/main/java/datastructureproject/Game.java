@@ -625,9 +625,9 @@ public class Game {
      */
     public void addAllKingMoves(Piece[][] board, ArrayList<Piece[][]> moves, Piece king, int y, int x) {
         addRegularKingMoves(board, moves, king, y, x);
-        if (king.getSide() == Side.WHITE) {
+        if (king.getSide() == Side.WHITE && y == 0 && x == 4) {
             addWhiteCastling(board, moves, king, y, x);
-        } else {
+        } else if (king.getSide() == Side.WHITE && y == 7 && x == 4) {
             addBlackCastling(board, moves, king, y, x);
         }
     }

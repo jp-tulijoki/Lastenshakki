@@ -17,9 +17,19 @@ import java.util.Collections;
 public class MoveSelector {
     
     private Game game;
+    private double[][] positionBonus;
+    
 
     public MoveSelector(Game game) {
         this.game = game;
+        this.positionBonus = new double[][]{{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+        {0.0, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.0},
+        {0.0, 0.1, 0.2, 0.2, 0.2, 0.2, 0.1, 0.0},
+        {0.0, 0.1, 0.2, 0.25, 0.25, 0.2, 0.1, 0.0},
+        {0.0, 0.1, 0.2, 0.25, 0.25, 0.2, 0.1, 0.0},
+        {0.0, 0.1, 0.2, 0.2, 0.2, 0.2, 0.1, 0.0},
+        {0.0, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.0},
+        {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}};
     }
     
     /**
@@ -40,18 +50,23 @@ public class MoveSelector {
         for (int y = 0; y <= 7; y++) {
             for (int x = 0; x <= 7; x++) {
                 Piece piece = board[y][x];
-                if (piece.getType() == Type.EMPTY) {
+                Type type = piece.getType();
+                Side side = piece.getSide();
+                if (type == Type.EMPTY) {
                     continue;
                 }
                 if (piece.getSide() == Side.WHITE) {
-                    whiteValue += piece.getType().getValue();
-                    whiteValue += countMobilityBonus(board, y, x);
+                    
+                    whiteValue += type.getValue();
+//                    whiteValue += countMobilityBonus(board, y, x);
+                    whiteValue += countPositionBonus(type, y, x);
                     if (piece.getType() == Type.BISHOP) {
                         whiteBishops++;
                     }
                 } else {
                     blackValue += piece.getType().getValue();
-                    blackValue += countMobilityBonus(board, y, x);
+//                    blackValue += countMobilityBonus(board, y, x);
+                    blackValue += countPositionBonus(type, y, x);
                     if (piece.getType() == Type.BISHOP) {
                         blackBishops++;
                     }
@@ -67,8 +82,17 @@ public class MoveSelector {
         return whiteValue - blackValue;
     }
     
+    public double countPositionBonus(Type type, int y, int x) {
+        double value = 0;
+        if (type == Type.BISHOP || type == Type.KNIGHT || type == Type.QUEEN || type == Type.ROOK) {
+            value += type.getValue() * this.positionBonus[y][x];
+        }
+        return value;
+    }
+    
+    
     /**
-     * This method counts mobility bonus used in board evaluation including
+     * (not in use at the moment) This method counts mobility bonus used in board evaluation including
      * special situations concerning pawn pieces (blocked, isolated, doubled and
      * close to promotion).
      * @param board the evaluated board situation
@@ -97,7 +121,7 @@ public class MoveSelector {
     }
     
     /**
-     * This method checks if a certain pawn has no adjaent friendly pieces.
+     * (not in use at the moment) This method checks if a certain pawn has no adjaent friendly pieces.
      * @param board the evaluated board situation
      * @param y the y-coordinate of the evaluated pawn
      * @param x the x-coordinate of the evaluated pawn
@@ -123,7 +147,7 @@ public class MoveSelector {
     }
     
     /**
-     * This method checks if there is a friendly pawn in the same file (column).
+     * (not in use at the moment) This method checks if there is a friendly pawn in the same file (column).
      * To avoid double penalties, only ranks greater than the current rank
      * are checked.
      * @param board the evaluated board situation
@@ -142,7 +166,7 @@ public class MoveSelector {
     }
     
     /**
-     * This method counts a bonus for pawns close to promotion.
+     * (not in use at the moment) This method counts a bonus for pawns close to promotion.
      * @param board the evaluated board situation
      * @param y the y-coordinate of the evaluated pawn
      * @param x the x-coordinate of the evaluated pawn
@@ -235,7 +259,7 @@ public class MoveSelector {
      * @return returns a chessboard representation of the best move
      */
     public Piece[][] getBestWhiteMove() {
-        Piece[][] board = game.getCurrentBoard();
+        Piece[][] board = game.copyBoard(game.getCurrentBoard());
         game.checkWhiteCastling(board);
         ArrayList<Piece[][]> moves = game.addAllLegalMoves(board, Side.WHITE);
         double bestValue = -99999.99;
@@ -254,25 +278,18 @@ public class MoveSelector {
      * This method selects the best move for the black player.
      * @return returns a chessboard representation of the best move
      */
-    public Piece[][] getBestBlackMove(int turn) {
-        Piece[][] board = game.getCurrentBoard();
+    public Piece[][] getBestBlackMove() {
+        Piece[][] board = game.copyBoard(game.getCurrentBoard());
         game.checkBlackCastling(board);
         ArrayList<Piece[][]> moves = game.addAllLegalMoves(board, Side.BLACK);
         double bestValue = 99999.99;
         Piece[][] bestMove = null;
-        try {
         for (Piece[][] move : moves) {
-            double value = maxBoardValue(move, 2, -99999.99, 99999.99);
+            double value = maxBoardValue(move, 3, -99999.99, 99999.99);
             if (value < bestValue) {
                 bestValue = value;
                 bestMove = move;
-                if (bestValue < -1 * turn) {
-                    break;
-                }
             }
-        }
-        } catch (Exception e) {
-            bestMove = selectRandomMove(Side.BLACK);
         }
         return bestMove;
     }

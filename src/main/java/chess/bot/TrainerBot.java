@@ -110,7 +110,7 @@ public class TrainerBot implements ChessBot {
             updateLatestMove(latestMove);
         }
         if (gamestate.playing == Side.BLACK) {
-            Piece[][] newBoard = ms.getBestBlackMove(gamestate.getTurnCount());
+            Piece[][] newBoard = ms.getBestBlackMove();
             String move = parseMove(Side.BLACK, game.getCurrentBoard(), newBoard);
             updateLatestMove(move);
             return move;
