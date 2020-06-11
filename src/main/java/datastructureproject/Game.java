@@ -267,6 +267,9 @@ public class Game {
      * @param x the x-coordinate of the current location of the pawn piece
      */
     public void addAllPawnMoves(Piece[][] board, ArrayList<Piece[][]> moves, Piece pawn, int y, int x) {
+        if (y == 0 || y == 7) {
+            return;
+        }
         addRegularPawnMove(board, moves, pawn, y, x);
         addTwoStepPawnMove(board, moves, pawn, y, x);
         addPawnAttack(board, moves, pawn, y, x);
