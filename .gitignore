@@ -16,3 +16,6 @@ token.txt
 .classpath
 
 nbproject/
+
+# Ignore 2nd approach to moveselector
+src/main/java/datastructureproject/MoveSelector2.java
