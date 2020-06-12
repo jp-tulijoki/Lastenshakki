@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 /**
+ *  
  * This class takes care of evaluation of board situations and selects a 
  * suitable next move for the chess bot.
  *
@@ -17,19 +18,10 @@ import java.util.Collections;
 public class MoveSelector {
     
     private Game game;
-    private double[][] positionBonus;
     
 
     public MoveSelector(Game game) {
         this.game = game;
-        this.positionBonus = new double[][]{{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
-        {0.0, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.0},
-        {0.0, 0.1, 0.2, 0.2, 0.2, 0.2, 0.1, 0.0},
-        {0.0, 0.1, 0.2, 0.25, 0.25, 0.2, 0.1, 0.0},
-        {0.0, 0.1, 0.2, 0.25, 0.25, 0.2, 0.1, 0.0},
-        {0.0, 0.1, 0.2, 0.2, 0.2, 0.2, 0.1, 0.0},
-        {0.0, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.0},
-        {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}};
     }
     
     /**
@@ -58,15 +50,13 @@ public class MoveSelector {
                 if (piece.getSide() == Side.WHITE) {
                     
                     whiteValue += type.getValue();
-//                    whiteValue += countMobilityBonus(board, y, x);
-                    whiteValue += countPositionBonus(type, y, x);
+                    whiteValue += countMobilityBonus(board, y, x);
                     if (piece.getType() == Type.BISHOP) {
                         whiteBishops++;
                     }
                 } else {
                     blackValue += piece.getType().getValue();
-//                    blackValue += countMobilityBonus(board, y, x);
-                    blackValue += countPositionBonus(type, y, x);
+                    blackValue += countMobilityBonus(board, y, x);
                     if (piece.getType() == Type.BISHOP) {
                         blackBishops++;
                     }
@@ -82,17 +72,8 @@ public class MoveSelector {
         return whiteValue - blackValue;
     }
     
-    public double countPositionBonus(Type type, int y, int x) {
-        double value = 0;
-        if (type == Type.BISHOP || type == Type.KNIGHT || type == Type.QUEEN || type == Type.ROOK) {
-            value += type.getValue() * this.positionBonus[y][x];
-        }
-        return value;
-    }
-    
-    
     /**
-     * (not in use at the moment) This method counts mobility bonus used in board evaluation including
+     * This method counts mobility bonus used in board evaluation including
      * special situations concerning pawn pieces (blocked, isolated, doubled and
      * close to promotion).
      * @param board the evaluated board situation
@@ -121,7 +102,7 @@ public class MoveSelector {
     }
     
     /**
-     * (not in use at the moment) This method checks if a certain pawn has no adjaent friendly pieces.
+     * This method checks if a certain pawn has no adjacent friendly pieces.
      * @param board the evaluated board situation
      * @param y the y-coordinate of the evaluated pawn
      * @param x the x-coordinate of the evaluated pawn
@@ -147,7 +128,7 @@ public class MoveSelector {
     }
     
     /**
-     * (not in use at the moment) This method checks if there is a friendly pawn in the same file (column).
+     * This method checks if there is a friendly pawn in the same file (column).
      * To avoid double penalties, only ranks greater than the current rank
      * are checked.
      * @param board the evaluated board situation
@@ -166,7 +147,7 @@ public class MoveSelector {
     }
     
     /**
-     * (not in use at the moment) This method counts a bonus for pawns close to promotion.
+     * This method counts a bonus for pawns close to promotion.
      * @param board the evaluated board situation
      * @param y the y-coordinate of the evaluated pawn
      * @param x the x-coordinate of the evaluated pawn
@@ -285,7 +266,7 @@ public class MoveSelector {
         double bestValue = 99999.99;
         Piece[][] bestMove = null;
         for (Piece[][] move : moves) {
-            double value = maxBoardValue(move, 3, -99999.99, 99999.99);
+            double value = maxBoardValue(move, 2, -99999.99, 99999.99);
             if (value < bestValue) {
                 bestValue = value;
                 bestMove = move;
