@@ -1,24 +1,12 @@
 package datastructureproject;
 
-import chess.bot.ChessBot;
-import chess.bot.TrainerBot;
-import chess.engine.GameState;
 import chess.model.Side;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
- * Use this class to write performance tests for your bot.
+ * The performance test for the algorithm.
  * 
  */
 public class PerformanceTest {
-
-    private List<GameState> gsList = new ArrayList();
-
-    public void setGsList(List<GameState> gsList) {
-        this.gsList = gsList;
-    }
-
 
     public static void main(String[] args) {
         Game game = new Game();
@@ -33,7 +21,7 @@ public class PerformanceTest {
             game.setCurrentBoard(board);
         }
         long end = System.nanoTime();
-        System.out.println((end-start)/1e9 + " sec.");
+        System.out.println((end - start) / 1e9 + " sec.");
         
         for (int y = 7; y >= 0; y--) {
             for (int x = 0; x <= 7; x++) {

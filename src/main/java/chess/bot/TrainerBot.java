@@ -24,6 +24,7 @@ public class TrainerBot implements ChessBot {
     }
     
     /**
+     * (note to self: enPassant still needs a special parsing)
      * This method parses the difference between two chessboard representations
      * to a UCI move. All promotions are set to queen at this point.
      * @param side the side of the current player
@@ -46,9 +47,11 @@ public class TrainerBot implements ChessBot {
                 if (currentBoardPiece != newBoardPiece) {
                     if (newBoardPiece.getType() == Type.EMPTY) {
                         start += (char) (x + 97) + String.valueOf(y + 1);
-                        if ((y == 6) && currentBoardPiece.getType() == Type.PAWN && currentBoardPiece.getSide() == Side.WHITE) {
+                        if ((y == 6) && currentBoardPiece.getType() == Type.PAWN && currentBoardPiece.getSide() 
+                                == Side.WHITE) {
                             promotion = true;
-                        } else if ((y == 1) && currentBoardPiece.getType() == Type.PAWN && currentBoardPiece.getSide() == Side.BLACK) {
+                        } else if ((y == 1) && currentBoardPiece.getType() == Type.PAWN 
+                                && currentBoardPiece.getSide() == Side.BLACK) {
                             promotion = true;
                         }
                     } else {
@@ -126,6 +129,12 @@ public class TrainerBot implements ChessBot {
         return null;
     }
     
+    /**
+     * This method updates the castling array during the next move update
+     * if necessary.
+     * @param currentY the y-coordinate of the moved piece
+     * @param currentX the x-coordinate of the moved piece
+     */
     public void updateCastlingStatus(int currentY, int currentX) {
         boolean[] castling = game.getCastling();
         if (!castling[0] && !castling[1] && !castling[2] && !castling[3]) {

@@ -6,8 +6,8 @@
 package datastructureproject;
 
 /**
- *
- * @author tulijoki
+ * This class contains the array in which the chessboard representations are 
+ * stored for selecting next move.
  */
 public class ChessboardList {
     private int size;
@@ -26,6 +26,11 @@ public class ChessboardList {
         return size;
     }
     
+    /**
+     * This method stores the chessboard representation in the array and
+     * increments the tail pointer.
+     * @param o the stored chessboard 
+     */
     public void add(Object o) {
         list[tail] = o;
         tail++;
@@ -34,6 +39,9 @@ public class ChessboardList {
         }
     }
     
+    /**
+     * This method doubles the array size if the original array is too small.
+     */
     public void grow() {
         size *= 2;
         Object[] newList = new Object[size];
@@ -43,14 +51,17 @@ public class ChessboardList {
         list = newList;
     }
     
+    /**
+     * This method returns the next board representation in the array.
+     * @return returns a Piece[][] array
+     */
     public Piece[][] getNextBoard() {
         if (next < tail) {
-            Piece[][] board = (Piece[][])list[next];
+            Piece[][] board = (Piece[][]) list[next];
             next++;
             return board;
-        } else {
-            return null;
-        }         
+        }
+        return null;         
     }
     
 }
