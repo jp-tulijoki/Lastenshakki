@@ -16,16 +16,19 @@ public class PerformanceTest {
         for (int i = 1; i <= 50; i++) {
             Piece[][] board = game.getCurrentBoard();
             board = ms.getBestWhiteMove();
+            printBoard(board);
             game.setCurrentBoard(board);
             board = ms.getBestBlackMove();
+            printBoard(board);
             game.setCurrentBoard(board);
         }
         long end = System.nanoTime();
         System.out.println((end - start) / 1e9 + " sec.");
-        
+    }
+    
+    public static void printBoard(Piece[][] board) {
         for (int y = 7; y >= 0; y--) {
             for (int x = 0; x <= 7; x++) {
-                Piece[][] board = game.getCurrentBoard();
                 Side side = board[y][x].getSide();
                 if (side != null) {
                     System.out.print(side);

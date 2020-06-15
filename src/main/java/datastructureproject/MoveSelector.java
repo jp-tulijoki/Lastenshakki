@@ -285,6 +285,12 @@ public class MoveSelector {
                 break;
             }
             double value = maxBoardValue(move, 2, -99999.99, 99999.99);
+            if (value > 90000.00) {
+                continue;
+            }
+            if (value < -10.0 && value > -90000.00) {
+                continue;
+            }
             if (value < bestValue) {
                 bestValue = value;
                 bestMove = move;

@@ -114,21 +114,17 @@ public class TrainerBot implements ChessBot {
             String latestMove = gamestate.getLatestMove();
             updateLatestMove(latestMove);
         }
-        if (gamestate.playing == Side.WHITE) {
-            Piece[][] currentBoard = game.getCurrentBoard();
-            Piece[][] newBoard = ms.getBestWhiteMove();
-            String move = parseMove(Side.WHITE, currentBoard, newBoard);
-            updateLatestMove(move);
-            return move;
-        }
-        if (gamestate.playing == Side.BLACK) {
-            Piece[][] currentBoard = game.getCurrentBoard();
+        Piece[][] currentBoard = game.getCurrentBoard();
+        String move = "";
+        if (gamestate.playing == Side.BLACK) {    
             Piece[][] newBoard = ms.getBestBlackMove();
-            String move = parseMove(Side.BLACK, currentBoard, newBoard);
-            updateLatestMove(move);
-            return move;
+            move = parseMove(Side.BLACK, currentBoard, newBoard);
+        } else {
+            Piece[][] newBoard = ms.getBestWhiteMove();
+            move = parseMove(Side.WHITE, currentBoard, newBoard);
         }
-        return null;
+        updateLatestMove(move);
+        return move;
     }
     
     /**
