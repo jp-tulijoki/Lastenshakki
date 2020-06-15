@@ -18,10 +18,12 @@ import java.util.Collections;
 public class MoveSelector {
     
     private Game game;
+    private MathUtils math;
     
 
     public MoveSelector(Game game) {
         this.game = game;
+        this.math = new MathUtils();
     }
     
     /**
@@ -84,9 +86,9 @@ public class MoveSelector {
     public double countMobilityBonus(Piece[][] board, int y, int x) {
         Piece piece = board[y][x];
         double value = 0;
-        ArrayList<Piece[][]> moves = game.getOnePieceMoves(board, y, x);
+        ChessboardList moves = game.getOnePieceMoves(board, y, x);
         if (piece.getType() == Type.PAWN) {
-            if (moves.isEmpty()) {
+            if (moves.getTail() == 0) {
                 value -= 0.5;
             }
             if (checkPawnIsolation(board, y, x)) {
@@ -97,7 +99,7 @@ public class MoveSelector {
             }
             value += addCloseToPromotionBonus(board, y, x);
         }
-        value += moves.size() * 0.1;
+        value += moves.getTail() * 0.1;
         return value;
     }
     
@@ -191,11 +193,15 @@ public class MoveSelector {
             return evaluateBoard(board);
         }
         double bestValue = -99999.99;
-        ArrayList<Piece[][]> moves = game.addAllLegalMoves(board, Side.WHITE);
-        for (Piece[][] move : moves) {
+        ChessboardList moves = game.addAllLegalMoves(board, Side.WHITE);
+        while (true) {
+            Piece[][] move = moves.getNextBoard();
+            if (move == null) {
+                break;
+            }
             double value = minBoardValue(move, depth - 1, alpha, beta);
-            bestValue = Math.max(value, bestValue);
-            alpha = Math.max(alpha, bestValue);
+            bestValue = math.max(value, bestValue);
+            alpha = math.max(alpha, bestValue);
             if (beta <= alpha) {
                 break;
             }
@@ -223,11 +229,15 @@ public class MoveSelector {
             return evaluateBoard(board);
         }    
         double bestValue = 99999.99;
-        ArrayList<Piece[][]> moves = game.addAllLegalMoves(board, Side.BLACK);
-        for (Piece[][] move : moves) {
+        ChessboardList moves = game.addAllLegalMoves(board, Side.BLACK);
+        while (true) {
+            Piece[][] move = moves.getNextBoard();
+            if (move == null) {
+                break;
+            }
             double value = maxBoardValue(move, depth - 1, alpha, beta);
-            bestValue = Math.min(value, bestValue);
-            beta = Math.min(beta, bestValue);
+            bestValue = math.min(value, bestValue);
+            beta = math.min(beta, bestValue);
             if (beta <= alpha) {
                 break;
             }
@@ -242,10 +252,14 @@ public class MoveSelector {
     public Piece[][] getBestWhiteMove() {
         Piece[][] board = game.copyBoard(game.getCurrentBoard());
         game.checkWhiteCastling(board);
-        ArrayList<Piece[][]> moves = game.addAllLegalMoves(board, Side.WHITE);
+        ChessboardList moves = game.addAllLegalMoves(board, Side.WHITE);
         double bestValue = -99999.99;
         Piece[][] bestMove = null;
-        for (Piece[][] move : moves) {
+        while (true) {
+            Piece[][] move = moves.getNextBoard();
+            if (move == null) {
+                break;
+            }
             double value = minBoardValue(move, 2, -99999, 99999);
             if (value > bestValue) {
                 bestValue = value;
@@ -262,10 +276,14 @@ public class MoveSelector {
     public Piece[][] getBestBlackMove() {
         Piece[][] board = game.copyBoard(game.getCurrentBoard());
         game.checkBlackCastling(board);
-        ArrayList<Piece[][]> moves = game.addAllLegalMoves(board, Side.BLACK);
+        ChessboardList moves = game.addAllLegalMoves(board, Side.BLACK);
         double bestValue = 99999.99;
         Piece[][] bestMove = null;
-        for (Piece[][] move : moves) {
+        while (true) {
+            Piece[][] move = moves.getNextBoard();
+            if (move == null) {
+                break;
+            }
             double value = maxBoardValue(move, 2, -99999.99, 99999.99);
             if (value < bestValue) {
                 bestValue = value;
@@ -288,29 +306,29 @@ public class MoveSelector {
      * @param side the side of the player
      * @return returns a move as a chessboard representation.
      */
-    public Piece[][] selectRandomMove(Side side) {
-        Piece[][] currentBoard = game.getCurrentBoard();
-        ArrayList<Piece[][]> moves = game.addAllLegalMoves(currentBoard, side);
-        Collections.shuffle(moves);
-        
-        Piece[][] selectedMove = null;
-        
-        for (Piece[][] move : moves) {
-            boolean illegalMove = false;
-            ArrayList<Piece[][]> oppositeMoves = game.addAllLegalMoves(move, getOppositeSide(side));
-            for (Piece[][] oppositeMove : oppositeMoves) {
-                if (game.isKingDead(oppositeMove, side)) {
-                    illegalMove = true;
-                    break;
-                }
-            }
-            if (illegalMove) {
-                continue;
-            } else {
-                selectedMove = move;
-                break;
-            }
-        }
-        return selectedMove;
-    }
+//    public Piece[][] selectRandomMove(Side side) {
+//        Piece[][] currentBoard = game.getCurrentBoard();
+//        ArrayList moves = game.addAllLegalMoves(currentBoard, side);
+//        Collections.shuffle(moves);
+//        
+//        Piece[][] selectedMove = null;
+//        
+//        for (Piece[][] move : moves) {
+//            boolean illegalMove = false;
+//            ArrayList<Piece[][]> oppositeMoves = game.addAllLegalMoves(move, getOppositeSide(side));
+//            for (Piece[][] oppositeMove : oppositeMoves) {
+//                if (game.isKingDead(oppositeMove, side)) {
+//                    illegalMove = true;
+//                    break;
+//                }
+//            }
+//            if (illegalMove) {
+//                continue;
+//            } else {
+//                selectedMove = move;
+//                break;
+//            }
+//        }
+//        return selectedMove;
+//    }
 }

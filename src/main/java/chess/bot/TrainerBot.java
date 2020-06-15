@@ -12,10 +12,12 @@ public class TrainerBot implements ChessBot {
     
     private Game game;
     private MoveSelector ms;
+    private MathUtils math;
 
     public TrainerBot() {
         this.game = new Game();
         this.ms = new MoveSelector(game);
+        this.math = new MathUtils();
         game.initBoard();
     }
 
@@ -178,7 +180,7 @@ public class TrainerBot implements ChessBot {
             board[currentX][currentY] = new Piece(Type.QUEEN, pawnSide);
         }
         game.movePiece(board, currentY, currentX, newY, newX);
-        if (board[newY][newX].getType() == Type.PAWN && Math.abs(newY - currentY) == 2) {
+        if (board[newY][newX].getType() == Type.PAWN && math.abs(newY - currentY) == 2) {
             game.setEnPassant(board[newY][newX]);
         } else {
             game.setEnPassant(null);

@@ -25,6 +25,12 @@ public class ChessboardList {
     public int getSize() {
         return size;
     }
+
+    public int getTail() {
+        return tail;
+    }
+    
+    
     
     /**
      * This method stores the chessboard representation in the array and

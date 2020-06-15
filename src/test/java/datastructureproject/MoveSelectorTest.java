@@ -74,9 +74,9 @@ public class MoveSelectorTest {
         Piece[][] board = game.getCurrentBoard();
         board[7][5] = new Piece(Type.EMPTY);
         game.movePiece(board, 1, 6, 6, 6);
-        ArrayList<Piece[][]> moves = new ArrayList();
+        ChessboardList moves = new ChessboardList();
         game.addPawnAttack(board, moves, board[6][6], 6, 6);
-        board = moves.get(0);
+        board = moves.getNextBoard();
         assertEquals(Type.QUEEN, board[7][7].getType());
         Piece[][] move = ms.getBestBlackMove();
         assertTrue(move != null);
@@ -129,7 +129,7 @@ public class MoveSelectorTest {
         board[7][1] = new Piece(Type.ROOK, Side.BLACK);
         board[7][6] = new Piece(Type.QUEEN, Side.WHITE);
         game.setCurrentBoard(board);
-        Piece[][] move = ms.selectRandomMove(Side.BLACK);
+        Piece[][] move = ms.getBestBlackMove();
         assertTrue(move != null);
     }
     

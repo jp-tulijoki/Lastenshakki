@@ -124,7 +124,7 @@ public class Game {
      * @param y the y-coordinate of the current location of the pawn piece
      * @param x the x-coordinate of the current location of the pawn piece
      */
-    public void addRegularPawnMove(Piece[][] board, ArrayList<Piece[][]> moves, Piece pawn, int y, int x) {           
+    public void addRegularPawnMove(Piece[][] board, ChessboardList moves, Piece pawn, int y, int x) {           
         if (pawn.getSide() == Side.WHITE && board[y + 1][x].getType() == Type.EMPTY) {
             Piece[][] newBoard = copyBoard(board);
             movePiece(newBoard, y, x, y + 1, x);
@@ -149,7 +149,7 @@ public class Game {
      * @param y the y-coordinate of the current location of the pawn piece
      * @param x the x-coordinate of the current location of the pawn piece
      */
-    public void addTwoStepPawnMove(Piece[][] board, ArrayList<Piece[][]> moves, Piece pawn, int y, int x) {
+    public void addTwoStepPawnMove(Piece[][] board, ChessboardList moves, Piece pawn, int y, int x) {
         if (pawn.getSide() == Side.WHITE && y != 1) {
             return;
         }
@@ -178,7 +178,7 @@ public class Game {
      * @param y the y-coordinate of the current location of the pawn piece
      * @param x the x-coordinate of the current location of the pawn piece
      */
-    public void addPawnAttack(Piece[][] board, ArrayList<Piece[][]> moves, Piece pawn, int y, int x) {
+    public void addPawnAttack(Piece[][] board, ChessboardList moves, Piece pawn, int y, int x) {
         if (x != 0) {
             if (pawn.getSide() == Side.WHITE && board[y + 1][x - 1].getSide() == Side.BLACK) {
                 Piece[][] newBoard = copyBoard(board);
@@ -216,7 +216,7 @@ public class Game {
      * @param y the y-coordinate of the current location of the pawn piece
      * @param x the x-coordinate of the current location of the pawn piece
      */
-    public void addEnPassant(Piece[][] board, ArrayList<Piece[][]> moves, Piece pawn, int y, int x) {
+    public void addEnPassant(Piece[][] board, ChessboardList moves, Piece pawn, int y, int x) {
         if (x > 0) {
             if (board[y][x - 1] == enPassant) {
                 if (pawn.getSide() == Side.WHITE) {
@@ -266,7 +266,7 @@ public class Game {
      * @param y the y-coordinate of the current location of the pawn piece
      * @param x the x-coordinate of the current location of the pawn piece
      */
-    public void addAllPawnMoves(Piece[][] board, ArrayList<Piece[][]> moves, Piece pawn, int y, int x) {
+    public void addAllPawnMoves(Piece[][] board, ChessboardList moves, Piece pawn, int y, int x) {
         if (y == 0 || y == 7) {
             return;
         }
@@ -284,7 +284,7 @@ public class Game {
      * @param y the y-coordinate of the current location of the knight piece
      * @param x the x-coordinate of the current location of the knight piece
      */
-    public void addKnightMoves(Piece[][] board, ArrayList<Piece[][]> moves, Piece knight, int y, int x) {
+    public void addKnightMoves(Piece[][] board, ChessboardList moves, Piece knight, int y, int x) {
         int[][] knightMoves = {{2, 2, 1, 1, -1, -1, -2, -2},
             {1, -1, 2, -2, 2, -2, 1, -1}};
         for (int i = 0; i < knightMoves[0].length; i++) {
@@ -310,7 +310,7 @@ public class Game {
      * @param y the y-coordinate of the current location of the rook piece
      * @param x the x-coordinate of the current location of the rook piece
      */
-    public void addRookMoves(Piece[][] board, ArrayList<Piece[][]> moves, Piece rook, int y, int x) {
+    public void addRookMoves(Piece[][] board, ChessboardList moves, Piece rook, int y, int x) {
         int up = y + 1;
         int down = y - 1;
         int right = x + 1;
@@ -377,7 +377,7 @@ public class Game {
      * @param y the y-coordinate of the current location of the bishop
      * @param x the x-coordinate of the current location of the bishop
      */
-    public void addBishopMoves(Piece[][] board, ArrayList<Piece[][]> moves, Piece bishop, int y, int x) {
+    public void addBishopMoves(Piece[][] board, ChessboardList moves, Piece bishop, int y, int x) {
         int up = y + 1;
         int down = y - 1;
         int right = x + 1;
@@ -453,7 +453,7 @@ public class Game {
      * @param y the y-coordinate of the current location of the queen
      * @param x the x-coordinate of the current location of the queen
      */
-    public void addQueenMoves(Piece[][] board, ArrayList<Piece[][]> moves, Piece queen, int y, int x) {
+    public void addQueenMoves(Piece[][] board, ChessboardList moves, Piece queen, int y, int x) {
         addRookMoves(board, moves, queen, y, x);
         addBishopMoves(board, moves, queen, y, x);
     }
@@ -466,7 +466,7 @@ public class Game {
      * @param y the y-coordinate of the current location of the king
      * @param x the x-coordinate of the current location of the king
      */
-    public void addRegularKingMoves(Piece[][] board, ArrayList<Piece[][]> moves, Piece king, int y, int x) {
+    public void addRegularKingMoves(Piece[][] board, ChessboardList moves, Piece king, int y, int x) {
         for (int newY = y - 1; newY <= y + 1; newY++) {
             for (int newX = x - 1; newX <= x + 1; newX++) {
                 if (newY == y && newX == x) {
@@ -511,8 +511,12 @@ public class Game {
         if (!castling[4] && !castling[5]) {
             return;
         }
-        ArrayList<Piece[][]> moves = addAllLegalMoves(board, Side.BLACK);
-        for (Piece[][] move : moves) {
+        ChessboardList moves = addAllLegalMoves(board, Side.BLACK);
+        while (true) {
+            Piece[][] move = moves.getNextBoard();
+            if (move == null) {
+                break;
+            }
             if (move[0][2].getType() != Type.EMPTY || move[0][3].getType() 
                     != Type.EMPTY || move[0][4].getType() != Type.KING) {
                 castling[4] = false;
@@ -550,8 +554,12 @@ public class Game {
         if (!castling[6] && !castling[7]) {
             return;
         }
-        ArrayList<Piece[][]> moves = addAllLegalMoves(board, Side.WHITE);
-        for (Piece[][] move : moves) {
+        ChessboardList moves = addAllLegalMoves(board, Side.WHITE);
+        while (true) {
+            Piece[][] move = moves.getNextBoard();
+            if (move == null) {
+                break;
+            }
             if (move[7][2].getType() != Type.EMPTY || move[7][3].getType() 
                     != Type.EMPTY || move[7][4].getType() != Type.KING) {
                 castling[6] = false;
@@ -574,7 +582,7 @@ public class Game {
      * @param y the y-coordinate of the current location of the king
      * @param x the x-coordinate of the current location of the king
      */
-    public void addWhiteCastling(Piece[][] board, ArrayList<Piece[][]> moves, Piece whiteKing, int y, int x) {
+    public void addWhiteCastling(Piece[][] board, ChessboardList moves, Piece whiteKing, int y, int x) {
         if (!castling[4] && !castling[5]) {
             return;
         }
@@ -600,7 +608,7 @@ public class Game {
      * @param y the y-coordinate of the current location of the king
      * @param x the x-coordinate of the current location of the king
      */
-    public void addBlackCastling(Piece[][] board, ArrayList<Piece[][]> moves, Piece blackKing, int y, int x) {
+    public void addBlackCastling(Piece[][] board, ChessboardList moves, Piece blackKing, int y, int x) {
         if (!castling[6] && !castling[7]) {
             return;
         }
@@ -626,7 +634,7 @@ public class Game {
      * @param y the y-coordinate of the current location of the king
      * @param x the x-coordinate of the current location of the king
      */
-    public void addAllKingMoves(Piece[][] board, ArrayList<Piece[][]> moves, Piece king, int y, int x) {
+    public void addAllKingMoves(Piece[][] board, ChessboardList moves, Piece king, int y, int x) {
         addRegularKingMoves(board, moves, king, y, x);
         if (king.getSide() == Side.WHITE && y == 0 && x == 4) {
             addWhiteCastling(board, moves, king, y, x);
@@ -663,8 +671,8 @@ public class Game {
      * but legality concerning the entire game situation, e.g. check is not 
      * controlled.
      */
-    public ArrayList<Piece[][]> addAllLegalMoves(Piece[][] board, Side side) {
-        ArrayList<Piece[][]> moves = new ArrayList();
+    public ChessboardList addAllLegalMoves(Piece[][] board, Side side) {
+        ChessboardList moves = new ChessboardList();
         for (int y = 0; y <= 7; y++) {
             for (int x = 0; x <= 7; x++) {
                 Piece piece = board[y][x];
@@ -698,8 +706,8 @@ public class Game {
      * but legality concerning the entire game situation, e.g. check is not 
      * controlled.
      */
-    public ArrayList<Piece[][]> getOnePieceMoves(Piece[][] board, int y, int x) {
-        ArrayList<Piece[][]> moves = new ArrayList();
+    public ChessboardList getOnePieceMoves(Piece[][] board, int y, int x) {
+        ChessboardList moves = new ChessboardList();
         Piece piece = board[y][x];
         if (piece.getType() == Type.PAWN) {
             addAllPawnMoves(board, moves, piece, y, x);
