@@ -25,7 +25,7 @@ public class MoveSelectorTest {
     
     public MoveSelectorTest() {
         this.game = new Game();
-        this.ms = new MoveSelector(game);
+        this.ms = new MoveSelector(game, false, 0.0, false, 0.0);
     }
     
     @Test
@@ -46,7 +46,7 @@ public class MoveSelectorTest {
     }
     
     @Test
-    public void moveSelectorDoesNotFailIn20Rounds() {
+    public void normalMoveSelectorDoesNotFailIn20Rounds() {
         game.initBoard();
         Piece[][] board = game.getCurrentBoard();
         for (int i = 1; i <= 20; i++) {
@@ -164,5 +164,23 @@ public class MoveSelectorTest {
         game.setCurrentBoard(board);
         Piece[][] move = ms.getBestBlackMove();
         assertTrue(move != null);
+    }
+    
+    @Test
+    public void handicapValueIsNotExdeeded() {
+        this.ms = new MoveSelector(game, false, 0.0, true, -3.0);
+        game.initBoard();
+        Piece[][] board = game.getCurrentBoard();
+        for (int i = 1; i <= 5; i++) {
+            board = ms.getBestWhiteMove();
+            assertTrue(board != null);
+            assertFalse(game.isKingDead(board, Side.BLACK));
+            board = ms.getBestBlackMove();
+            assertTrue(board != null);
+            assertFalse(game.isKingDead(board, Side.WHITE));
+        }
+        board = game.getCurrentBoard();
+        double boardValue = ms.evaluateBoard(board);
+        assertTrue(boardValue > -3.5);
     }
 }

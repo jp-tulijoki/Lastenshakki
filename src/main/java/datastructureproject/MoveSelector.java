@@ -19,11 +19,31 @@ public class MoveSelector {
     
     private Game game;
     private MathUtils math;
+    private boolean whiteHandicap;
+    private double whiteMaxValue;
+    private boolean blackHandicap;
+    private double blackMinValue;
     
-
-    public MoveSelector(Game game) {
+    /**
+     * The constructor for this class.
+     * @param game the game object for which the move selector makes the next 
+     * move
+     * @param whiteHandicap defines if white plays with handicap
+     * @param whiteMaxValue sets the max board value white may accomplish with
+     * next move. The larger the better. Does not limit white from making a
+     * checkmate.
+     * @param blackHandicap defines if black plays with handicap
+     * @param blackMinValue sets the min board value white may accomplish with
+     * next move. The smaller the better. Does not limit black from making a
+     * checkmate.
+     */
+    public MoveSelector(Game game, boolean whiteHandicap, double whiteMaxValue, boolean blackHandicap, double blackMinValue) {
         this.game = game;
         this.math = new MathUtils();
+        this.whiteHandicap = whiteHandicap;
+        this.whiteHandicap = whiteHandicap;
+        this.blackHandicap = blackHandicap;
+        this.blackHandicap = blackHandicap;
     }
     
     /**
@@ -261,6 +281,14 @@ public class MoveSelector {
                 break;
             }
             double value = minBoardValue(move, 2, -99999, 99999);
+            if (value < -90000.00) {
+                continue;
+            }
+            if (whiteHandicap) {
+                if (value > whiteMaxValue && value < 90000.00) {
+                    continue;
+                }    
+            }
             if (value > bestValue) {
                 bestValue = value;
                 bestMove = move;
@@ -288,8 +316,10 @@ public class MoveSelector {
             if (value > 90000.00) {
                 continue;
             }
-            if (value < -10.0 && value > -90000.00) {
-                continue;
+            if (blackHandicap) {
+                if (value < blackMinValue && value > -90000.00) {
+                    continue;
+                }
             }
             if (value < bestValue) {
                 bestValue = value;
@@ -306,35 +336,4 @@ public class MoveSelector {
             return Side.WHITE;
         }
     }
-    
-    /**
-     * This method selects the random move for the bot (for testing purposes). 
-     * @param side the side of the player
-     * @return returns a move as a chessboard representation.
-     */
-//    public Piece[][] selectRandomMove(Side side) {
-//        Piece[][] currentBoard = game.getCurrentBoard();
-//        ArrayList moves = game.addAllLegalMoves(currentBoard, side);
-//        Collections.shuffle(moves);
-//        
-//        Piece[][] selectedMove = null;
-//        
-//        for (Piece[][] move : moves) {
-//            boolean illegalMove = false;
-//            ArrayList<Piece[][]> oppositeMoves = game.addAllLegalMoves(move, getOppositeSide(side));
-//            for (Piece[][] oppositeMove : oppositeMoves) {
-//                if (game.isKingDead(oppositeMove, side)) {
-//                    illegalMove = true;
-//                    break;
-//                }
-//            }
-//            if (illegalMove) {
-//                continue;
-//            } else {
-//                selectedMove = move;
-//                break;
-//            }
-//        }
-//        return selectedMove;
-//    }
 }
