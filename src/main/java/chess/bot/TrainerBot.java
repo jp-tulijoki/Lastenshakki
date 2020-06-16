@@ -26,7 +26,6 @@ public class TrainerBot implements ChessBot {
     }
     
     /**
-     * (note to self: enPassant still needs a special parsing)
      * This method parses the difference between two chessboard representations
      * to a UCI move. All promotions are set to queen at this point.
      * @param side the side of the current player
@@ -47,6 +46,12 @@ public class TrainerBot implements ChessBot {
                 Piece currentBoardPiece = currentBoard[y][x];
                 Piece newBoardPiece = newBoard[y][x];
                 if (currentBoardPiece != newBoardPiece) {
+                    if (currentBoardPiece.getType() == Type.PAWN && (y == 3 || y == 4)) {
+                        move = parseEnPassant(side, y, x, currentBoard, newBoard);
+                        if (!move.isEmpty()) {
+                            return move;
+                        }
+                    }
                     if (newBoardPiece.getType() == Type.EMPTY) {
                         start += (char) (x + 97) + String.valueOf(y + 1);
                         if ((y == 6) && currentBoardPiece.getType() == Type.PAWN && currentBoardPiece.getSide() 
@@ -96,6 +101,48 @@ public class TrainerBot implements ChessBot {
             if (currentBoard[7][4].getType() == Type.KING && currentBoard[7][4].getSide() == Side.BLACK 
                     && newBoard[7][6].getType() == Type.KING && newBoard[7][6].getSide() == Side.BLACK) {
                 return "e8g8";
+            }
+        }
+        return "";
+    }
+    
+    /**
+     * Special parsing for the enPassant move.
+     * @param side the side of the player who made the move
+     * @param y the y-coordinate of the moved piece before the mpve
+     * @param x the x-coordinate of the moved piece before the move
+     * @param currentBoard the board before the move
+     * @param newBoard the board after the move
+     * @return returns an enPassant move in UCI format if there is one and an 
+     * empty string otherwise
+     */
+    public String parseEnPassant(Side side, int y, int x, Piece[][] currentBoard, Piece[][] newBoard) {
+        if (side == Side.WHITE && y == 4) {
+            if (x > 0) {
+                if (currentBoard[y][x - 1].getType() == Type.PAWN && currentBoard[y][x - 1].getSide()
+                        == Side.BLACK && newBoard[y][x - 1].getType() == Type.EMPTY) {
+                    return (char) (x + 97) + String.valueOf(y + 1) + (char) (x + 96) + String.valueOf(y + 2);
+                }
+            }
+            if (x < 7) {
+                if (currentBoard[y][x + 1].getType() == Type.PAWN && currentBoard[y][x + 1].getSide()
+                        == Side.BLACK && newBoard[y][x + 1].getType() == Type.EMPTY) {
+                    return (char) (x + 97) + String.valueOf(y + 1) + (char) (x + 98) + String.valueOf(y + 2);
+                }
+            }
+        }
+        if (side == Side.BLACK && y == 3) {
+            if (x > 0) {
+                if (currentBoard[y][x - 1].getType() == Type.PAWN && currentBoard[y][x - 1].getSide()
+                        == Side.WHITE && newBoard[y][x - 1].getType() == Type.EMPTY) {
+                    return (char) (x + 97) + String.valueOf(y + 1) + (char) (x + 96) + String.valueOf(y);
+                }
+            }
+            if (x < 7) {
+                if (currentBoard[y][x + 1].getType() == Type.PAWN && currentBoard[y][x + 1].getSide()
+                        == Side.WHITE && newBoard[y][x + 1].getType() == Type.EMPTY) {
+                    return (char) (x + 97) + String.valueOf(y + 1) + (char) (x + 98) + String.valueOf(y);
+                }
             }
         }
         return "";

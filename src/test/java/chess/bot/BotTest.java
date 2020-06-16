@@ -71,6 +71,45 @@ public class BotTest {
     }
     
     @Test
+    public void moveParserDetectsEnPassant() {
+        Game game = new Game();
+        Piece[][] currentBoard = game.getCurrentBoard();
+        for (int y = 0; y <= 7; y++) {
+            for (int x = 0; x <= 7; x++) {
+                currentBoard[y][x] = new Piece(Type.EMPTY);
+            }
+        }
+        currentBoard[4][0] = new Piece(Type.PAWN, Side.WHITE);
+        currentBoard[4][1] = new Piece(Type.PAWN, Side.BLACK);
+        currentBoard[4][7] = new Piece(Type.PAWN, Side.WHITE);
+        currentBoard[4][6] = new Piece(Type.PAWN, Side.BLACK);
+        currentBoard[3][0] = new Piece(Type.PAWN, Side.BLACK);
+        currentBoard[3][1] = new Piece(Type.PAWN, Side.WHITE);
+        currentBoard[3][7] = new Piece(Type.PAWN, Side.BLACK);
+        currentBoard[3][6] = new Piece(Type.PAWN, Side.WHITE);
+        Piece newBoard[][] = game.copyBoard(currentBoard);
+        game.movePiece(newBoard, 4, 0, 5, 1);
+        newBoard[4][1] = new Piece(Type.EMPTY);
+        String move = bot.parseMove(Side.WHITE, currentBoard, newBoard);
+        assertEquals("a5b6", move);
+        currentBoard = game.copyBoard(newBoard);
+        game.movePiece(newBoard, 4, 7, 5, 6);
+        newBoard[4][6] = new Piece(Type.EMPTY);
+        move = bot.parseMove(Side.WHITE, currentBoard, newBoard);
+        assertEquals("h5g6", move);
+        currentBoard = game.copyBoard(newBoard);
+        game.movePiece(newBoard, 3, 0, 2, 1);
+        newBoard[3][1] = new Piece(Type.EMPTY);
+        move = bot.parseMove(Side.BLACK, currentBoard, newBoard);
+        assertEquals("a4b3", move);
+        currentBoard = game.copyBoard(newBoard);
+        game.movePiece(newBoard, 3, 7, 2, 6);
+        newBoard[3][6] = new Piece(Type.EMPTY);
+        move = bot.parseMove(Side.BLACK, currentBoard, newBoard);
+        assertEquals("h4g3", move);
+    }
+    
+    @Test
     public void castlingArrayUpdatesQueensideRookMoves() {
         Game game = bot.getGame();
         game.initBoard();
