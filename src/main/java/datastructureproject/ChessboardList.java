@@ -16,7 +16,7 @@ public class ChessboardList {
     private int next;
 
     public ChessboardList() {
-        this.size = 100;
+        this.size = 40;
         this.list = new Object[size];
         this.tail = 0;
         this.next = 0;

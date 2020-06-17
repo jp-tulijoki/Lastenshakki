@@ -43,14 +43,14 @@ public class ChessboardListTest {
         }
     }
     
-//    @Test
-//    public void ArrayIsGrownWhenNecessary() {
-//        for (int i = 1; i < 40; i++) {
-//            list.add(new Piece[8][8]);
-//        }
-//        assertEquals(40, list.getSize());
-//        list.add(new Piece[8][8]);
-//        assertEquals(80, list.getSize());
-//    }
+    @Test
+    public void ArrayIsGrownWhenNecessary() {
+        for (int i = 1; i < 40; i++) {
+            list.add(new Piece[8][8]);
+        }
+        assertEquals(40, list.getSize());
+        list.add(new Piece[8][8]);
+        assertEquals(80, list.getSize());
+    }
     
 }
