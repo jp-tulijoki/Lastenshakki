@@ -25,7 +25,7 @@ public class MoveSelectorTest {
     
     public MoveSelectorTest() {
         this.game = new Game();
-        this.ms = new MoveSelector(game, false, 0.0, false, 0.0);
+        this.ms = new MoveSelector(game, 2, false, 0.0, false, 0.0);
     }
     
     @Test
@@ -168,7 +168,7 @@ public class MoveSelectorTest {
     
     @Test
     public void handicapValueIsNotExdeeded() {
-        this.ms = new MoveSelector(game, false, 0.0, true, -3.0);
+        this.ms = new MoveSelector(game, 2, false, 0.0, true, -3.0);
         game.initBoard();
         Piece[][] board = game.getCurrentBoard();
         for (int i = 1; i <= 5; i++) {

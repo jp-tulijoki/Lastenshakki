@@ -19,6 +19,7 @@ public class MoveSelector {
     
     private Game game;
     private MathUtils math;
+    private int depth;
     private boolean whiteHandicap;
     private double whiteMaxValue;
     private boolean blackHandicap;
@@ -37,9 +38,10 @@ public class MoveSelector {
      * next move. The smaller the better. Does not limit black from making a
      * checkmate.
      */
-    public MoveSelector(Game game, boolean whiteHandicap, double whiteMaxValue, boolean blackHandicap, double blackMinValue) {
+    public MoveSelector(Game game, int depth, boolean whiteHandicap, double whiteMaxValue, boolean blackHandicap, double blackMinValue) {
         this.game = game;
         this.math = new MathUtils();
+        this.depth = depth;
         this.whiteHandicap = whiteHandicap;
         this.whiteHandicap = whiteHandicap;
         this.blackHandicap = blackHandicap;
@@ -280,7 +282,7 @@ public class MoveSelector {
             if (move == null) {
                 break;
             }
-            double value = minBoardValue(move, 2, -99999, 99999);
+            double value = minBoardValue(move, depth, -99999, 99999);
             if (value < -90000.00) {
                 continue;
             }
@@ -312,7 +314,7 @@ public class MoveSelector {
             if (move == null) {
                 break;
             }
-            double value = maxBoardValue(move, 2, -99999.99, 99999.99);
+            double value = maxBoardValue(move, depth, -99999.99, 99999.99);
             if (value > 90000.00) {
                 continue;
             }
