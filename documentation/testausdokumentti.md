@@ -41,6 +41,7 @@ Laskentatyökalun nopeutta testattiin tekemällä 20 siirtoa (10 per puoli) ja l
 Minimaxin nopeutta mitattiin tekemällä 100 siirtoa (50 per puoli) ja mittaamalla kokonaisaika. Testit tehtiin syvyyksillä 1, 2 ja 3 ilman alpha-beta-pruningia ja sen kanssa. Syvyyden 3 testi ilman alpha-beta-pruningia lyhennettiin 10 siirtoon per puoli, josta laskettiin arvio, mitä algoritmin suorittaminen olisi kestänyt 50 siirrolla per puoli. Testitulokset alla.
 
 Syvyys | Ilman alpha-beta-pruningia | alpha-beta-pruningin kanssa
+--- | --- | ---
 1 | 7,12 s | 6,89 s
 2 | 6 min 12 s | 1 min 18 s
 3 | 2 t 31 min (arvio) | 18 min 57 s
