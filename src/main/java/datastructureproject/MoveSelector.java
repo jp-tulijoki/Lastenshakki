@@ -215,7 +215,7 @@ public class MoveSelector {
             return evaluateBoard(board);
         }
         double bestValue = -99999.99;
-        ChessboardList moves = game.addAllLegalMoves(board, Side.WHITE);
+        ChessboardList moves = game.addAllMoves(board, Side.WHITE);
         while (true) {
             Piece[][] move = moves.getNextBoard();
             if (move == null) {
@@ -251,7 +251,7 @@ public class MoveSelector {
             return evaluateBoard(board);
         }    
         double bestValue = 99999.99;
-        ChessboardList moves = game.addAllLegalMoves(board, Side.BLACK);
+        ChessboardList moves = game.addAllMoves(board, Side.BLACK);
         while (true) {
             Piece[][] move = moves.getNextBoard();
             if (move == null) {
@@ -274,7 +274,7 @@ public class MoveSelector {
     public Piece[][] getBestWhiteMove() {
         Piece[][] board = game.copyBoard(game.getCurrentBoard());
         game.checkWhiteCastling(board);
-        ChessboardList moves = game.addAllLegalMoves(board, Side.WHITE);
+        ChessboardList moves = game.addAllMoves(board, Side.WHITE);
         ChessboardList legalMoves = filterLegalMoves(moves, Side.WHITE);
         Piece[][] bestMove = legalMoves.getNextBoard();
         double bestValue = evaluateBoard(bestMove);
@@ -304,7 +304,7 @@ public class MoveSelector {
     public Piece[][] getBestBlackMove() {
         Piece[][] board = game.copyBoard(game.getCurrentBoard());
         game.checkBlackCastling(board);
-        ChessboardList moves = game.addAllLegalMoves(board, Side.BLACK);
+        ChessboardList moves = game.addAllMoves(board, Side.BLACK);
         ChessboardList legalMoves = this.filterLegalMoves(moves, Side.BLACK);
         Piece[][] bestMove = legalMoves.getNextBoard();
         double bestValue = this.evaluateBoard(bestMove);
@@ -335,7 +335,7 @@ public class MoveSelector {
             if (move == null) {
                 break;
             }
-            ChessboardList opponentMoves = game.addAllLegalMoves(move, getOppositeSide(side));
+            ChessboardList opponentMoves = game.addAllMoves(move, getOppositeSide(side));
             while (true) {
                 Piece[][] opponentMove = opponentMoves.getNextBoard();
                 if (opponentMove == null) {

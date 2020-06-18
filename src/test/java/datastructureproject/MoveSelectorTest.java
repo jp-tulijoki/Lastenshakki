@@ -196,7 +196,7 @@ public class MoveSelectorTest {
         board[0][0] = new Piece(Type.KING, Side.WHITE);
         board[2][0] = new Piece(Type.ROOK, Side.BLACK);
         board[1][1] = new Piece(Type.ROOK, Side.BLACK);
-        ChessboardList moves = game.addAllLegalMoves(board, Side.WHITE);
+        ChessboardList moves = game.addAllMoves(board, Side.WHITE);
         assertEquals(3, moves.getTail());
         ChessboardList legalMoves = ms.filterLegalMoves(moves, Side.WHITE);
         assertEquals(1, legalMoves.getTail());

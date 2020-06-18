@@ -511,7 +511,7 @@ public class Game {
         if (!castling[4] && !castling[5]) {
             return;
         }
-        ChessboardList moves = addAllLegalMoves(board, Side.BLACK);
+        ChessboardList moves = addAllMoves(board, Side.BLACK);
         while (true) {
             Piece[][] move = moves.getNextBoard();
             if (move == null) {
@@ -554,7 +554,7 @@ public class Game {
         if (!castling[6] && !castling[7]) {
             return;
         }
-        ChessboardList moves = addAllLegalMoves(board, Side.WHITE);
+        ChessboardList moves = addAllMoves(board, Side.WHITE);
         while (true) {
             Piece[][] move = moves.getNextBoard();
             if (move == null) {
@@ -671,7 +671,7 @@ public class Game {
      * but legality concerning the entire game situation, e.g. check is not 
      * controlled.
      */
-    public ChessboardList addAllLegalMoves(Piece[][] board, Side side) {
+    public ChessboardList addAllMoves(Piece[][] board, Side side) {
         ChessboardList moves = new ChessboardList();
         for (int y = 0; y <= 7; y++) {
             for (int x = 0; x <= 7; x++) {

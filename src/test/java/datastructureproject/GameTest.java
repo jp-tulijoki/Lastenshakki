@@ -453,7 +453,7 @@ public class GameTest {
         Piece[][] board = game.getCurrentBoard();
         game.checkWhiteCastling(board);
         game.checkBlackCastling(board);
-        ChessboardList moves = game.addAllLegalMoves(board, Side.WHITE);
+        ChessboardList moves = game.addAllMoves(board, Side.WHITE);
         assertEquals(20, moves.getTail());
     }
     
