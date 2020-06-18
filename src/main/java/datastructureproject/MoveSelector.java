@@ -275,17 +275,15 @@ public class MoveSelector {
         Piece[][] board = game.copyBoard(game.getCurrentBoard());
         game.checkWhiteCastling(board);
         ChessboardList moves = game.addAllLegalMoves(board, Side.WHITE);
-        double bestValue = -99999.99;
-        Piece[][] bestMove = null;
+        ChessboardList legalMoves = filterLegalMoves(moves, Side.WHITE);
+        Piece[][] bestMove = legalMoves.getNextBoard();
+        double bestValue = evaluateBoard(bestMove);
         while (true) {
-            Piece[][] move = moves.getNextBoard();
+            Piece[][] move = legalMoves.getNextBoard();
             if (move == null) {
                 break;
             }
             double value = minBoardValue(move, depth, -99999, 99999);
-            if (value < -90000.00) {
-                continue;
-            }
             if (whiteHandicap) {
                 if (value > whiteMaxValue && value < 90000.00) {
                     continue;
@@ -307,17 +305,15 @@ public class MoveSelector {
         Piece[][] board = game.copyBoard(game.getCurrentBoard());
         game.checkBlackCastling(board);
         ChessboardList moves = game.addAllLegalMoves(board, Side.BLACK);
-        double bestValue = 99999.99;
-        Piece[][] bestMove = null;
+        ChessboardList legalMoves = this.filterLegalMoves(moves, Side.BLACK);
+        Piece[][] bestMove = legalMoves.getNextBoard();
+        double bestValue = this.evaluateBoard(bestMove);
         while (true) {
-            Piece[][] move = moves.getNextBoard();
+            Piece[][] move = legalMoves.getNextBoard();
             if (move == null) {
                 break;
             }
             double value = maxBoardValue(move, depth, -99999.99, 99999.99);
-            if (value > 90000.00) {
-                continue;
-            }
             if (blackHandicap) {
                 if (value < blackMinValue && value > -90000.00) {
                     continue;
@@ -329,6 +325,32 @@ public class MoveSelector {
             }
         }
         return bestMove;
+    }
+    
+    public ChessboardList filterLegalMoves(ChessboardList moves, Side side) {
+        ChessboardList legalMoves = new ChessboardList();
+        while (true) {
+            Piece[][] move = moves.getNextBoard();
+            boolean legal = true;
+            if (move == null) {
+                break;
+            }
+            ChessboardList opponentMoves = game.addAllLegalMoves(move, getOppositeSide(side));
+            while (true) {
+                Piece[][] opponentMove = opponentMoves.getNextBoard();
+                if (opponentMove == null) {
+                    break;
+                }
+                if (game.isKingDead(opponentMove, side)) {
+                    legal = false;
+                    break;
+                }
+            }
+            if (legal) {
+                legalMoves.add(move);
+            }
+        }
+        return legalMoves;
     }
     
     public Side getOppositeSide(Side side) {

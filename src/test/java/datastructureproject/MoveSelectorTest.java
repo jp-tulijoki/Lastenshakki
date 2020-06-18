@@ -183,4 +183,23 @@ public class MoveSelectorTest {
         double boardValue = ms.evaluateBoard(board);
         assertTrue(boardValue > -3.5);
     }
+    
+    @Test
+    public void illegalMovesAreRemovedFromLegalMovesList() {
+        this.ms = new MoveSelector(game, 2, false, 0.0, false, 0.0);
+        Piece[][] board = game.getCurrentBoard();
+        for (int y = 0; y <=7; y++) {
+            for (int x = 0; x <= 7; x++) {
+                board[y][x] = new Piece(Type.EMPTY);
+            }
+        }
+        board[0][0] = new Piece(Type.KING, Side.WHITE);
+        board[2][0] = new Piece(Type.ROOK, Side.BLACK);
+        board[1][1] = new Piece(Type.ROOK, Side.BLACK);
+        ChessboardList moves = game.addAllLegalMoves(board, Side.WHITE);
+        assertEquals(3, moves.getTail());
+        ChessboardList legalMoves = ms.filterLegalMoves(moves, Side.WHITE);
+        assertEquals(1, legalMoves.getTail());
+        assertEquals(Type.KING, legalMoves.getNextBoard()[1][1].getType());
+    }
 }
