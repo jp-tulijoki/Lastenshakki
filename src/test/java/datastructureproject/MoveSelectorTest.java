@@ -77,7 +77,7 @@ public class MoveSelectorTest {
         ChessboardList moves = new ChessboardList();
         game.addPawnAttack(board, moves, board[6][6], 6, 6);
         board = moves.getNextBoard();
-        assertEquals(Type.QUEEN, board[7][7].getType());
+        assertEquals(Type.BISHOP, board[7][7].getType());
         Piece[][] move = ms.getBestBlackMove();
         assertTrue(move != null);
     }

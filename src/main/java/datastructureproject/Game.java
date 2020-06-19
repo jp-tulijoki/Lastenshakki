@@ -12,6 +12,7 @@ public class Game {
     private Piece[][] currentBoard;
     private Piece enPassant;
     private boolean[] castling;
+    private final Type[] promotionTypes;
 
     /**
      * The constructor. The chessboard is represented as a 8*8 two-dimensional
@@ -28,6 +29,7 @@ public class Game {
     public Game() {
         this.currentBoard = new Piece[8][8];
         this.castling = new boolean[]{true, true, true, true, false, false, false, false};
+        this.promotionTypes = new Type[]{Type.BISHOP, Type.KNIGHT, Type.QUEEN, Type.ROOK}; 
     }
     
     /**
@@ -128,16 +130,29 @@ public class Game {
         if (pawn.getSide() == Side.WHITE && board[y + 1][x].getType() == Type.EMPTY) {
             Piece[][] newBoard = copyBoard(board);
             movePiece(newBoard, y, x, y + 1, x);
-            promotePawn(newBoard, y + 1, x);
-            moves.add(newBoard);
+            for (int i = 0; i <= 3; i++) {
+                if (promotePawn(newBoard, y + 1, x, i)) {
+                    moves.add(newBoard);
+                    newBoard = copyBoard(newBoard);
+                } else {
+                    moves.add(newBoard);
+                    break;
+                }
+            }
             return;
         }
         if (pawn.getSide() == Side.BLACK && board[y - 1][x].getType() == Type.EMPTY) {
             Piece[][] newBoard = copyBoard(board);
             movePiece(newBoard, y, x, y - 1, x);
-            promotePawn(newBoard, y - 1, x);
-            moves.add(newBoard);
-            
+            for (int i = 0; i <= 3; i++) {
+                if (promotePawn(newBoard, y - 1, x, i)) {
+                    moves.add(newBoard);
+                    newBoard = copyBoard(newBoard);
+                } else {
+                    moves.add(newBoard);
+                    break;
+                }
+            }
         }
     }
     
@@ -183,28 +198,55 @@ public class Game {
             if (pawn.getSide() == Side.WHITE && board[y + 1][x - 1].getSide() == Side.BLACK) {
                 Piece[][] newBoard = copyBoard(board);
                 movePiece(newBoard, y, x, y + 1, x - 1);
-                promotePawn(newBoard, y + 1, x - 1);
-                moves.add(newBoard);
-            }
+                for (int i = 0; i <= 3; i++) {
+                    if (promotePawn(newBoard, y + 1, x - 1, i)) {
+                        moves.add(newBoard);
+                        newBoard = copyBoard(newBoard);
+                    } else {
+                        moves.add(newBoard);
+                        break;
+                    }
+                }                            }
             if (pawn.getSide() == Side.BLACK && board[y - 1][x - 1].getSide() == Side.WHITE) {
                 Piece[][] newBoard = copyBoard(board);
                 movePiece(newBoard, y, x, y - 1, x - 1);
-                promotePawn(newBoard, y - 1, x - 1);
-                moves.add(newBoard);
+                for (int i = 0; i <= 3; i++) {
+                    if (promotePawn(newBoard, y - 1, x - 1, i)) {
+                        moves.add(newBoard);
+                        newBoard = copyBoard(newBoard);
+                    } else {
+                        moves.add(newBoard);
+                        break;
+                    }
+                }
             }
         }
         if (x != 7) {
             if (pawn.getSide() == Side.WHITE && board[y + 1][x + 1].getSide() == Side.BLACK) {
                 Piece[][] newBoard = copyBoard(board);
                 movePiece(newBoard, y, x, y + 1, x + 1);
-                promotePawn(newBoard, y + 1, x + 1);
-                moves.add(newBoard);
+                for (int i = 0; i <= 3; i++) {
+                    if (promotePawn(newBoard, y + 1, x + 1, i)) {
+                        moves.add(newBoard);
+                        newBoard = copyBoard(newBoard);
+                    } else {
+                        moves.add(newBoard);
+                        break;
+                    }
+                }
             }
             if (pawn.getSide() == Side.BLACK && board[y - 1][x + 1].getSide() == Side.WHITE) {
                 Piece[][] newBoard = copyBoard(board);
                 movePiece(newBoard, y, x, y - 1, x + 1);
-                promotePawn(newBoard, y - 1, x + 1);
-                moves.add(newBoard);
+                for (int i = 0; i <= 3; i++) {
+                    if (promotePawn(newBoard, y - 1, x + 1, i)) {
+                        moves.add(newBoard);
+                        newBoard = copyBoard(newBoard);
+                    } else {
+                        moves.add(newBoard);
+                        break;
+                    }
+                }
             }
         }
     }
@@ -251,12 +293,15 @@ public class Game {
         }
     }
     
-    public void promotePawn(Piece[][] board, int y, int x) {
+    public boolean promotePawn(Piece[][] board, int y, int x, int i) {
         if (y == 7) {
-            board[y][x] = new Piece(Type.QUEEN, Side.WHITE);
+            board[y][x] = new Piece(promotionTypes[i], Side.WHITE);
+            return true;
         } else if (y == 0) {
-            board[y][x] = new Piece(Type.QUEEN, Side.BLACK);
+            board[y][x] = new Piece(promotionTypes[i], Side.BLACK);
+            return true;
         }
+        return false;
     }
     
     /**
@@ -698,7 +743,11 @@ public class Game {
     }
     
     /**
-     * This method returns all moves of a specified piece.
+     * This method returns all moves of a specified piece except castling for 
+     * the king piece. Castling is excluded as this method is used for 
+     * calculating different board value scenarios and for that purpose keeping
+     * the castling array up-to-date gives only a small additional value 
+     * compared to that method's time complexity.
      * @param board the board in which the moves are made
      * @param y the current y-coordinate of the specified piece
      * @param x the current y-coordinate of the specified piece

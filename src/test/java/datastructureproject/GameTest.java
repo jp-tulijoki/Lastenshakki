@@ -200,9 +200,18 @@ public class GameTest {
         Piece blackPawn = game.getPiece(1, 6);
         ChessboardList moves = new ChessboardList();
         game.addAllPawnMoves(currentBoard, moves, blackPawn, 1, 6);
-        assertEquals(1, moves.getTail());
+        assertEquals(4, moves.getTail());
         Piece[][] board = moves.getNextBoard();
+        assertEquals(Type.BISHOP, board[0][6].getType());
+        assertEquals(Side.BLACK, board[0][6].getSide());
+        board = moves.getNextBoard();
+        assertEquals(Type.KNIGHT, board[0][6].getType());
+        assertEquals(Side.BLACK, board[0][6].getSide());
+        board = moves.getNextBoard();
         assertEquals(Type.QUEEN, board[0][6].getType());
+        assertEquals(Side.BLACK, board[0][6].getSide());
+        board = moves.getNextBoard();
+        assertEquals(Type.ROOK, board[0][6].getType());
         assertEquals(Side.BLACK, board[0][6].getSide());
     }
     
@@ -214,9 +223,18 @@ public class GameTest {
         Piece whitePawn = game.getPiece(6, 0);
         ChessboardList moves = new ChessboardList();
         game.addAllPawnMoves(currentBoard, moves, whitePawn, 6, 0);
-        assertEquals(1, moves.getTail());
+        assertEquals(4, moves.getTail());
         Piece[][] board = moves.getNextBoard();
+        assertEquals(Type.BISHOP, board[7][1].getType());
+        assertEquals(Side.WHITE, board[7][1].getSide());
+        board = moves.getNextBoard();
+        assertEquals(Type.KNIGHT, board[7][1].getType());
+        assertEquals(Side.WHITE, board[7][1].getSide());
+        board = moves.getNextBoard();
         assertEquals(Type.QUEEN, board[7][1].getType());
+        assertEquals(Side.WHITE, board[7][1].getSide());
+        board = moves.getNextBoard();
+        assertEquals(Type.ROOK, board[7][1].getType());
         assertEquals(Side.WHITE, board[7][1].getSide());
     }
     

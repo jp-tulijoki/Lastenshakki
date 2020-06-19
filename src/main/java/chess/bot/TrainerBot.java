@@ -69,7 +69,9 @@ public class TrainerBot implements ChessBot {
         }
         move = start + end;
         if (promotion) {
-            move += "q";
+            int y = Character.getNumericValue(end.charAt(1)) - 1;
+            int x = (int) end.charAt(0) - 97;
+            move += newBoard[y][x].getType().getAbbreviation();
         }
         return move;
     }
@@ -219,8 +221,9 @@ public class TrainerBot implements ChessBot {
         int newY = Character.getNumericValue(move.charAt(3)) - 1;
         int newX = (int) move.charAt(2) - 97;
         if (move.length() == 5) {
+            char promotionChar = move.charAt(4);
             Side pawnSide = board[currentY][currentX].getSide();
-            board[currentY][currentX] = new Piece(Type.QUEEN, pawnSide);
+            board[currentY][currentX] = new Piece(Type.getType(promotionChar), pawnSide);
         }
         game.movePiece(board, currentY, currentX, newY, newX);
         if (board[newY][newX].getType() == Type.PAWN && math.abs(newY - currentY) == 2) {

@@ -64,10 +64,20 @@ public class BotTest {
         }
         currentBoard[6][0] = new Piece(Type.PAWN, Side.WHITE);
         game.setCurrentBoard(currentBoard);
-        Piece[][] newBoard = game.copyBoard(currentBoard);
-        game.movePiece(newBoard, 6, 0, 7, 0);
+        ChessboardList moves = new ChessboardList();
+        game.addRegularPawnMove(currentBoard, moves, currentBoard[6][0], 6, 0);
+        Piece[][] newBoard = moves.getNextBoard();
         String move = bot.parseMove(Side.WHITE, currentBoard, newBoard);
+        assertEquals("a7a8b", move);
+        newBoard = moves.getNextBoard();
+        move = bot.parseMove(Side.WHITE, currentBoard, newBoard);
+        assertEquals("a7a8n", move);
+        newBoard = moves.getNextBoard();
+        move = bot.parseMove(Side.WHITE, currentBoard, newBoard);
         assertEquals("a7a8q", move);
+        newBoard = moves.getNextBoard();
+        move = bot.parseMove(Side.WHITE, currentBoard, newBoard);
+        assertEquals("a7a8r", move);
     }
     
     @Test
@@ -197,17 +207,18 @@ public class BotTest {
     public void pawnPromotionTestTwo() {
         Game game = bot.getGame();
         game.initBoard();
-        Piece[][] board = game.getCurrentBoard();
-        game.movePiece(board, 1, 6, 6, 6);
-        game.setCurrentBoard(board);
-        Piece[][] newBoard = game.copyBoard(board);
-        game.movePiece(newBoard, 6, 6, 7, 7);
-        String move = bot.parseMove(Side.WHITE, board, newBoard);
-        assertEquals("g7h8q", move);
+        Piece[][] currentBoard = game.getCurrentBoard();
+        game.movePiece(currentBoard, 1, 7, 6, 7);
+        game.setCurrentBoard(currentBoard);
+        ChessboardList moves = new ChessboardList();
+        game.addPawnAttack(currentBoard, moves, currentBoard[6][7], 6, 7);
+        moves.getNextBoard();
+        moves.getNextBoard();
+        Piece[][] newBoard = moves.getNextBoard();
+        String move = bot.parseMove(Side.WHITE, currentBoard, newBoard);
+        assertEquals("h7g8q", move);
         bot.updateLatestMove(move);
-        assertEquals(Type.QUEEN, game.getCurrentBoard()[7][7].getType());
-        assertEquals(Side.WHITE, game.getCurrentBoard()[7][7].getSide());
-        
-    }
-    
+        assertEquals(Type.QUEEN, game.getCurrentBoard()[7][6].getType());
+        assertEquals(Side.WHITE, game.getCurrentBoard()[7][6].getSide());
+    }  
 }
