@@ -3,18 +3,20 @@ package datastructureproject;
 import chess.model.Side;
 
 /**
- * The performance test for the algorithm.
- * 
+ * The performance test for the move selection algorithm.
  */
 public class PerformanceTest {
 
     public static void main(String[] args) {
-        testEvaluationTools();
+//        testEvaluationTools();
         test50moves(1);
         test50moves(2);
         test50moves(3);
     }
     
+    /**
+     * This method counts the average speed of one board evaluation.
+     */
     public static void testEvaluationTools() {
         Game game = new Game();
         game.initBoard();
@@ -39,6 +41,11 @@ public class PerformanceTest {
         printBoard(board);
     }
     
+    /**
+     * This method counts the duration of selection 50 consecutive moves for
+     * each side, 100 moves in total.
+     * @param depth the depth of the recursion of the minimax algorithm. 
+     */
     public static void test50moves(int depth) {     
         Game game = new Game();
         game.initBoard();
@@ -57,6 +64,11 @@ public class PerformanceTest {
         printBoard(board);
     }
     
+    /**
+     * This method prints the board status. Used for controlling that moves are
+     * counted for a valid game, i.e. both kings are still alive. 
+     * @param board 
+     */
     public static void printBoard(Piece[][] board) {
         for (int y = 7; y >= 0; y--) {
             for (int x = 0; x <= 7; x++) {
@@ -72,5 +84,4 @@ public class PerformanceTest {
             System.out.println("");
         }
     }
-
 }

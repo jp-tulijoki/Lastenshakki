@@ -27,7 +27,7 @@ public class TrainerBot implements ChessBot {
     
     /**
      * This method parses the difference between two chessboard representations
-     * to a UCI move. All promotions are set to queen at this point.
+     * to a UCI move.
      * @param side the side of the current player
      * @param currentBoard the board before the move
      * @param newBoard the board after the move
@@ -154,8 +154,7 @@ public class TrainerBot implements ChessBot {
      * This method updates the latest move and returns the next move to be made 
      * in UCI format.
      * @param gamestate the current gamestate
-     * @return returns a move in UCI format if there is a possible move and 
-     * null otherwise
+     * @return returns a move in UCI format
      */
     @Override
     public String nextMove(GameState gamestate) {
@@ -208,10 +207,9 @@ public class TrainerBot implements ChessBot {
         }
     }
     
-    
     /**
      * This method is called by the nextMove method and takes care of updating
-     * the latest UCI format move to the current game object.
+     * the latest UCI format move to the board of the current Game object.
      * @param move the move in UCI format
      */
     public void updateLatestMove(String move) {

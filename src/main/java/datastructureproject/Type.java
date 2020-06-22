@@ -1,9 +1,8 @@
 package datastructureproject;
 
 /**
- * This enum contains all piece types, their relative values and empty type for
- * empty squares.
- * 
+ * This enum contains all piece types, their relative values, abbreviations and 
+ * empty type for empty squares.
  */
 public enum Type {
     KING(200, 'k'),
@@ -30,6 +29,13 @@ public enum Type {
         return abbreviation;
     }
     
+    /**
+     * This method returns a Type value equivalent to the abbreviation. Used for
+     * playing promotion moves in UCI format in the board of the current Game
+     * object.
+     * @param abbreviation the abbreviation of the piece the pawn is promoted to
+     * @return returns a Type value
+     */
     public static Type getType(char abbreviation) {
         if (abbreviation == 'b') {
             return Type.BISHOP;

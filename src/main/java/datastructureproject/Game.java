@@ -15,7 +15,9 @@ public class Game {
 
     /**
      * The constructor. The chessboard is represented as a 8*8 two-dimensional
-     * array. The boolean array for castling contains following values:
+     * array. EnPassant has a reference to the pawn piece that has proceeded two
+     * steps in the previous turn. The boolean array for castling contains 
+     * following values:
      * 0 = white queenside castling possible in the current game
      * 1 = white kingside castling possible in the current game
      * 2 = black queenside castling possible in the current game
@@ -24,6 +26,7 @@ public class Game {
      * 5 = white kingside castling possible in the current turn
      * 6 = black queenside castling possible in the current turn
      * 7 = black kingside castling possible in the current turn
+     * Promotion types are listed in an array as well.
      */
     public Game() {
         this.currentBoard = new Piece[8][8];
@@ -99,9 +102,7 @@ public class Game {
     public void setCastling(boolean[] castling) {
         this.castling = castling;
     }
-    
-    
-    
+        
     /**
      * This method moves a chesspiece to the new square and replaces the old 
      * location with empty square.
@@ -120,6 +121,7 @@ public class Game {
     /**
      * This method adds a regular one step pawn move to the moves list if 
      * it's possible.
+     * @param board the board in which the move is made 
      * @param moves the list the move is added to
      * @param pawn the specified pawn piece
      * @param y the y-coordinate of the current location of the pawn piece
@@ -158,6 +160,7 @@ public class Game {
     /**
      * This method adds a two step pawn move to the moves list if 
      * it's possible.
+     * @param board the board in which the move is made 
      * @param moves the list the move is added to
      * @param pawn the specified pawn piece
      * @param y the y-coordinate of the current location of the pawn piece
@@ -187,6 +190,7 @@ public class Game {
     
     /**
      * This method adds pawn attacks to the moves list if it's possible.
+     * @param board the board in which the move is made 
      * @param moves the list the moves are added to
      * @param pawn the specified pawn piece
      * @param y the y-coordinate of the current location of the pawn piece
@@ -252,6 +256,7 @@ public class Game {
     
     /**
      * This method adds enPassant to the moves list if it's possible.
+     * @param board the board in which the move is made 
      * @param moves the list the move is added to
      * @param pawn the specified pawn piece
      * @param y the y-coordinate of the current location of the pawn piece
@@ -292,6 +297,16 @@ public class Game {
         }
     }
     
+    /**
+     * This method promotes the pawn piece which has proceeded to the other end 
+     * of the board.
+     * @param board the board in which the move is made 
+     * @param y the y-coordinate of the promoted pawn
+     * @param x the x-coordinate of the promoted pawn
+     * @param i the index for the promotion types array. See constructor for
+     * array values.
+     * @return returns true if promotion was made and false otherwise
+     */
     public boolean promotePawn(Piece[][] board, int y, int x, int i) {
         if (y == 7) {
             board[y][x] = new Piece(promotionTypes[i], Side.WHITE);
@@ -305,6 +320,7 @@ public class Game {
     
     /**
      * This method calls all pawn move methods to add all different pawn moves.
+     * @param board the board in which the move is made 
      * @param moves the list the moves are added to
      * @param pawn the specified pawn piece
      * @param y the y-coordinate of the current location of the pawn piece
@@ -323,6 +339,7 @@ public class Game {
     /**
      * This method adds all possible moves of a certain knight to moves
      * list.
+     * @param board the board in which the move is made 
      * @param moves the list the moves are added to
      * @param knight the specified knight piece
      * @param y the y-coordinate of the current location of the knight piece
@@ -348,7 +365,8 @@ public class Game {
     }
     
     /**
-     * This method adds all possible moves of a certain rook to moves list
+     * This method adds all possible moves of a certain rook to moves list.
+     * @param board the board in which the move is made 
      * @param moves the list the moves are added to
      * @param rook the specified rook piece
      * @param y the y-coordinate of the current location of the rook piece
@@ -416,6 +434,7 @@ public class Game {
     /**
      * This method adds all possible moves of a certain bishop to moves
      * list.
+     * @param board the board in which the move is made 
      * @param moves the list the moves are added to
      * @param bishop the specified bishop
      * @param y the y-coordinate of the current location of the bishop
@@ -492,6 +511,7 @@ public class Game {
     /**
      * This method adds all possible moves of a certain queen to moves 
      * list by combining the moves of the rook and the bishop piece.
+     * @param board the board in which the move is made 
      * @param moves the list the moves are added to
      * @param queen the specified queen
      * @param y the y-coordinate of the current location of the queen
@@ -505,6 +525,7 @@ public class Game {
     /**
      * This method adds all possible moves of a certain king to moves 
      * list.
+     * @param board the board in which the move is made 
      * @param moves the list the moves are added to
      * @param king the specified king
      * @param y the y-coordinate of the current location of the king
@@ -532,6 +553,7 @@ public class Game {
     /**
      * This method updates the castling boolean array values for the white 
      * player. See constructor for value clarifications.
+     * @param board the board that is used for checking if castling is possible
      */
     public void checkWhiteCastling(Piece[][] board) {
         castling[4] = true;
@@ -578,6 +600,7 @@ public class Game {
     /**
      * This method updates the castling boolean array values for the black 
      * player. See constructor for value clarifications.
+     * @param board the board that is used for checking if castling is possible
      */
     public void checkBlackCastling(Piece[][] board) {
         castling[6] = true;
@@ -621,6 +644,7 @@ public class Game {
     /**
      * This method adds castling moves for white player to the moves list if
      * it's possible
+     * @param board the board in which the castling move is made
      * @param moves the list the moves are added to
      * @param whiteKing the white king
      * @param y the y-coordinate of the current location of the king
@@ -647,6 +671,7 @@ public class Game {
     /**
      * This method adds castling moves for black player to the moves list if
      * it's possible
+     * @param board the board in which the castling move is made
      * @param moves the list the moves are added to
      * @param blackKing the black king
      * @param y the y-coordinate of the current location of the king
@@ -672,7 +697,8 @@ public class Game {
     
     /**
      * This method calls both king move method to add all king moves to the 
-     * moves list
+     * moves list.
+     * @param board the board in which the move is made 
      * @param moves the list the moves are added to
      * @param king the specified king
      * @param y the y-coordinate of the current location of the king
@@ -710,6 +736,7 @@ public class Game {
     
     /**
      * This method adds all moves of the specified player to the moves list.
+     * @param board the board in which the moves are made 
      * @param side the side of the player
      * @return returns a list of moves which are legal for an individual piece,
      * but legality concerning the entire game situation, e.g. check is not 

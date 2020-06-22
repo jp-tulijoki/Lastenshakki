@@ -1,17 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package datastructureproject;
 
 import chess.model.Side;
 
 /**
- *  
  * This class takes care of evaluation of board situations and selects a 
  * suitable next move for the chess bot.
- *
  */
 public class MoveSelector {
     
@@ -129,7 +122,7 @@ public class MoveSelector {
      * @param board the evaluated board situation
      * @param y the y-coordinate of the evaluated pawn
      * @param x the x-coordinate of the evaluated pawn
-     * @return returns false if the pawn has an adjacent frindly piece and true
+     * @return returns false if the pawn has an adjacent friendly piece and true
      * if not.
      */
     public boolean checkPawnIsolation(Piece[][] board, int y, int x) {
@@ -326,6 +319,13 @@ public class MoveSelector {
         return bestMove;
     }
     
+    /**
+     * This method creates a moves list which does not contain illegal moves,
+     * i.e. moves that leave king in check.
+     * @param moves the list of all technically possible moves
+     * @param side the side of the player who has the turn
+     * @return returns a ChessboardList object containing only legal moves
+     */
     public ChessboardList filterLegalMoves(ChessboardList moves, Side side) {
         ChessboardList legalMoves = new ChessboardList();
         while (true) {
