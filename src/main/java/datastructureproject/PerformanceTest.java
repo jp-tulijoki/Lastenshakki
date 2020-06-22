@@ -8,7 +8,7 @@ import chess.model.Side;
 public class PerformanceTest {
 
     public static void main(String[] args) {
-//        testEvaluationTools();
+        testEvaluationTools();
         test50moves(1);
         test50moves(2);
         test50moves(3);
