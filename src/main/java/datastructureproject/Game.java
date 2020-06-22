@@ -1,7 +1,6 @@
 package datastructureproject;
 
 import chess.model.Side;
-import java.util.ArrayList;
 
 /**
  * This class contains the main functionalities of the chessboard such as moving

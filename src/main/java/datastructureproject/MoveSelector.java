@@ -6,8 +6,6 @@
 package datastructureproject;
 
 import chess.model.Side;
-import java.util.ArrayList;
-import java.util.Collections;
 
 /**
  *  
@@ -38,7 +36,8 @@ public class MoveSelector {
      * next move. The smaller the better. Does not limit black from making a
      * checkmate.
      */
-    public MoveSelector(Game game, int depth, boolean whiteHandicap, double whiteMaxValue, boolean blackHandicap, double blackMinValue) {
+    public MoveSelector(Game game, int depth, boolean whiteHandicap, double whiteMaxValue,
+            boolean blackHandicap, double blackMinValue) {
         this.game = game;
         this.math = new MathUtils();
         this.depth = depth;
@@ -277,7 +276,7 @@ public class MoveSelector {
         ChessboardList moves = game.addAllMoves(board, Side.WHITE);
         ChessboardList legalMoves = filterLegalMoves(moves, Side.WHITE);
         Piece[][] bestMove = legalMoves.getNextBoard();
-        double bestValue = evaluateBoard(bestMove);
+        double bestValue = minBoardValue(bestMove, depth, -99999, 99999);
         while (true) {
             Piece[][] move = legalMoves.getNextBoard();
             if (move == null) {
@@ -307,7 +306,7 @@ public class MoveSelector {
         ChessboardList moves = game.addAllMoves(board, Side.BLACK);
         ChessboardList legalMoves = this.filterLegalMoves(moves, Side.BLACK);
         Piece[][] bestMove = legalMoves.getNextBoard();
-        double bestValue = this.evaluateBoard(bestMove);
+        double bestValue = maxBoardValue(bestMove, depth, -99999.99, 99999.99);
         while (true) {
             Piece[][] move = legalMoves.getNextBoard();
             if (move == null) {
