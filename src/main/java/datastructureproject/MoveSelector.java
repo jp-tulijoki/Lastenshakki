@@ -35,9 +35,9 @@ public class MoveSelector {
         this.math = new MathUtils();
         this.depth = depth;
         this.whiteHandicap = whiteHandicap;
-        this.whiteHandicap = whiteHandicap;
+        this.whiteMaxValue = whiteMaxValue;
         this.blackHandicap = blackHandicap;
-        this.blackHandicap = blackHandicap;
+        this.blackMinValue = blackMinValue;
     }
     
     /**
