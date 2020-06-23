@@ -72,6 +72,12 @@ Pseudokoodista nähdään, että pahimman tapauksen aikavaativuus on edelleen O(
 
 Tilavaativuuksia ei ole erikseen testattu, mutta ne noudattelevat suunnilleen aikavaativuuksia, koska jokaista pelilautatilannetta varten luodaan mahdolliset seuraavat siirrot.
 
+## Jatkokehitysaiheita
+
+* tekoäly pelaa kohtuullisen hyvin ja pystyy tekemään shakkimatteja, mutta strategista puolta voisi lisätä. Nyt tekoäly valitsee vain kulloinkin parhaan siirron.
+* vaikka pelilaudan arviointityökalu on oleellinen osa tekoäly, vaatii se melko paljon laskentaa, mikä hidastaa ohjelmaa. Laskentaa voisi nopeuttaa miettimällä kevyemmät metodit. Tämä oli kuitenkin ensimmäinen peleihin ja tekoälyyn liittyvä ohjelmointityöni ja kaiken kaikkiaan kolmas laajempi työ, joten halusin pitää asiat mahdollisimman yksinkertaisena.
+* ohjelmassa on jonkin verran toisteista koodia ja pitkiä metodeita. Osa metodeista on mielestäni perustellusti pitkiä: esim. Trainer-botin metodien laajempi pilkkominen tekisi mielestäni koodista sekavampaa. Sen sijaan esim. tornin ja lähetin siirtojen koodin lyhentämistä voisi miettiä.
+
 Lähteet:
 
 https://en.wikipedia.org/wiki/Branching_factor
