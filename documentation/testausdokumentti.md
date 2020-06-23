@@ -24,6 +24,10 @@ ChessboardList-luokan testeissä on testattu, että itse luotu taulukkotietorake
 
 MathUtils-luokan testeissä on testattu että itse luodut min, max ja abs -metodit toimivat oikein.
 
+### Kattavuus ja toimenpiteet
+
+Alla olevista kuvista näkyy TrainerBot-luokan sekä datastructureproject-pakkaukseen kuuluvien muiden luokkien testikattavuudet. Kattavuudessa on pyritty siihen, että kaikki toiminnallisuudet, pl. getterit, setterit yms., testataan, mutta täyteen rivi- ja haaraumakattavuuteen ei pyritä. Testeissä ilmi tulleet ongelmat on korjattu heti niiden tultua ilmi. 
+
 ## Järjestelmätason testit
 
 Järjestelmätason testit on suoritettu manuaalisesti ja automaattisesti xboard-ohjelmalla siten, että toisena pelaajana on ollut tekoäly. Automaaattisessa testauksessa on hyödynnetty xboardin fairymax-tekoälyä ja manuaalista testausta ovat tehneet tekijä ja tekijän 7-vuotias poika, joka on ikäisekseen taitava shakinpelaaja.
@@ -42,10 +46,20 @@ Minimaxin nopeutta mitattiin tekemällä 100 siirtoa (50 per puoli) ja mittaamal
 
 Syvyys | Ilman alpha-beta-pruningia | alpha-beta-pruningin kanssa
 --- | --- | ---
-1 | 7,12 s | 6,89 s
-2 | 6 min 12 s | 1 min 18 s
-3 | 2 t 31 min (arvio) | 18 min 57 s
+1 | 6,42 s | 6,90 s
+2 | 4 min 3 s | 1 min 15 s
+3 | 2 t 30 min (arvio) | 19 min 38 s
+
+Vertailun vuoksi testattiin myös versiota, jossa pelilaudan arvo laskettiin vain nappuloiden arvon perusteella. Tällöin yhden laskentakerran keskimääräinen nopeus oli 1557 ns. Minimaxin nopeudet pelkällä nappuloiden arvon laskennalla olivat:
+
+Syvyys | Ilman alpha-beta-pruningia | alpha-beta-pruningin kanssa
+--- | --- | ---
+1 | 0,15 s | 0,24 s
+2 | 3,88 s | 3,47 s
+3 | 49,80 s | 12,03 s
+
+Vertailu osoittaa, että arviointityökalu monimutkaistaa laskentaa huomattavasti verrattuna pelkkiin nappuloiden arvoon. Kuitenkaan tämän perusteella ei ole ryhdytty mihinkään toimenpiteisiin: Arviointityökalu parantaa tekoälyn peliä (tekoäly mm. voittaa pelkkiä nappuloiden arvoja laskevan tekoälyn) ja tuo siihen mielekkyyttä (tekoäly pyrkii edistämään asemaansa pelilaudalla silloinkin, kun vastustajan nappuloita ei ole syötävissä). Lisäksi on todettava, että keskimääräinen noin 12 sekunnin siirronvalinta syvyyden 3 minimaxissa on ihmispelaajaan ja vaikka xboardin oletustekoälyyn verrattuna varsin kohtuullinen.
 
 ## Testien toistettavuus
 
-JUNit-testit ja suorituskykytestit ovat täysin toistettavissa ja niiden koodi löytyy ohjelman koodista. Manuaaliset järjestelmätason testitkin ovat periaatteessa toistettavissa, mutta testaamisessa tehtyjä siirtoja ei ole dokumentoitu muuten kuin ongelmia aiheuttaneet pelitilanteet, jotka löytyvät MoveSelector-luokan JUnit-testeistä.
+JUNit-testit ja suorituskykytestit ovat täysin toistettavissa ja niiden koodi löytyy ohjelman koodista. Suorituskykytestejä varten ei kuitenkaan ole luotu MoveSelector-luokkaan erikseen mitään testimetodeja, joista puuttuisi alpha-beta-pruning tai arviointityökalun metodeja, vaan muokkaukset voi nopeasti tehdä käsin. Manuaaliset järjestelmätason testitkin ovat periaatteessa toistettavissa, mutta testaamisessa tehtyjä siirtoja ei ole dokumentoitu muuten kuin ongelmia aiheuttaneet pelitilanteet, jotka löytyvät MoveSelector-luokan JUnit-testeistä.
