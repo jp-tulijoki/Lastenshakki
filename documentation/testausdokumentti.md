@@ -28,13 +28,16 @@ MathUtils-luokan testeissä on testattu että itse luodut min, max ja abs -metod
 
 Alla olevista kuvista näkyy TrainerBot-luokan sekä datastructureproject-pakkaukseen kuuluvien muiden luokkien testikattavuudet. Kattavuudessa on pyritty siihen, että kaikki toiminnallisuudet, pl. getterit, setterit yms., testataan, mutta täyteen rivi- ja haaraumakattavuuteen ei pyritä. Testeissä ilmi tulleet ongelmat on korjattu heti niiden tultua ilmi. 
 
+![Trainerbot](https://github.com/jp-tulijoki/Lastenshakki/blob/master/documentation/pics/jacocoTrainerBot.jpg)
+![Datastructureproject](https://github.com/jp-tulijoki/Lastenshakki/blob/master/documentation/pics/jacocoDatastructureproject.jpg)
+
 ## Järjestelmätason testit
 
 Järjestelmätason testit on suoritettu manuaalisesti ja automaattisesti xboard-ohjelmalla siten, että toisena pelaajana on ollut tekoäly. Automaaattisessa testauksessa on hyödynnetty xboardin fairymax-tekoälyä ja manuaalista testausta ovat tehneet tekijä ja tekijän 7-vuotias poika, joka on ikäisekseen taitava shakinpelaaja.
 
 Testauksen tarkoituksena on ollut varmistaa, että ohjelma toimii oikein. Erityisesti ongelmatilanteita on pyritty toistamaan useita kertoja, jotta on voitu varmistaa ohjelman toimivuus. Suurimmat esille tulleet ongelmat järjestelmätason testeissä ovat koskeneet erikoissiirtoja ja nämä on pyritty korjaamaan niiden esille tultua.
 
-Lisäksi on testattu lasten mukautuksen vaikeustasoa.
+Lisäksi on testattu lasten mukautuksen vaikeustasoa. Testaajan mukaan sopiva mukautuksen handicap-arvo oli |7.0|. Myös arvo |10.0| oli pelattavissa, mutta haastavampi. Ilman tasoitusta pelaaminen tuntui vaikealta. Kaikissa testeissä minimaxin rekursion syvyys oli 2.
 
 ## Suorituskykytestit
 
