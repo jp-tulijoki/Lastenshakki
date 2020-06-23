@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package datastructureproject;
 
 import chess.model.Side;
@@ -10,10 +5,6 @@ import java.util.ArrayList;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-/**
- *
- * @author tulijoki
- */
 public class GameTest {
     private Game game;
     
@@ -49,9 +40,12 @@ public class GameTest {
             assertEquals(Side.WHITE, game.getPiece(0, x).getSide());
             assertEquals(Side.BLACK, game.getPiece(7, x).getSide());
         }
-        assertTrue(game.getPiece(0, 0).getType() == Type.ROOK && game.getPiece(0, 7).getType() == Type.ROOK && game.getPiece(7, 0).getType() == Type.ROOK && game.getPiece(7, 7).getType() == Type.ROOK);
-        assertTrue(game.getPiece(0, 1).getType() == Type.KNIGHT && game.getPiece(0, 6).getType() == Type.KNIGHT && game.getPiece(7, 1).getType() == Type.KNIGHT && game.getPiece(7, 6).getType() == Type.KNIGHT);
-        assertTrue(game.getPiece(0, 2).getType() == Type.BISHOP && game.getPiece(0, 5).getType() == Type.BISHOP && game.getPiece(7, 2).getType() == Type.BISHOP && game.getPiece(7, 5).getType() == Type.BISHOP);
+        assertTrue(game.getPiece(0, 0).getType() == Type.ROOK && game.getPiece(0, 7).getType() == Type.ROOK && game.getPiece(7, 0).getType() 
+                == Type.ROOK && game.getPiece(7, 7).getType() == Type.ROOK);
+        assertTrue(game.getPiece(0, 1).getType() == Type.KNIGHT && game.getPiece(0, 6).getType() == Type.KNIGHT && game.getPiece(7, 1).getType() 
+                == Type.KNIGHT && game.getPiece(7, 6).getType() == Type.KNIGHT);
+        assertTrue(game.getPiece(0, 2).getType() == Type.BISHOP && game.getPiece(0, 5).getType() == Type.BISHOP && game.getPiece(7, 2).getType() 
+                == Type.BISHOP && game.getPiece(7, 5).getType() == Type.BISHOP);
         assertTrue(game.getPiece(0, 3).getType() == Type.QUEEN && game.getPiece(7, 3).getType() == Type.QUEEN);
         assertTrue(game.getPiece(0, 4).getType() == Type.KING && game.getPiece(7, 4).getType() == Type.KING);
     }

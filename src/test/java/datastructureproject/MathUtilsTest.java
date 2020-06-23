@@ -1,17 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package datastructureproject;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-/**
- *
- * @author tulijoki
- */
 public class MathUtilsTest {
     private MathUtils utils;
     
@@ -45,6 +36,5 @@ public class MathUtilsTest {
         int b = -5;
         assertEquals(2, utils.abs(a));
         assertEquals(5, utils.abs(b));
-    }
-    
+    } 
 }

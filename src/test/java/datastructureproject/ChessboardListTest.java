@@ -1,18 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package datastructureproject;
 
 import chess.model.Side;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-/**
- *
- * @author tulijoki
- */
 public class ChessboardListTest {
     private Game game;
     private ChessboardList list;
@@ -51,6 +42,5 @@ public class ChessboardListTest {
         assertEquals(40, list.getSize());
         list.add(new Piece[8][8]);
         assertEquals(80, list.getSize());
-    }
-    
+    }  
 }
