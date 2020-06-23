@@ -188,4 +188,43 @@ public class MoveSelectorTest {
         assertEquals(1, legalMoves.getTail());
         assertEquals(Type.KING, legalMoves.getNextBoard()[1][1].getType());
     }
+    
+    @Test
+    public void problemMoveSix() {
+        this.ms = new MoveSelector(game, 2, true, 7.0, false, 0.0);
+        Piece[][] board = game.getCurrentBoard();
+        for (int y = 0; y <=7; y++) {
+            for (int x = 0; x <= 7; x++) {
+                board[y][x] = new Piece(Type.EMPTY);
+            }
+        }
+        board[0][4] = new Piece(Type.KING, Side.WHITE);
+        board[1][1] = new Piece(Type.ROOK, Side.BLACK);
+        board[1][4] = new Piece(Type.PAWN, Side.WHITE);
+        board[1][5] = new Piece(Type.PAWN, Side.WHITE);
+        board[1][7] = new Piece(Type.PAWN, Side.WHITE);
+        board[2][7] = new Piece(Type.PAWN, Side.BLACK);
+        board[3][3] = new Piece(Type.PAWN, Side.WHITE);
+        board[4][3] = new Piece(Type.PAWN, Side.BLACK);
+        board[4][4] = new Piece(Type.BISHOP, Side.WHITE);
+        board[4][5] = new Piece(Type.BISHOP, Side.BLACK);
+        board[4][7] = new Piece(Type.PAWN, Side.BLACK);
+        board[5][4] = new Piece(Type.PAWN, Side.BLACK);
+        board[6][0] = new Piece(Type.PAWN, Side.BLACK);
+        board[6][1] = new Piece(Type.PAWN, Side.BLACK);
+        board[7][2] = new Piece(Type.KING, Side.BLACK);
+        board[7][5] = new Piece(Type.BISHOP, Side.BLACK);
+        game.setCurrentBoard(board);
+        ChessboardList moves = game.addAllMoves(board, Side.WHITE);
+        ChessboardList legalMoves = ms.filterLegalMoves(moves, Side.WHITE);
+        while (true) {
+            Piece[][] move = legalMoves.getNextBoard();
+            if (move == null) {
+                break;
+            }
+            assertEquals(Type.EMPTY, move[1][3].getType());
+        }
+        Piece[][] move = ms.getBestWhiteMove();
+        assertEquals(Type.EMPTY, move[1][3].getType());
+    }
 }

@@ -16,7 +16,7 @@ public class TrainerBot implements ChessBot {
 
     public TrainerBot() {
         this.game = new Game();
-        this.ms = new MoveSelector(game, 2, false, 0.0, false, 0.0);
+        this.ms = new MoveSelector(game, 2, true, 7.0, false, 0.0);
         this.math = new MathUtils();
         game.initBoard();
     }
@@ -222,6 +222,13 @@ public class TrainerBot implements ChessBot {
             char promotionChar = move.charAt(4);
             Side pawnSide = board[currentY][currentX].getSide();
             board[currentY][currentX] = new Piece(Type.getType(promotionChar), pawnSide);
+        }
+        if (board[currentY][currentX].getType() == Type.KING && math.abs(newX - currentX) == 2) {
+            if (currentX > newX) {
+                game.movePiece(board, currentY, 0, newY, 3);
+            } else {
+                game.movePiece(board, currentY, 7, newY, 5);
+            }
         }
         game.movePiece(board, currentY, currentX, newY, newX);
         if (board[newY][newX].getType() == Type.PAWN && math.abs(newY - currentY) == 2) {

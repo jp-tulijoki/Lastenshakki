@@ -169,6 +169,35 @@ public class BotTest {
         assertEquals(Side.WHITE, game.getPiece(3, 0).getSide());
         Piece whitePawn = game.getPiece(3, 0);
         assertEquals(whitePawn, game.getEnPassant());
+        currentBoard = game.getCurrentBoard();
+        currentBoard[0][1] = new Piece(Type.EMPTY);
+        currentBoard[0][2] = new Piece(Type.EMPTY);
+        currentBoard[0][3] = new Piece(Type.EMPTY);
+        bot.updateLatestMove("e1c1");
+        currentBoard = game.getCurrentBoard();
+        assertEquals(Type.KING, currentBoard[0][2].getType());
+        assertEquals(Type.ROOK, currentBoard[0][3].getType());
+        currentBoard[0][5] = new Piece(Type.EMPTY);
+        currentBoard[0][6] = new Piece(Type.EMPTY);
+        currentBoard[0][4] = new Piece(Type.KING, Side.WHITE);
+        bot.updateLatestMove("e1g1");
+        currentBoard = game.getCurrentBoard();
+        assertEquals(Type.KING, currentBoard[0][6].getType());
+        assertEquals(Type.ROOK, currentBoard[0][5].getType());
+        currentBoard[7][1] = new Piece(Type.EMPTY);
+        currentBoard[7][2] = new Piece(Type.EMPTY);
+        currentBoard[7][3] = new Piece(Type.EMPTY);
+        bot.updateLatestMove("e8c8");
+        currentBoard = game.getCurrentBoard();
+        assertEquals(Type.KING, currentBoard[7][2].getType());
+        assertEquals(Type.ROOK, currentBoard[7][3].getType());
+        currentBoard[7][5] = new Piece(Type.EMPTY);
+        currentBoard[7][6] = new Piece(Type.EMPTY);
+        currentBoard[7][4] = new Piece(Type.KING, Side.BLACK);
+        bot.updateLatestMove("e8g8");
+        currentBoard = game.getCurrentBoard();
+        assertEquals(Type.KING, currentBoard[7][6].getType());
+        assertEquals(Type.ROOK, currentBoard[7][5].getType());
     }
     
     @Test
@@ -211,5 +240,5 @@ public class BotTest {
         bot.updateLatestMove(move);
         assertEquals(Type.QUEEN, game.getCurrentBoard()[7][6].getType());
         assertEquals(Side.WHITE, game.getCurrentBoard()[7][6].getSide());
-    }  
+    }
 }
