@@ -43,6 +43,8 @@ Lisäksi on testattu lasten mukautuksen vaikeustasoa. Testaajan mukaan sopiva mu
 
 Suorituskykytesteissä testattiin laskentatyökalun nopeutta ja minimax-algoritmin nopeutta.
 
+### Versio 1.0
+
 Laskentatyökalun nopeutta testattiin tekemällä 20 siirtoa (10 per puoli) ja laskemalla siirron jälkeisen pelilaudan arvo. Lopuksi laskettiin yhden laskentakerran nopeuden keskiarvo, joka oli 54162 ns.
 
 Minimaxin nopeutta mitattiin tekemällä 100 siirtoa (50 per puoli) ja mittaamalla kokonaisaika. Testit tehtiin syvyyksillä 1, 2 ja 3 ilman alpha-beta-pruningia ja sen kanssa. Syvyyden 3 testi ilman alpha-beta-pruningia lyhennettiin 10 siirtoon per puoli, josta laskettiin arvio, mitä algoritmin suorittaminen olisi kestänyt 50 siirrolla per puoli. Testitulokset alla.
@@ -53,15 +55,15 @@ Syvyys | Ilman alpha-beta-pruningia | alpha-beta-pruningin kanssa
 2 | 4 min 3 s | 1 min 15 s
 3 | 2 t 30 min (arvio) | 19 min 38 s
 
-Vertailun vuoksi testattiin myös versiota, jossa pelilaudan arvo laskettiin vain nappuloiden arvon perusteella. Tällöin yhden laskentakerran keskimääräinen nopeus oli 1557 ns. Minimaxin nopeudet pelkällä nappuloiden arvon laskennalla olivat:
+### Versio 1.1
+
+Vaikka syvyyden 3 minimax oli suhteessa ihmispelaajan siirtoon käyttämään aikaan kohtuullinen, tuntui se harmittavan hitaalta. Tämän vuoksi muokkasin laskentatyökalua niin, että se käyttää liikkumisbonuksen laskentaan hyvin samanlaisia metodeita kuin siirtojen luonnissa käytetään, mutta mitään siirtoja ei luoda. Uuden laskentatyökalun suorituskykytestin tulokset olivat seuraavat (syvyyden 2 peli päättyi 89 siirron jälkeen pattiin, joten siitä esitetään laskennallinen arvio 100 siirrolle):
 
 Syvyys | Ilman alpha-beta-pruningia | alpha-beta-pruningin kanssa
 --- | --- | ---
-1 | 0,15 s | 0,24 s
-2 | 3,88 s | 3,47 s
-3 | 49,80 s | 12,03 s
-
-Vertailu osoittaa, että arviointityökalu monimutkaistaa laskentaa huomattavasti verrattuna pelkkiin nappuloiden arvoon. Kuitenkaan tämän perusteella ei ole ryhdytty mihinkään toimenpiteisiin: Arviointityökalu parantaa tekoälyn peliä (tekoäly mm. voittaa pelkkiä nappuloiden arvoja laskevan tekoälyn) ja tuo siihen mielekkyyttä (tekoäly pyrkii edistämään asemaansa pelilaudalla silloinkin, kun vastustajan nappuloita ei ole syötävissä). Lisäksi on todettava, että keskimääräinen noin 12 sekunnin siirronvalinta syvyyden 3 minimaxissa on ihmispelaajaan ja vaikka xboardin oletustekoälyyn verrattuna varsin kohtuullinen.
+1 | 0,45 s | 0,46 s
+2 | 5,69 s | 3,52 s
+3 | 7 min 37 s | 1 min 59 s
 
 ## Testien toistettavuus
 
