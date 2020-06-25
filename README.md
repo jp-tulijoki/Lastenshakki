@@ -10,6 +10,10 @@ Muu ohjelmakoodi perustuu kurssia varten toteutettuun valmiiseen ![projektipohja
 
 [Testausdokumentti](https://github.com/jp-tulijoki/Lastenshakki/blob/master/documentation/testausdokumentti.md)
 
+[Käyttöohje](https://github.com/jp-tulijoki/Lastenshakki/blob/master/documentation/kayttoohje.md)
+
+[Release](https://github.com/jp-tulijoki/Lastenshakki/releases/tag/v1.0)
+
 ## Viikkoraportit
 
 [Viikko 1](https://github.com/jp-tulijoki/Lastenshakki/blob/master/documentation/weeklyReports/viikko1.md)
