@@ -46,7 +46,7 @@ minimax(origin, depth, TRUE)
 
 Koodista nähdään, että perus-minimaxin aikavaativuus on O(b^d), missä b on kutakin pelitilannetta vastaava mahdollisten siirtojen määrä (branching factor) ja d on rekursion syvyys (depth).
 
-Keskimääräinen shakkilaudan branching factor on 35, jolloin yhden yksikön lisääminen rekursion syvyyteen 35-kertaistaa laskenta ajan. [Suorituskykytestin](https://github.com/jp-tulijoki/Lastenshakki/blob/master/documentation/testausdokumentti.md) tulokset ovat suhteellisen hyvin linjassa oletetun aikavaativuuden kanssa: Jos ensimmäisen syvyyden laskentaan kului 6,42 s, tulisi toisen syvyyden laskentaan kulua 3 min 45 s (todellisuudessa 4 min 3 s) ja kolmannen syvyyden laskentaan 2 t 11 min (todellisuudessa 2 t 30 min). Toisaalta pelkkään nappuloiden arvon laskentaan perustuva minimax suorituu laskennasta oletettua nopeammin. Tämä selittynee ainakin osittain sillä, että pelkkiin nappuloiden arvoon perustuva laskenta tekee enemmän edestakaisia ja lyhyitä siirtoja, jolloin branching factor on oletettua pienempi.
+Keskimääräinen shakkilaudan branching factor on 35, jolloin yhden yksikön lisääminen rekursion syvyyteen 35-kertaistaa laskenta ajan. Version 1.0 [suorituskykytestin](https://github.com/jp-tulijoki/Lastenshakki/blob/master/documentation/testausdokumentti.md) tulokset ovat suhteellisen hyvin linjassa oletetun aikavaativuuden kanssa: Jos ensimmäisen syvyyden laskentaan kului 6,42 s, tulisi toisen syvyyden laskentaan kulua 3 min 45 s (todellisuudessa 4 min 3 s) ja kolmannen syvyyden laskentaan 2 t 11 min (todellisuudessa 2 t 30 min). Toisaalta pelkkään nappuloiden arvon laskentaan perustuva minimax suorituu laskennasta oletettua nopeammin. Tämä selittynee ainakin osittain sillä, että pelkkiin nappuloiden arvoon perustuva laskenta tekee enemmän edestakaisia ja lyhyitä siirtoja, jolloin branching factor on oletettua pienempi.
 
 Ohjelman alpha-beta-pruningia hyödyntävä minimax perustuu seuraavaan pseudokoodiin (ohjelmassa eriksee min ja max -metodit):
 
@@ -75,15 +75,17 @@ function alphabeta(node, depth, α, β, maximizingPlayer) is
 alphabeta(origin, depth, −∞, +∞, TRUE)
 ```
 
-Pseudokoodista nähdään, että pahimman tapauksen aikavaativuus on edelleen O(b^d), joka tapahtuu tilanteessa, jossa pelilautatilanteet käydään jatkuvasti väärässä järjestyksessä läpi. Kuitenkin keskimääräinen aikavaativuus on [lähdemateriaalin](https://en.wikipedia.org/wiki/Alpha%E2%80%93beta_pruning) mukaan b/2^d eli branching factor ja samalla laskenta-aika puolittuisi. Testit osoittavat, että todellisuudessa ohjelman alpha-beta-pruning toimii tehokkaammin: Syvyydessä 2 pruning pienentää laskenta-ajan noin neljäsosaan perus-minimaxista ja syvyydessä 3 melkein kahdeksasosaan. Testeistä nähdään myös, että pelkkään nappuloiden arvon laskentaan perustuvaa minimaxia pruning parantaa huomattavasti vähemmän, mikä johtunee siitä, että siirtojen arvon vaihtelu on pienempää. 
+Pseudokoodista nähdään, että pahimman tapauksen aikavaativuus on edelleen O(b^d), joka tapahtuu tilanteessa, jossa pelilautatilanteet käydään jatkuvasti väärässä järjestyksessä läpi. Kuitenkin keskimääräinen aikavaativuus on [lähdemateriaalin](https://en.wikipedia.org/wiki/Alpha%E2%80%93beta_pruning) mukaan b/2^d eli branching factor ja samalla laskenta-aika puolittuisi. Testit osoittavat, että todellisuudessa ohjelman alpha-beta-pruning toimii tehokkaammin: Syvyydessä 2 pruning pienentää laskenta-ajan noin neljäsosaan perus-minimaxista ja syvyydessä 3 melkein kahdeksasosaan. 
+
+Version 1.1 testeissä alpha-beta pruning ei paranna suhteellisia tuloksia aivan yhtä agressiivisesti, mutta siinäkin syvyyden 2 laskenta-aika melkein puolittuu ja syvyyden 3 laskenta-aika vähenee noin neljäsosaan. Olennainen parannus uudessa versiossa on kuitenkin kevyempi laskentatyökalu, joka parantaa absoluuttisen laskenta-ajan murto-osaan aiemmasta versiosta heikentämättä kuitenkaan pelituloksia.
 
 Tilavaativuuksia ei ole erikseen testattu, mutta ne noudattelevat suunnilleen aikavaativuuksia, koska jokaista pelilautatilannetta varten luodaan mahdolliset seuraavat siirrot.
 
-## Jatkokehitysaiheita
+## Puutteita ja jatkokehitysaiheita
 
 * tekoäly pelaa kohtuullisen hyvin ja pystyy tekemään shakkimatteja, mutta strategista puolta voisi lisätä. Nyt tekoäly valitsee vain kulloinkin parhaan siirron.
-* vaikka pelilaudan arviointityökalu on oleellinen osa tekoäly, vaatii se melko paljon laskentaa, mikä hidastaa ohjelmaa. Laskentaa voisi nopeuttaa miettimällä kevyemmät metodit. Tämä oli kuitenkin ensimmäinen peleihin ja tekoälyyn liittyvä ohjelmointityöni ja kaiken kaikkiaan kolmas laajempi työ, joten halusin pitää asiat mahdollisimman yksinkertaisena.
-* ohjelmassa on jonkin verran toisteista koodia ja pitkiä metodeita. Osa metodeista on mielestäni perustellusti pitkiä: esim. Trainer-botin metodien laajempi pilkkominen tekisi mielestäni koodista sekavampaa. Sen sijaan esim. tornin ja lähetin siirtojen koodin lyhentämistä voisi miettiä.
+* ohjelmassa on jonkin verran toisteista koodia ja pitkiä metodeita. Suurin osa toisteisesta koodista on siirtojen määrän laskennassa käytettyä koodia, joka perustuu vahvasti siirtojen luomiseen käytettävään koodiin. Erillinen koodi pelkkään siirtojen määrän laskentaan nopeuttaa kuitenkin merkittävästi arviointityökalun laskentaa. Osa metodeista on mielestäni perustellusti pitkiä: esim. Trainer-botin metodien laajempi pilkkominen tekisi mielestäni koodista sekavampaa. Sen sijaan esim. tornin ja lähetin siirtojen koodin lyhentämistä voisi miettiä.
+* tekoäly ei tunnista toistuvia siirtoja: jos tekoäly pelaa toista tekoälyä vastaan, joka ei myöskään tunnista toistuvia siirtoja, päättyy peli toistuvien pelilauta-asetelmien vuoksi tasapeliin.
 
 Lähteet:
 
