@@ -2,17 +2,24 @@
 
 ## Rakenne
 
-Ohjelma koostuu kurssia varten luodusta projektipohjasta, joka tarjoaa rungon shakkitekoälyn käyttöön xboard ja lichess 
-sovelluksilla.
+Ohjelma koostuu kurssia varten luodusta projektipohjasta, joka tarjoaa rungon shakkitekoälyn käyttöön `xboard` ja `lichess` 
+-sovelluksilla.
 
 Tässä projektissa toteutettu shakkitekoäly koostuu pakkauksen `datastructureproject` luokista sekä pakkaukseen `chess.bot`
 lisätystä luokasta TrainerBot. Pakkauksen `datastructureproject` luokkien sisällöt ovat seuraavat:
-* Game: pelilautaolio, joka säilyttää pelin kannalta olennaiset tiedot eli nappuloiden sijainnit laudalla sekä tornitukseen ja 
-ohestalyöntiin liittyvät tilanteet
-* MoveSelector: työkalut pelilaudan arvon laskemiseen sekä minimax-algoritmin alpha-beta-pruningilla siirron valitsemiseen
-* Piece: pelinappulaolio, jolla on tyyppi ja väri
-* Type: enum, joka sisältää kaikki pelinappulatyypit suhteellisine arvoineen sekä tyhjän ruudun.
-* PerformanceTest: suorituskykytesti
+* Game: Luokka sisältää metodit eri nappulatyyppien siirtoihin sekä säilyttää pelin kannalta olennaiset tiedot eli nappuloiden sijainnit laudalla sekä tornitukseen ja ohestalyöntiin liittyvät tilanteet. 
+* MoveSelector: Luokka sisältää työkalut pelilaudan arvon laskemiseen sekä minimax-algoritmin alpha-beta-pruningilla siirron valitsemiseen.
+* Piece: Pelinappula, jolla on tyyppi ja väri.
+* Type: Enum, joka sisältää kaikki pelinappulatyypit suhteellisine arvoineen ja lyhenteineen sekä tyhjän ruudun.
+* ChessboardList: Tietorakenne, joka sisältää toiminnot pelilaudan tallettamiseksi taulukkoon, järjestyksessä seuraavan pelilaudan haun sekä taulukon kasvattamisen, jos oletuskoko 40 pelilautaa ei riitä.
+* MathUtils: Itse toteutetut min, max ja abs -toiminnot.
+* PerformanceTest: Suorituskykytesti.
+
+TrainerBot-luokka vastaa siitä, että siirtojen päivittäminen pelialustan ja Game-luokasta luodun peliolion välillä toimii. Luokka muuntaa Game-luokan pelilaudalla ilmaistuja siirtoja UCI:n (universal chess interface) mukaisiksi merkkijonoiksi sekä päivittää Game-luokan pelilautaa pelialustalta tulevien UCI-siirtojen mukaisiksi.
+
+Luokkakaaviossa näkyy ainoastaan em. mainitut itse toteutetut luokat (ei projektipohjan luokkia).
+
+![luokkakaavio](https://github.com/jp-tulijoki/Lastenshakki/blob/master/documentation/pics/classDiagramChess.jpg)
 
 ## Ohjelman aika- ja tilavaativuudet
 
