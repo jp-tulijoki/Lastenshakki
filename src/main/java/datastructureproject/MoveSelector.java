@@ -8,18 +8,19 @@ import chess.model.Side;
  */
 public class MoveSelector {
     
-    private Game game;
-    private MathUtils math;
-    private int depth;
-    private boolean whiteHandicap;
-    private double whiteMaxValue;
-    private boolean blackHandicap;
-    private double blackMinValue;
+    private final Game game;
+    private final MathUtils math;
+    private final int depth;
+    private final boolean whiteHandicap;
+    private final double whiteMaxValue;
+    private final boolean blackHandicap;
+    private final double blackMinValue;
     
     /**
      * The constructor for this class.
      * @param game the game object for which the move selector makes the next 
      * move
+     * @param depth the recursion depth of the minimax algorithm
      * @param whiteHandicap defines if white plays with handicap
      * @param whiteMaxValue sets the max board value white may accomplish with
      * next move. The larger the better. Does not limit white from making a
@@ -63,17 +64,16 @@ public class MoveSelector {
                 if (type == Type.EMPTY) {
                     continue;
                 }
-                if (piece.getSide() == Side.WHITE) {
-                    
+                if (side == Side.WHITE) {
                     whiteValue += type.getValue();
                     whiteValue += countMobilityBonus(board, y, x);
-                    if (piece.getType() == Type.BISHOP) {
+                    if (type == Type.BISHOP) {
                         whiteBishops++;
                     }
                 } else {
-                    blackValue += piece.getType().getValue();
+                    blackValue += type.getValue();
                     blackValue += countMobilityBonus(board, y, x);
-                    if (piece.getType() == Type.BISHOP) {
+                    if (type == Type.BISHOP) {
                         blackBishops++;
                     }
                 }
@@ -99,7 +99,7 @@ public class MoveSelector {
      */
     public double countMobilityBonus(Piece[][] board, int y, int x) {
         Piece piece = board[y][x];
-        double value = 0;
+        double value = 0.0;
         if (piece.getType() == Type.PAWN) {
             if (checkBlockedPawn(board, y, x)) {
                 value -= 0.5;
@@ -124,6 +124,13 @@ public class MoveSelector {
         return value;
     }
     
+    /**
+     * This method checks if a pawn piece is blocked, i.e. can not move at all.
+     * @param board the evaluated board situation
+     * @param y the y-coordinate of the evaluated pawn
+     * @param x the x-coordinate of the evaluated pawn
+     * @return returns true if the pawn is blocked and otherwise false.
+     */
     public boolean checkBlockedPawn(Piece[][] board, int y, int x) { 
         Piece pawn = board[y][x];
         if (pawn.getSide() == Side.WHITE) {
@@ -134,7 +141,8 @@ public class MoveSelector {
                 if (board[y + 1][x - 1].getSide() == Side.BLACK) {
                     return false;
                 }
-            } if (x < 7) {
+            } 
+            if (x < 7) {
                 if (board[y + 1][x + 1].getSide() == Side.BLACK) {
                     return false;
                 }
@@ -147,7 +155,8 @@ public class MoveSelector {
                 if (board[y - 1][x - 1].getSide() == Side.WHITE) {
                     return false;
                 }
-            } if (x < 7) {
+            } 
+            if (x < 7) {
                 if (board[y - 1][x + 1].getSide() == Side.WHITE) {
                     return false;
                 }
@@ -227,6 +236,15 @@ public class MoveSelector {
         return 0;
     }
     
+    /**
+     * This method counts the number of possible knight moves for mobility 
+     * bonus.
+     * @param board the evaluated board situation
+     * @param knight the evaluated knight piece
+     * @param y the y-coordinate of the evaluated knight
+     * @param x the x-coordinate of the evaluated knight
+     * @return returns the number of moves
+     */
     public int countKnightMoves(Piece[][] board, Piece knight, int y, int x) {
         int moves = 0;
         int[][] knightMoves = {{2, 2, 1, 1, -1, -1, -2, -2},
@@ -246,6 +264,15 @@ public class MoveSelector {
         return moves;
     }
     
+    /**
+     * This method counts the number of possible knight moves for mobility 
+     * bonus.
+     * @param board the evaluated board situation
+     * @param rook the evaluated rook piece
+     * @param y the y-coordinate of the evaluated rook
+     * @param x the x-coordinate of the evaluated rook
+     * @return returns the number of moves
+     */
     public int countRookMoves(Piece[][] board, Piece rook, int y, int x) {
         int up = y + 1;
         int down = y - 1;
@@ -299,6 +326,15 @@ public class MoveSelector {
         return moves;
     }
     
+    /**
+     * This method counts the number of possible bishop moves for mobility 
+     * bonus.
+     * @param board the evaluated board situation
+     * @param bishop the evaluated bishop piece
+     * @param y the y-coordinate of the evaluated bishop
+     * @param x the x-coordinate of the evaluated bishop
+     * @return returns the number of moves
+     */
     public int countBishopMoves(Piece[][] board, Piece bishop, int y, int x) {
         int up = y + 1;
         int down = y - 1;
@@ -360,14 +396,21 @@ public class MoveSelector {
         }
         return moves;
     }
-    
+    /**
+     * This method counts the number of possible queen moves for mobility 
+     * bonus by calling the equivalent rook and bishop methods.
+     * @param board the evaluated board situation
+     * @param queen the evaluated queen piece
+     * @param y the y-coordinate of the evaluated queen
+     * @param x the x-coordinate of the evaluated queen
+     * @return returns the number of moves
+     */
     public int countQueenMoves(Piece[][] board, Piece queen, int y, int x) {
         int moves = 0;
         moves += countRookMoves(board, queen, y, x);
         moves += countBishopMoves(board, queen, y, x);
         return moves;
     }
-    
     
     /**
      * This method is the max part of the minimax algorithm.
@@ -404,7 +447,6 @@ public class MoveSelector {
         return bestValue;
     }
     
-
     /**
      * This method is the min part of the minimax algorithm.
      * @param board the given chessboard to be analyzed.
@@ -442,7 +484,8 @@ public class MoveSelector {
     
     /**
      * This method selects the best move for the white player.
-     * @return returns a chessboard representation of the best move
+     * @return returns a chessboard representation of the best move or null if 
+     * there is no legal move
      */
     public Piece[][] getBestWhiteMove() {
         Piece[][] board = game.copyBoard(game.getCurrentBoard());
@@ -475,7 +518,8 @@ public class MoveSelector {
     
     /**
      * This method selects the best move for the black player.
-     * @return returns a chessboard representation of the best move
+     * @return returns a chessboard representation of the best move or null if 
+     * there is no legal move
      */
     public Piece[][] getBestBlackMove() {
         Piece[][] board = game.copyBoard(game.getCurrentBoard());
@@ -540,7 +584,7 @@ public class MoveSelector {
     }
     
     public Side getOppositeSide(Side side) {
-        if (side == side.WHITE) {
+        if (side == Side.WHITE) {
             return Side.BLACK;
         } else {
             return Side.WHITE;

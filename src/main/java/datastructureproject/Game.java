@@ -767,36 +767,4 @@ public class Game {
         }
         return moves;
     }
-    
-    /**
-     * This method returns all moves of a specified piece except castling for 
-     * the king piece. Castling is excluded as this method is used for 
-     * calculating different board value scenarios and for that purpose keeping
-     * the castling array up-to-date gives only a small additional value 
-     * compared to that method's time complexity.
-     * @param board the board in which the moves are made
-     * @param y the current y-coordinate of the specified piece
-     * @param x the current y-coordinate of the specified piece
-     * @return returns a list of moves which are legal for the specified piece,
-     * but legality concerning the entire game situation, e.g. check is not 
-     * controlled.
-     */
-    public ChessboardList getOnePieceMoves(Piece[][] board, int y, int x) {
-        ChessboardList moves = new ChessboardList();
-        Piece piece = board[y][x];
-        if (piece.getType() == Type.PAWN) {
-            addAllPawnMoves(board, moves, piece, y, x);
-        } else if (piece.getType() == Type.KNIGHT) {
-            addKnightMoves(board, moves, piece, y, x);
-        } else if (piece.getType() == Type.ROOK) {
-            addRookMoves(board, moves, piece, y, x);
-        } else if (piece.getType() == Type.BISHOP) {
-            addBishopMoves(board, moves, piece, y, x);
-        } else if (piece.getType() == Type.QUEEN) {
-            addQueenMoves(board, moves, piece, y, x);
-        } else if (piece.getType() == Type.KING) {
-            addRegularKingMoves(board, moves, piece, y, x);
-        }
-        return moves;
-    }
 }

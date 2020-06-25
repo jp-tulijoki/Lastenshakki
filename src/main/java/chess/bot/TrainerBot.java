@@ -10,13 +10,13 @@ import datastructureproject.*;
  */
 public class TrainerBot implements ChessBot {
     
-    private Game game;
-    private MoveSelector ms;
-    private MathUtils math;
+    private final Game game;
+    private final MoveSelector ms;
+    private final MathUtils math;
 
     public TrainerBot() {
         this.game = new Game();
-        this.ms = new MoveSelector(game, 3, false, 0.0, false, 0.0);
+        this.ms = new MoveSelector(game, 3, true, 0.0, false, 0.0);
         this.math = new MathUtils();
         game.initBoard();
     }
@@ -232,7 +232,8 @@ public class TrainerBot implements ChessBot {
                 game.movePiece(board, currentY, 7, newY, 5);
             }
         }
-        if (board[currentY][currentX].getType() == Type.PAWN && board[newY][newX].getType() == Type.EMPTY && math.abs(newX - currentX) == 1) {
+        if (board[currentY][currentX].getType() == Type.PAWN && board[newY][newX].getType() 
+                == Type.EMPTY && math.abs(newX - currentX) == 1) {
             board[currentY][newX] = new Piece(Type.EMPTY);
         }
         game.movePiece(board, currentY, currentX, newY, newX);
