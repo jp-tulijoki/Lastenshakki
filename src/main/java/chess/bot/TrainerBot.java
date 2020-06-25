@@ -16,7 +16,7 @@ public class TrainerBot implements ChessBot {
 
     public TrainerBot() {
         this.game = new Game();
-        this.ms = new MoveSelector(game, 2, false, 0.0, false, 0.0);
+        this.ms = new MoveSelector(game, 3, false, 0.0, false, 0.0);
         this.math = new MathUtils();
         game.initBoard();
     }
@@ -207,6 +207,8 @@ public class TrainerBot implements ChessBot {
         }
     }
     
+    
+    
     /**
      * This method is called by the nextMove method and takes care of updating
      * the latest UCI format move to the board of the current Game object.
@@ -229,6 +231,9 @@ public class TrainerBot implements ChessBot {
             } else {
                 game.movePiece(board, currentY, 7, newY, 5);
             }
+        }
+        if (board[currentY][currentX].getType() == Type.PAWN && board[newY][newX].getType() == Type.EMPTY && math.abs(newX - currentX) == 1) {
+            board[currentY][newX] = new Piece(Type.EMPTY);
         }
         game.movePiece(board, currentY, currentX, newY, newX);
         if (board[newY][newX].getType() == Type.PAWN && math.abs(newY - currentY) == 2) {

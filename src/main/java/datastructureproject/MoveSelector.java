@@ -91,7 +91,7 @@ public class MoveSelector {
     /**
      * This method counts mobility bonus used in board evaluation including
      * special situations concerning pawn pieces (blocked, isolated, doubled and
-     * close to promotion).
+     * close to promotion). King pieces are ignored.
      * @param board the evaluated board situation
      * @param y the y-coordinate of the evaluated piece
      * @param x the x-coordinate of the evaluated piece
@@ -100,9 +100,8 @@ public class MoveSelector {
     public double countMobilityBonus(Piece[][] board, int y, int x) {
         Piece piece = board[y][x];
         double value = 0;
-        ChessboardList moves = game.getOnePieceMoves(board, y, x);
         if (piece.getType() == Type.PAWN) {
-            if (moves.getTail() == 0) {
+            if (checkBlockedPawn(board, y, x)) {
                 value -= 0.5;
             }
             if (checkPawnIsolation(board, y, x)) {
@@ -113,8 +112,48 @@ public class MoveSelector {
             }
             value += addCloseToPromotionBonus(board, y, x);
         }
-        value += moves.getTail() * 0.1;
+        if (piece.getType() == Type.KNIGHT) {
+            value += 0.1 * countKnightMoves(board, piece, y, x);
+        } else if (piece.getType() == Type.ROOK) {
+            value += 0.1 * countRookMoves(board, piece, y, x);
+        } else if (piece.getType() == Type.BISHOP) {
+            value += 0.1 * countBishopMoves(board, piece, y, x);
+        } else if (piece.getType() == Type.QUEEN) {
+            value += 0.1 * countQueenMoves(board, piece, y, x);
+        }
         return value;
+    }
+    
+    public boolean checkBlockedPawn(Piece[][] board, int y, int x) { 
+        Piece pawn = board[y][x];
+        if (pawn.getSide() == Side.WHITE) {
+            if (board[y + 1][x].getType() == Type.EMPTY) {
+                return false;
+            }
+            if (x > 0) {
+                if (board[y + 1][x - 1].getSide() == Side.BLACK) {
+                    return false;
+                }
+            } if (x < 7) {
+                if (board[y + 1][x + 1].getSide() == Side.BLACK) {
+                    return false;
+                }
+            }
+        } else {
+            if (board[y - 1][x].getType() == Type.EMPTY) {
+                return false;
+            }
+            if (x > 0) {
+                if (board[y - 1][x - 1].getSide() == Side.WHITE) {
+                    return false;
+                }
+            } if (x < 7) {
+                if (board[y - 1][x + 1].getSide() == Side.WHITE) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
     
     /**
@@ -187,6 +226,148 @@ public class MoveSelector {
         }
         return 0;
     }
+    
+    public int countKnightMoves(Piece[][] board, Piece knight, int y, int x) {
+        int moves = 0;
+        int[][] knightMoves = {{2, 2, 1, 1, -1, -1, -2, -2},
+            {1, -1, 2, -2, 2, -2, 1, -1}};
+        for (int i = 0; i < knightMoves[0].length; i++) {
+            int newY = y + knightMoves[0][i];
+            int newX = x + knightMoves[1][i];
+            
+            if (newY < 0 || newY > 7 || newX < 0 || newX > 7) {
+                continue;
+            }
+            
+            if (knight.getSide() != board[newY][newX].getSide()) {
+                moves++;
+            }
+        }
+        return moves;
+    }
+    
+    public int countRookMoves(Piece[][] board, Piece rook, int y, int x) {
+        int up = y + 1;
+        int down = y - 1;
+        int right = x + 1;
+        int left = x - 1;
+        int moves = 0;
+        
+        while (up <= 7) {
+            if (board[up][x].getSide() == rook.getSide()) {
+                break;
+            }
+            moves++;
+            if (board[up][x].getSide() != null) {
+                break;
+            }
+            up++;
+        }
+        
+        while (down >= 0) {
+            if (board[down][x].getSide() == rook.getSide()) {
+                break;
+            }
+            moves++;
+            if (board[down][x].getSide() != null) {
+                break;
+            }
+            down--;
+        }
+        
+        while (right <= 7) {
+            if (board[y][right].getSide() == rook.getSide()) {
+                break;
+            }
+            moves++;
+            if (board[y][right].getSide() != null) {
+                break;
+            }
+            right++;
+        }
+        
+        while (left >= 0) {
+            if (board[y][left].getSide() == rook.getSide()) {
+                break;
+            }
+            moves++;
+            if (board[y][left].getSide() != null) {
+                break;
+            }
+            left--;
+        }
+        return moves;
+    }
+    
+    public int countBishopMoves(Piece[][] board, Piece bishop, int y, int x) {
+        int up = y + 1;
+        int down = y - 1;
+        int right = x + 1;
+        int left = x - 1;
+        int moves = 0;
+        
+        while (up <= 7 && right <= 7) {
+            if (board[up][right].getSide() == bishop.getSide()) {
+                break;
+            }
+            moves++;
+            if (board[up][right].getSide() != null) {
+                break;
+            }
+            up++;
+            right++;
+        }
+        up = y + 1;
+        right = x + 1;
+        
+        while (down >= 0 && right <= 7) {
+            if (board[down][right].getSide() == bishop.getSide()) {
+                break;
+            }
+            moves++;
+            if (board[down][right].getSide() != null) {
+                break;
+            }
+            down--;
+            right++;
+        }
+        down = y - 1;
+        right = x + 1;
+        
+        while (up <= 7 && left >= 0) {
+            if (board[up][left].getSide() == bishop.getSide()) {
+                break;
+            }
+            moves++;
+            if (board[up][left].getSide() != null) {
+                break;
+            }
+            up++;
+            left--;
+        }
+        left = x - 1;
+        
+        while (down >= 0 && left >= 0) {
+            if (board[down][left].getSide() == bishop.getSide()) {
+                break;
+            }
+            moves++;
+            if (board[down][left].getSide() != null) {
+                break;
+            }
+            down--;
+            left--;
+        }
+        return moves;
+    }
+    
+    public int countQueenMoves(Piece[][] board, Piece queen, int y, int x) {
+        int moves = 0;
+        moves += countRookMoves(board, queen, y, x);
+        moves += countBishopMoves(board, queen, y, x);
+        return moves;
+    }
+    
     
     /**
      * This method is the max part of the minimax algorithm.
@@ -268,6 +449,9 @@ public class MoveSelector {
         game.checkWhiteCastling(board);
         ChessboardList moves = game.addAllMoves(board, Side.WHITE);
         ChessboardList legalMoves = filterLegalMoves(moves, Side.WHITE);
+        if (legalMoves.getTail() == 0) {
+            return null;
+        }
         Piece[][] bestMove = legalMoves.getNextBoard();
         double bestValue = minBoardValue(bestMove, depth, -99999, 99999);
         while (true) {
@@ -298,6 +482,9 @@ public class MoveSelector {
         game.checkBlackCastling(board);
         ChessboardList moves = game.addAllMoves(board, Side.BLACK);
         ChessboardList legalMoves = this.filterLegalMoves(moves, Side.BLACK);
+        if (legalMoves.getTail() == 0) {
+            return null;
+        }
         Piece[][] bestMove = legalMoves.getNextBoard();
         double bestValue = maxBoardValue(bestMove, depth, -99999.99, 99999.99);
         while (true) {

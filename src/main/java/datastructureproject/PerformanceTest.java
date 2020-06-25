@@ -51,15 +51,25 @@ public class PerformanceTest {
         game.initBoard();
         MoveSelector ms = new MoveSelector(game, depth, false, 0.0, false, 0.0);
         Piece[][] board = null;
+        int moves = 0;
         long start = System.nanoTime();
         for (int i = 1; i <= 50; i++) {  
             board = ms.getBestWhiteMove();
+            if (board == null) {
+                break;
+            }
+            moves++;
             game.setCurrentBoard(board);
             board = ms.getBestBlackMove();
+            if (board == null) {
+                break;
+            }
+            moves++;
             game.setCurrentBoard(board);
         }
         long end = System.nanoTime();
         System.out.println((end - start) / 1e9 + " sec");
+        System.out.println("Moves made: " + moves);
         board = game.getCurrentBoard();
         printBoard(board);
     }
