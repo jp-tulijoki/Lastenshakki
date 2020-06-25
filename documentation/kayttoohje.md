@@ -9,16 +9,15 @@ Projektin voi ladata omalle koneelle repositorion oikeassa yläreunassa olevasta
 
 ## Käyttäminen
 
-Pelaamiseen liittyviä toiminnallisuuksia voi käyttää vain `XBoard` ja `Lichess` -alustoilla, eikä tämän repositorion ohjelmakoodi sisällä käyttöliittymää. Nopea tapa
-saada ohjelma käyttöön on ladata jonkin releasen .jar-tiedosto ja käyttää sitä `XBoardissa` yllä olevan linkin ohjeiden mukaisesti.
+Pelaamiseen liittyviä toiminnallisuuksia voi käyttää vain `XBoard` ja `Lichess` -alustoilla, eikä tämän repositorion ohjelmakoodi sisällä käyttöliittymää. Nopea tapa saada ohjelma käyttöön on ladata jokin [releasen](https://github.com/jp-tulijoki/Lastenshakki/releases) .jar-tiedosto ja käyttää sitä `XBoardissa` yllä olevan linkin ohjeiden mukaisesti.
 
 Muut toiminnallisuudet vaativat toimiakseen Gradlen. Gradle-pluginin voi asentaa oman ohjelmointiympäristön kautta tai sen voi hakea [täältä](https://gradle.org/releases/).
 
 Komentoriviltä voi ajaa mm. seuraavia toimintoja:
-`./gradlew build` (.jar-tiedoston generointi /build/libs -kansioon)
-`./gradlew test` (testien ajaminen)
-`./gradlew JacocoTestReport` (testikattavuusraporttien generointi /build/reports/jacoco/test -kansioon)
-`./gradlew check` (checkstyle-raportti)
+* `./gradlew build` (.jar-tiedoston generointi /build/libs -kansioon)
+* `./gradlew test` (testien ajaminen)
+* `./gradlew JacocoTestReport` (testikattavuusraporttien generointi /build/reports/jacoco/test -kansioon)
+* `./gradlew check` (checkstyle-raportti)
 
 ## Asetusten muuttaminen
 
@@ -29,5 +28,8 @@ määrittää ns. parhaan sallitun siirron. Valkoisen arvo annetaan positiivisen
 alussa vastustajan molemmat lähetit, se ei syö enempää nappuloita ennen kuin itse menettää niitä. Tasoitus ei kuitenkaan estä bottia tekemästä shakkimattia tai 
 torjumasta shakkia syömällä nappulan, vaikka tasoitus ei muuten antaisi myöden.
 
-Jälkimmäinen boolean-arvo määrittää, antaako musta tasoitusta. Vastaavasti boolean-arvoa seuraava parametri määrittää, paljonko tasoitusta musta antaa. Peruslogiikka
-on sama kuin valkoisella. Ainoa ero on, että mustan tasoituksen arvo annetaan negatiivisena liukulukuna.
+Jälkimmäinen boolean-arvo määrittää, antaako musta tasoitusta. Vastaavasti boolean-arvoa seuraava parametri määrittää, paljonko tasoitusta musta antaa. Peruslogiikka on sama kuin valkoisella. Ainoa ero on, että mustan tasoituksen arvo annetaan negatiivisena liukulukuna.
+
+Alla olevassa esimerkissä on asetettu valkoiselle 7.0 yksikön tasoitus. Mustalla tasoitusta ei ole.
+
+![tasoitus](https://github.com/jp-tulijoki/Lastenshakki/blob/master/documentation/pics/setHandicap.jpg)
