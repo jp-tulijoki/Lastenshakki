@@ -33,7 +33,7 @@ Alla olevista kuvista näkyy TrainerBot-luokan sekä datastructureproject-pakkau
 
 ## Järjestelmätason testit
 
-Järjestelmätason testit on suoritettu manuaalisesti ja automaattisesti xboard-ohjelmalla siten, että toisena pelaajana on ollut tekoäly. Automaaattisessa testauksessa on hyödynnetty xboardin fairymax-tekoälyä ja manuaalista testausta ovat tehneet tekijä ja tekijän 7-vuotias poika, joka on ikäisekseen taitava shakinpelaaja.
+Järjestelmätason testit on suoritettu manuaalisesti ja automaattisesti xboard-ohjelmalla siten, että toisena pelaajana on ollut tekoäly. Automaaattisessa testauksessa on hyödynnetty xboardin fairymax-tekoälyä sekä Lichessin stockfish-tekoälyä ja manuaalista testausta ovat tehneet tekijä ja tekijän 7-vuotias poika, joka on ikäisekseen taitava shakinpelaaja. Valtaosa testeistä on tehty XBoardilla ja Lichessin osalta on testattu lähinnä, että ohjelma toimii kaatumatta.
 
 Testauksen tarkoituksena on ollut varmistaa, että ohjelma toimii oikein. Erityisesti ongelmatilanteita on pyritty toistamaan useita kertoja, jotta on voitu varmistaa ohjelman toimivuus. Suurimmat esille tulleet ongelmat järjestelmätason testeissä ovat koskeneet erikoissiirtoja ja nämä on pyritty korjaamaan niiden esille tultua.
 
