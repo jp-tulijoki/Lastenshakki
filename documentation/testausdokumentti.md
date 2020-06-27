@@ -10,7 +10,7 @@ Game-luokan testit koostuvat lähtökohtaisesti eri pelinappuloiden siirroista. 
 
 ### MoveSelector-luokka
 
-MoveSelector-luokan testit testaavat pelilaudan arviointityökalua sekä siirron valinta -metodia. Siirronvalintatestit on suoritettu normaalilla minimax-algoritmilla, ts. sellaisella, joka ei anna tasoitusta. Siirrom valinnassa on testattu, että metodit palauttavat laillisia siirtoja eli eivät esim. anna vastustajalle mahdollisuutta syödä kuningasta seuraavalla siirrolla. Lisäksi on testattu ns. ongelmasiirtoja, jotka ovat jossain vaiheessa aiheuttaneet ohjelman kaatumisen asettamalla nappulat täsmälleen kaatumista edeltäneeseen asemaan.
+MoveSelector-luokan testit testaavat pelilaudan arviointityökalua sekä siirron valinta -metodia. Siirronvalintatestit on suoritettu normaalilla minimax-algoritmilla, ts. sellaisella, joka ei anna tasoitusta. Siirron valinnassa on testattu, että metodit palauttavat laillisia siirtoja eli eivät esim. anna vastustajalle mahdollisuutta syödä kuningasta seuraavalla siirrolla. Lisäksi on testattu ns. ongelmasiirtoja, jotka ovat jossain vaiheessa aiheuttaneet ohjelman kaatumisen asettamalla nappulat täsmälleen kaatumista edeltäneeseen asemaan.
 
 ### TrainerBot-luokka
 
@@ -57,13 +57,15 @@ Syvyys | Ilman alpha-beta-pruningia | alpha-beta-pruningin kanssa
 
 ### Versio 1.1
 
-Vaikka syvyyden 3 minimax oli suhteessa ihmispelaajan siirtoon käyttämään aikaan kohtuullinen, tuntui se harmittavan hitaalta. Tämän vuoksi muokkasin laskentatyökalua niin, että se käyttää liikkumisbonuksen laskentaan hyvin samanlaisia metodeita kuin siirtojen luonnissa käytetään, mutta mitään siirtoja ei luoda. Uuden laskentatyökalun suorituskykytestin tulokset olivat seuraavat (syvyyden 2 peli päättyi 89 siirron jälkeen pattiin, joten siitä esitetään laskennallinen arvio 100 siirrolle):
+Vaikka syvyyden 3 minimax oli suhteessa ihmispelaajan siirtoon käyttämään aikaan kohtuullinen, tuntui se harmittavan hitaalta. Tämän vuoksi muokkasin laskentatyökalua niin, että se käyttää liikkumisbonuksen laskentaan hyvin samanlaisia metodeita kuin siirtojen luonnissa käytetään, mutta mitään siirtoja ei luoda. 
+
+Yhden laskentakerran nopeus keskimäärin 5109 ns.
 
 Syvyys | Ilman alpha-beta-pruningia | alpha-beta-pruningin kanssa
 --- | --- | ---
-1 | 0,45 s | 0,46 s
-2 | 5,69 s | 3,52 s
-3 | 7 min 37 s | 1 min 59 s
+1 | 0,33 s | 0,35 s
+2 | 5,43 s | 3,60 s
+3 | 4 min 17 s | 1 min 6 s
 
 ## Testien toistettavuus
 
