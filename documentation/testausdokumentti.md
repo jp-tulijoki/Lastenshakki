@@ -33,11 +33,11 @@ Alla olevista kuvista näkyy TrainerBot-luokan sekä datastructureproject-pakkau
 
 ## Järjestelmätason testit
 
-Järjestelmätason testit on suoritettu manuaalisesti ja automaattisesti xboard-ohjelmalla siten, että toisena pelaajana on ollut tekoäly. Automaaattisessa testauksessa on hyödynnetty xboardin fairymax-tekoälyä sekä Lichessin stockfish-tekoälyä ja manuaalista testausta ovat tehneet tekijä ja tekijän 7-vuotias poika, joka on ikäisekseen taitava shakinpelaaja. Valtaosa testeistä on tehty XBoardilla ja Lichessin osalta on testattu lähinnä, että ohjelma toimii kaatumatta.
+Järjestelmätason testit on suoritettu manuaalisesti XBoard-sovelluksella sekä automaattisesti XBoard- ja Lichess -sovelluksilla siten, että toisena pelaajana on ollut tekoäly. Automaaattisessa testauksessa on hyödynnetty XBoardin fairymax-tekoälyä sekä Lichessin stockfish-tekoälyä. Manuaalista testausta ovat tehneet tekijä ja tekijän 7-vuotias poika, joka on ikäisekseen taitava shakinpelaaja. Valtaosa testeistä on tehty XBoardilla ja Lichessin osalta on testattu lähinnä, että ohjelma toimii kaatumatta. Testeissä on testattu lähinnä minimaxin rekursiosyvyyksiä 2 ja 3 hyödyntävää ohjelmaa (muutama testi syvyydellä 4).
 
-Testauksen tarkoituksena on ollut varmistaa, että ohjelma toimii oikein. Erityisesti ongelmatilanteita on pyritty toistamaan useita kertoja, jotta on voitu varmistaa ohjelman toimivuus. Suurimmat esille tulleet ongelmat järjestelmätason testeissä ovat koskeneet erikoissiirtoja ja nämä on pyritty korjaamaan niiden esille tultua.
+Testauksen tarkoituksena on ollut varmistaa, että ohjelma toimii oikein. Erityisesti ongelmatilanteita on pyritty toistamaan useita kertoja, jotta on voitu varmistaa ohjelman toimivuus. Suurimmat esille tulleet ongelmat järjestelmätason testeissä ovat koskeneet erikoissiirtoja ja nämä on pyritty korjaamaan niiden esille tultua. Viimeisissä testeissä ongelmia ei ole ilmaantunut.
 
-Lisäksi on testattu lasten mukautuksen vaikeustasoa. Testaajan mukaan sopiva mukautuksen handicap-arvo oli |7.0|. Myös arvo |10.0| oli pelattavissa, mutta haastavampi. Ilman tasoitusta pelaaminen tuntui vaikealta. Kaikissa testeissä minimaxin rekursion syvyys oli 2.
+Lisäksi on testattu lasten mukautuksen vaikeustasoa. Testaajan mukaan sopiva mukautuksen handicap-arvo oli |7.0|. Myös arvo |10.0| oli pelattavissa, mutta haastavampi. Ilman tasoitusta pelaaminen tuntui vaikealta. Kaikissa lasten mukautuksen testeissä minimaxin rekursion syvyys oli 2.
 
 ## Suorituskykytestit
 
@@ -69,4 +69,4 @@ Syvyys | Ilman alpha-beta-pruningia | alpha-beta-pruningin kanssa
 
 ## Testien toistettavuus
 
-JUNit-testit ja suorituskykytestit ovat täysin toistettavissa ja niiden koodi löytyy ohjelman koodista. Suorituskykytestejä varten ei kuitenkaan ole luotu MoveSelector-luokkaan erikseen mitään testimetodeja, joista puuttuisi alpha-beta-pruning tai arviointityökalun metodeja, vaan muokkaukset voi nopeasti tehdä käsin. Manuaaliset järjestelmätason testitkin ovat periaatteessa toistettavissa, mutta testaamisessa tehtyjä siirtoja ei ole dokumentoitu muuten kuin ongelmia aiheuttaneet pelitilanteet, jotka löytyvät MoveSelector-luokan JUnit-testeistä.
+JUnit-testit ja suorituskykytestit ovat täysin toistettavissa ja niiden koodi löytyy ohjelman koodista (version 1.0 koodin voi ladata kyseisestä [releasesta](https://github.com/jp-tulijoki/Lastenshakki/releases/tag/v1.0)). Suorituskykytestejä varten ei kuitenkaan ole luotu MoveSelector-luokkaan erikseen mitään testimetodeja, joista puuttuisi alpha-beta-pruning tai arviointityökalun metodeja, vaan muokkaukset voi nopeasti tehdä käsin. Manuaaliset järjestelmätason testitkin ovat periaatteessa toistettavissa, mutta testaamisessa tehtyjä siirtoja ei ole dokumentoitu muuten kuin ongelmia aiheuttaneet pelitilanteet, jotka löytyvät MoveSelector-luokan JUnit-testeistä.
