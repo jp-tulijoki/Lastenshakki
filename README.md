@@ -1,6 +1,6 @@
 # Lasten shakki -tekoäly
 
-Helsingin yliopiston Tietorakenteet ja algoritmit -harjoitustyönä toteutettu projekti, jonka tavoitteena on luoda shakkia harjoitteleville lapsille sopivan vaikea harjoitusvastustaja. Projektissa toteutetaan teköälyn lisäksi myös normaalit shakkipelin säännöt ohjelmakoodiin.
+Helsingin yliopiston Tietorakenteet ja algoritmit -harjoitustyönä toteutettu projekti, jonka tavoitteena on luoda shakkia harjoitteleville lapsille sopivan vaikea harjoitusvastustaja. Tekoäly ei toimi yksinomaan tasoitusta antavana lasten versiona, vaan ns. normaali pelaaminen ilman mitään tasoituksia on mahdollista. Projektissa toteutetaan teköälyn lisäksi myös normaalit shakkipelin säännöt ohjelmakoodiin.
 
 Muu ohjelmakoodi perustuu kurssia varten toteutettuun valmiiseen ![projektipohjaan](https://github.com/TiraLabra/chess).
 
@@ -12,7 +12,7 @@ Muu ohjelmakoodi perustuu kurssia varten toteutettuun valmiiseen ![projektipohja
 
 [Käyttöohje](https://github.com/jp-tulijoki/Lastenshakki/blob/master/documentation/kayttoohje.md)
 
-[Release](https://github.com/jp-tulijoki/Lastenshakki/releases/tag/v1.0)
+[Versio 1.1 release](https://github.com/jp-tulijoki/Lastenshakki/releases/tag/v1.1)
 
 ## Viikkoraportit
 
