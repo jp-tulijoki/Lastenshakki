@@ -16,7 +16,7 @@ public class TrainerBot implements ChessBot {
 
     public TrainerBot() {
         this.game = new Game();
-        this.ms = new MoveSelector(game, 3, true, 0.0, false, 0.0);
+        this.ms = new MoveSelector(game, 3, false, 0.0, false, 0.0);
         this.math = new MathUtils();
         game.initBoard();
     }

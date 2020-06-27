@@ -177,7 +177,7 @@ public class MoveSelector {
         Piece pawn = board[y][x];
         for (int y2 = y - 1; y2 <= y + 1; y2++) {
             for (int x2 = x - 1; x2 <= x + 1; x2++) {
-                if (x2 == y && x2 == x) {
+                if (y2 == y && x2 == x) {
                     continue;
                 }
                 if (y2 < 0 || y2 > 7 || x2 < 0 || x2 > 7) {

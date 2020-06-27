@@ -104,13 +104,13 @@ public class Game {
     }
         
     /**
-     * This method moves a chesspiece to the new square and replaces the old 
+     * This method moves a chess piece to the new square and replaces the old 
      * location with empty square.
      * @param board the current piece locations on the chessboard
-     * @param currentY the current y-coordinate of the chesspiece moved
-     * @param currentX the current x-coordinate of the chesspiece moved
-     * @param newY the y-coordinate the chesspiece is moved to
-     * @param newX the x-coordinate the chesspiece is moved to
+     * @param currentY the current y-coordinate of the chess piece moved
+     * @param currentX the current x-coordinate of the chess piece moved
+     * @param newY the y-coordinate the chess piece is moved to
+     * @param newX the x-coordinate the chess piece is moved to
      */
     public void movePiece(Piece[][] board, int currentY, int currentX, int newY, int newX) {
         Piece movedPiece = board[currentY][currentX];
@@ -551,7 +551,7 @@ public class Game {
     }
     
     /**
-     * This method updates the castling boolean array values for the white 
+     * This method updates the castling array values for the white 
      * player. See constructor for value clarifications.
      * @param board the board that is used for checking if castling is possible
      */
@@ -598,7 +598,7 @@ public class Game {
     }       
     
     /**
-     * This method updates the castling boolean array values for the black 
+     * This method updates the castling array values for the black 
      * player. See constructor for value clarifications.
      * @param board the board that is used for checking if castling is possible
      */
@@ -739,7 +739,7 @@ public class Game {
      * @param board the board in which the moves are made 
      * @param side the side of the player
      * @return returns a list of moves which are legal for an individual piece,
-     * but legality concerning the entire game situation, e.g. check is not 
+     * but legality concerning the entire game situation, e.g. king check is not 
      * controlled.
      */
     public ChessboardList addAllMoves(Piece[][] board, Side side) {

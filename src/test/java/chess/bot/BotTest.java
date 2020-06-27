@@ -24,7 +24,36 @@ public class BotTest {
     }
     
     @Test
-    public void moveParserDetectsCastling() {
+    public void moveParserDetectsWhiteCastling() {
+        Game game = new Game();
+        Piece[][] currentBoard = game.getCurrentBoard();
+        for (int y = 0; y <= 7; y++) {
+            for (int x = 0; x <= 7; x++) {
+                currentBoard[y][x] = new Piece(Type.EMPTY);
+            }
+        }
+        Piece whiteRook = new Piece(Type.ROOK, Side.WHITE);
+        Piece whiteKing = new Piece(Type.KING, Side.WHITE);
+        currentBoard[0][7] = whiteRook;
+        currentBoard[0][4] = whiteKing;
+        game.setCurrentBoard(currentBoard);
+        Piece[][] newBoard = game.copyBoard(currentBoard);
+        game.movePiece(newBoard, 0, 7, 0, 5);
+        game.movePiece(newBoard, 0, 4, 0, 6);
+        String move = bot.parseMove(Side.WHITE, currentBoard, newBoard);
+        assertEquals("e1g1", move);
+        game.movePiece(newBoard, 0, 5, 0, 0);
+        game.movePiece(newBoard, 0, 6, 0, 4);
+        currentBoard = game.copyBoard(newBoard);
+        game.setCurrentBoard(currentBoard);
+        game.movePiece(newBoard, 0, 0, 0, 3);
+        game.movePiece(newBoard, 0, 4, 0, 2);
+        move = bot.parseMove(Side.WHITE, currentBoard, newBoard);
+        assertEquals("e1c1", move);
+    }
+    
+    @Test
+    public void moveParserDetectsBlackCastling() {
         Game game = new Game();
         Piece[][] currentBoard = game.getCurrentBoard();
         for (int y = 0; y <= 7; y++) {
@@ -42,6 +71,14 @@ public class BotTest {
         game.movePiece(newBoard, 7, 4, 7, 6);
         String move = bot.parseMove(Side.BLACK, currentBoard, newBoard);
         assertEquals("e8g8", move);
+        game.movePiece(newBoard, 7, 5, 7, 0);
+        game.movePiece(newBoard, 7, 6, 7, 4);
+        currentBoard = game.copyBoard(newBoard);
+        game.setCurrentBoard(currentBoard);
+        game.movePiece(newBoard, 7, 0, 7, 3);
+        game.movePiece(newBoard, 7, 4, 7, 2);
+        move = bot.parseMove(Side.BLACK, currentBoard, newBoard);
+        assertEquals("e8c8", move);
     }
     
     @Test
@@ -159,6 +196,22 @@ public class BotTest {
     }
     
     @Test
+    public void moveUpdaterDetectsEnPassant() {
+        Game game = bot.getGame();
+        game.initBoard();
+        Piece[][] board = game.getCurrentBoard();
+        game.movePiece(board, 1, 4, 3, 4);
+        game.movePiece(board, 6, 5, 3, 5);
+        game.setCurrentBoard(board);
+        bot.updateLatestMove("f4e3");
+        board = game.getCurrentBoard();
+        assertEquals(Type.PAWN, board[2][4].getType());
+        assertEquals(Side.BLACK, board[2][4].getSide());
+        assertEquals(Type.EMPTY, board[3][4].getType());
+        assertEquals(Type.EMPTY, board[3][5].getType());
+    }
+    
+    @Test
     public void moveUpdaterWorksProperly() {
         Game game = bot.getGame();
         game.initBoard();
@@ -220,7 +273,6 @@ public class BotTest {
         bot.updateLatestMove("g7h8q");
         assertEquals(Type.QUEEN, game.getCurrentBoard()[7][7].getType());
         assertEquals(Side.WHITE, game.getCurrentBoard()[7][7].getSide());
-        
     }
     
     @Test

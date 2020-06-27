@@ -35,7 +35,7 @@ public class XBoardHandler {
                 // Configure XBoard with desired options
                 if (input.startsWith("protover")) {
                     System.out.println("feature done=0 sigint=0 sigterm=0 reuse=0 "
-                            + "usermove=1 myname=\"Trainer-Bot\" done=1\n");
+                            + "usermove=1 myname=\"Trainer-Bot1.1\" done=1\n");
                     System.out.flush();
                     break;
                 }

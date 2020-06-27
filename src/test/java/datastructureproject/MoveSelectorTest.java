@@ -23,6 +23,61 @@ public class MoveSelectorTest {
     }
     
     @Test
+    public void blockedPawnIsDetected() {
+        game.initBoard();
+        Piece[][] board = game.getCurrentBoard();
+        game.movePiece(board, 6, 0, 2, 0);
+        assertTrue(ms.checkBlockedPawn(board, 1, 0));
+        assertFalse(ms.checkBlockedPawn(board, 1, 1));
+    }
+    
+    @Test
+    public void isolatedPawnIsDetected() {
+        game.initBoard();
+        Piece[][] board = game.getCurrentBoard();
+        game.movePiece(board, 1, 0, 3, 0);
+        assertTrue(ms.checkPawnIsolation(board, 3, 0));
+        assertFalse(ms.checkPawnIsolation(board, 1, 1));
+    }
+    
+    @Test
+    public void doubledPawnsAreDetectedButOnlyOnce() {
+        game.initBoard();
+        Piece[][] board = game.getCurrentBoard();
+        game.movePiece(board, 1, 1, 3, 0);
+        game.movePiece(board, 6, 1, 4, 0);
+        assertTrue(ms.checkDoubledPawns(board, 1, 0));
+        assertFalse(ms.checkDoubledPawns(board, 3, 0));
+        assertFalse(ms.checkDoubledPawns(board, 1, 6));
+        assertTrue(ms.checkDoubledPawns(board, 4, 0));
+        assertFalse(ms.checkDoubledPawns(board, 6, 0));
+    }
+    
+    @Test
+    public void pawnsCloseToPromotionReceiveBonus() {
+        game.initBoard();
+        Piece[][] board = game.getCurrentBoard();
+        game.movePiece(board, 1, 0, 5, 0);
+        game.movePiece(board, 6, 3, 1, 3);
+        assertEquals(1, ms.addCloseToPromotionBonus(board, 5, 0));
+        assertEquals(2, ms.addCloseToPromotionBonus(board, 1, 3));
+        assertEquals(0, ms.addCloseToPromotionBonus(board, 1, 1));
+    }
+    
+    @Test
+    public void mobilityBonusIsCountedRight() {
+        game.initBoard();
+        Piece[][] board = game.getCurrentBoard();
+        game.movePiece(board, 0, 3, 2, 3);
+        game.movePiece(board, 0, 0, 3, 0);
+        game.movePiece(board, 0, 2, 5, 2);
+        assertEquals(2, ms.countKnightMoves(board, board[0][1], 0, 1));
+        assertEquals(18, ms.countQueenMoves(board, board[2][3], 2, 3));
+        assertEquals(11, ms.countRookMoves(board, board[3][0], 3, 0));
+        assertEquals(6, ms.countBishopMoves(board, board[5][2], 5, 2));
+    }
+    
+    @Test
     public void moveSelectorReturnsMove() {
         game.initBoard();
         Piece[][] whiteMove = ms.getBestWhiteMove();
